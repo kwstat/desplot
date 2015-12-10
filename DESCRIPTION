@@ -1,0 +1,21 @@
+Package: desplot
+Title: Plotting Field Plans for Agricultural Experiments
+Version: 1.0
+Date: 2015-12-07
+Authors@R: person("Kevin","Wright", email="kw.stat@gmail.com", role=c("aut","cre"))
+Type: Package
+Description: A function for plotting maps of agricultural field experiments that
+    are laid out in grids.
+Imports:
+    grid,
+    lattice,
+    reshape2,
+Suggests:
+    agridat,
+    knitr
+License: GPL-2
+LazyData: yes
+URL: https://github.com/kwstat/desplot
+BugReports: https://github.com/kwstat/desplot/issues
+VignetteBuilder: knitr
+RoxygenNote: 5.0.1
