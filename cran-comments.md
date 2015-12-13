@@ -6,12 +6,15 @@ split off from the 'agridat' package so that the latter can be a data-only
 package.
 
 ## test environments
-local R 3.2.2 on Windows 7
+
+local R 3.2.3 on Windows 7
 win-builder (devel & release)
 
 ## R CMD check results
-There were no ERRORs or WARNINGs. 
+
+There were no ERRORs, WARNINGs, or NOTEs.
 
 ## Downstream dependencies
 
-None.
+None.  This is a first release.
+

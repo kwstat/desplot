@@ -1,2 +1,4 @@
 # agrifun
-Functions for analysis of agricultural data
+
+Functions for plotting experimental designs in agriculture.
+

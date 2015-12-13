@@ -1,13 +1,22 @@
-# History files
+# Emacs backup files
+*.~*~
+\#*\#
+# Emacs backups of hidden files, like ".gitignore.~3~"
+.*.~*~
+.\#*
+
+# RStudio/R GUI
+.Rbuildignore
+.RData
 .Rhistory
-.Rapp.history
+.Rproj.user
+*.Rproj
 
-# Example code in package build process
-*-Ex.R
-
-# RStudio files
-.Rproj.user/
-
-# produced vignettes
-vignettes/*.html
+# Vignettes
+vignettes/*.bbl
+vignettes/*.log
+vignettes/*.md
 vignettes/*.pdf
+vignettes/*.synctex.gz
+vignettes/*.tex
+
