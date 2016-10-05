@@ -1,4 +1,3 @@
-
 ---
 title: "Plotting field maps with the desplot package"
 author: "Kevin Wright"
@@ -33,16 +32,24 @@ knitr::opts_chunk$set(fig.align="center", fig.width=6, fig.height=6)
 options(width=90)
 ```
 
-First, a plot of the experimental design of the oats data from Yates.
+## Example 1
+
+First, a plot of the experimental design of the oats data from @yates1935complex.
 ```{r yates}
 library(agridat)
 library(desplot)
 data(yates.oats)
-desplot(block ~ x+y, yates.oats, col=nitro, text=gen, cex=1, out1=block,
+# Older versions of agridat used x/y here instead of col/row
+if(is.element("x",names(yates.oats)))
+   yates.oats <- transform(yates.oats, col=x, row=y)
+desplot(block ~ col+row, yates.oats,
+        col=nitro, text=gen, cex=1, out1=block,
         out2=gen, out2.gpar=list(col = "gray50", lwd = 1, lty = 1))
-
 ```
-This example is from @ryder1981field.  Fit an ordinary RCB model with fixed
+
+## Example 2
+
+This next example is from @ryder1981field.  Fit an ordinary RCB model with fixed
 effects for `block` and `genotype`.  Plot a heatmap of the residuals.
 ```{r ryder}
 library(agridat)
@@ -55,8 +62,14 @@ desplot(res ~ col + row, gnut, text=gen, cex=1,
         main="ryder.groundnut residuals from RCB model")
 ```
 Note the largest positive/negative residuals are adjacent to each other,
-perhaps caused by the original data values being swapped.  Checking experiment
-investigators (managers, data collectors, etc.) is recommended.
+perhaps caused by the original data values being swapped.  Checking with
+experiment investigators (managers, data collectors, etc.) is recommended.
 
-# References
+## Session info
+
+```{r session}
+sessionInfo()
+```
+
+## References
 	

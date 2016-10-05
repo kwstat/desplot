@@ -1,5 +1,5 @@
 # desplot.r
-# Time-stamp: <10 Dec 2015 15:33:52 c:/x/rpack/desplot/R/desplot.r>
+# Time-stamp: <17 Jun 2016 16:11:07 c:/x/rpack/desplot/R/desplot.r>
 # Kevin Wright
 
 # TODO: If we have 'text' and shorten='no', don't bother with the key.
@@ -59,12 +59,16 @@ RedGrayBlue <- colorRampPalette(c("firebrick", "lightgray", "#375997"))
 #' be adjacent to each other by virtue of appearing in different whole-plots.
 #' To correctly outline the split-plot factor, simply concatenate the
 #' whole-plot factor and sub-plot factor together.
+#'
+#' To get a map of a field with a true aspect ratio, include 'aspect=ylen/xlen'
+#' in the call, where 'ylen' is the vertical length of the field and 'xlen'
+#' is the horizontal length of the field.
 #' 
 #' To call this function inside another function, you can hack like this:
 #' vr <- "yield"; vx <- "x"; vy <- "y";
 #' eval(parse(text=paste("desplot(", vr, "~", vx, "*", vy, ", data=yates.oats)")))
 #' 
-#' @param form A formula like \code{yield~x*y|location}
+#' @param form A formula like \code{yield~x*y|location. Note x,y are numeric.}
 #' @param data A data frame
 #' @param num The column of the data to use for plotting numbers
 #' @param col Column of the data for the color of the number
@@ -109,6 +113,9 @@ RedGrayBlue <- colorRampPalette(c("firebrick", "lightgray", "#375997"))
 #' 
 #' # Show experiment layout
 #' data(yates.oats)
+#' # Older versions of agridat used x/y here instead of col/row
+#' if(is.element("x",names(yates.oats)))
+#'   yates.oats <- transform(yates.oats, col=x, row=y)
 #' desplot(yield ~ x+y, yates.oats, out1=block, out2=gen)
 #' 
 #' desplot(block ~ x+y, yates.oats, col=nitro, text=gen, cex=1, out1=block,
@@ -548,97 +555,97 @@ prepanel.desplot <- function (x, y, subscripts, flip, ...) {
 #' @references
 #' Derived from lattice::panel.levelplot
 panel.outlinelevelplot <- function(x, y, z, subscripts, at, ...,
-           alpha.regions = 1, out1f, out1g, out2f, out2g) {
-    dots=list(...)
-    col.regions=dots$col.regions
+                                   alpha.regions = 1, out1f, out1g, out2f, out2g) {
+  dots=list(...)
+  col.regions=dots$col.regions
   # Based on panel.levelplot
+  
+  # parent function forces x,y to be numeric, not factors
+  
+  if (length(subscripts) == 0L) return()
+  
+  z <- as.numeric(z)
+  zcol <- level.colors(z, at, col.regions, colors = TRUE)
+  x <- x[subscripts]
+  y <- y[subscripts]
+  
+  zlim <- range(z, finite = TRUE)
+  z <- z[subscripts]
+  zcol <- zcol[subscripts]
+  
+  ux <- sort(unique(x[!is.na(x)]))
+  bx <- if (length(ux) > 1L) { # breakpoints
+    c(3 * ux[1] - ux[2], ux[-length(ux)] + ux[-1],
+      3 * ux[length(ux)] - ux[length(ux) - 1])/2
+  } else ux + c(-0.5, 0.5)
+  lx <- diff(bx) # lengths? I think this is same as rep(1, length(ux))
+  cx <- (bx[-1] + bx[-length(bx)])/2  # centers
+  
+  uy <- sort(unique(y[!is.na(y)]))
+  by <- if (length(uy) > 1) {
+    c(3 * uy[1] - uy[2], uy[-length(uy)] + uy[-1],
+      3 * uy[length(uy)] - uy[length(uy) - 1])/2
+  } else uy + c(-0.5, 0.5)
+  ly <- diff(by)
+  cy <- (by[-1] + by[-length(by)])/2
+  
+  idx <- match(x, ux)
+  idy <- match(y, uy)
+  
+  # Fill the cells
+  grid.rect(x = cx[idx], y = cy[idy],
+            width=lx[idx],
+            height = ly[idy],
+            default.units = "native",
+            gp = gpar(fill = zcol, lwd = 1e-05, col="transparent",
+                      alpha = alpha.regions))
+  
+  draw.outline <- function(x, y, lab, gp) {
+    # x,y are coords, lab=grouping for outline, gp=graphics par
+    out1 <- data.frame(x=x, y=y, lab=lab, stringsAsFactors = FALSE)
+    out1 <- reshape2::melt(out1, id.var=c('x','y'))
+    # reshape melts char vector to char, reshape 2 melts to factor!
+    # both packages could be attached, hack to fix this...
+    out1$value <- as.character(out1$value)
     
-    # parent function forces x,y to be numeric, not factors
-
-    if (length(subscripts) == 0L) return()
-
-    z <- as.numeric(z)
-    zcol <- level.colors(z, at, col.regions, colors = TRUE)
-    x <- x[subscripts]
-    y <- y[subscripts]
-
-    zlim <- range(z, finite = TRUE)
-    z <- z[subscripts]
-    zcol <- zcol[subscripts]
-
-    ux <- sort(unique(x[!is.na(x)]))
-    bx <- if (length(ux) > 1L) { # breakpoints
-      c(3 * ux[1] - ux[2], ux[-length(ux)] + ux[-1],
-        3 * ux[length(ux)] - ux[length(ux) - 1])/2
-    } else ux + c(-0.5, 0.5)
-    lx <- diff(bx) # lengths? I think this is same as rep(1, length(ux))
-    cx <- (bx[-1] + bx[-length(bx)])/2  # centers
-
-    uy <- sort(unique(y[!is.na(y)]))
-    by <- if (length(uy) > 1) {
-      c(3 * uy[1] - uy[2], uy[-length(uy)] + uy[-1],
-        3 * uy[length(uy)] - uy[length(uy) - 1])/2
-    } else uy + c(-0.5, 0.5)
-    ly <- diff(by)
-    cy <- (by[-1] + by[-length(by)])/2
-
-    idx <- match(x, ux)
-    idy <- match(y, uy)
-
-    # Fill the cells
-    grid.rect(x = cx[idx], y = cy[idy],
-              width=lx[idx],
-              height = ly[idy],
-              default.units = "native",
-              gp = gpar(fill = zcol, lwd = 1e-05, col="transparent",
-                alpha = alpha.regions))
-
-    draw.outline <- function(x, y, lab, gp) {
-      # x,y are coords, lab=grouping for outline, gp=graphics par
-      out1 <- data.frame(x=x, y=y, lab=lab, stringsAsFactors = FALSE)
-      out1 <- reshape2::melt(out1, id.var=c('x','y'))
-      # reshape melts char vector to char, reshape 2 melts to factor!
-      # both packages could be attached, hack to fix this...
-      out1$value <- as.character(out1$value)
-
-      out1 <- reshape2::acast(out1, y~x)
-      # Careful.  The 'out' matrix is upside down from the levelplot
-
-      # Since 'out' could be 1 row or column, surround it with NAs
-      out1 <- cbind(NA, rbind(NA, out1, NA), NA)
-
-      # Horizontal lines above boxes
-      hor <- out1[2:nrow(out1)-1, ] != out1[2:nrow(out1), ]
-      hor <- reshape2::melt(hor)
-      hor <- hor[!(hor$value==FALSE | is.na(hor$value)),]
-      if(nrow(hor)>0) {
-        hx <- hor[,2] # reshape uses X2, reshape2 uses Var2
-        hy <- hor[,1]
-        grid.polyline(x=c(hx-.5, hx+.5), y=c(hy+.5, hy+.5),
-                      id=rep(1:length(hx), 2), default.units="native", gp=gp)
-      }
-      # Vertical lines along right side of boxes
-      vert <- out1[ , 2:ncol(out1)-1] != out1[ , 2:ncol(out1)]
-      vert <- reshape2::melt(vert)
-      vert <- vert[!(vert$value==FALSE | is.na(vert$value)),]
-      if(nrow(vert)>0) {
-        vx <- vert[,2]
-        vy <- vert[,1]
-        grid.polyline(x=c(vx+.5, vx+.5), y=c(vy-.5, vy+.5),
-                      id=rep(1:length(vx), 2), default.units="native", gp=gp)
-      }
-
+    out1 <- reshape2::acast(out1, y~x)
+    # Careful.  The 'out' matrix is upside down from the levelplot
+    
+    # Since 'out' could be 1 row or column, surround it with NAs
+    out1 <- cbind(NA, rbind(NA, out1, NA), NA)
+    
+    # Horizontal lines above boxes
+    hor <- out1[2:nrow(out1)-1, ] != out1[2:nrow(out1), ]
+    hor <- reshape2::melt(hor)
+    hor <- hor[!(hor$value==FALSE | is.na(hor$value)),]
+    if(nrow(hor)>0) {
+      hx <- hor[,2] # reshape uses X2, reshape2 uses Var2
+      hy <- hor[,1]
+      grid.polyline(x=c(hx-.5, hx+.5), y=c(hy+.5, hy+.5),
+                    id=rep(1:length(hx), 2), default.units="native", gp=gp)
     }
-
-    # Outline factor 1
-    if(!is.null(out1f))
-      draw.outline(x, y, as.character(out1f[subscripts]), out1g)
-
-    # Outline factor 2
-    if(!is.null(out2f))
-      draw.outline(x, y, as.character(out2f[subscripts]), out2g)
-
-    return()
+    # Vertical lines along right side of boxes
+    vert <- out1[ , 2:ncol(out1)-1] != out1[ , 2:ncol(out1)]
+    vert <- reshape2::melt(vert)
+    vert <- vert[!(vert$value==FALSE | is.na(vert$value)),]
+    if(nrow(vert)>0) {
+      vx <- vert[,2]
+      vy <- vert[,1]
+      grid.polyline(x=c(vx+.5, vx+.5), y=c(vy-.5, vy+.5),
+                    id=rep(1:length(vx), 2), default.units="native", gp=gp)
+    }
+    
+  }
+  
+  # Outline factor 1
+  if(!is.null(out1f))
+    draw.outline(x, y, as.character(out1f[subscripts]), out1g)
+  
+  # Outline factor 2
+  if(!is.null(out2f))
+    draw.outline(x, y, as.character(out2f[subscripts]), out2g)
+  
+  return()
 }
 
 .addLevels <- function(dat, xvar='x', yvar='y', locvar=NULL){
@@ -691,7 +698,7 @@ panel.outlinelevelplot <- function(x, y, z, subscripts, at, ...,
 }
 
 # lel is a very simple version of lattice:::extend.limits
-# Copied here because CRAN does not like ::: anymore as of 8.25.13
+# Copied here because CRAN does not like ::: anymore 
 lel <- function (lim, prop = lattice.getOption("axis.padding")$numeric) {
 
   if (lim[1] == lim[2])

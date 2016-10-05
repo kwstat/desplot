@@ -12,7 +12,7 @@ desplot(form = formula(NULL ~ x + y), data, num = NULL, col = NULL,
   show.key = TRUE, key.cex, cex = 0.4, strip.cex = 0.75, ...)
 }
 \arguments{
-\item{form}{A formula like \code{yield~x*y|location}}
+\item{form}{A formula like \code{yield~x*y|location. Note x,y are numeric.}}
 
 \item{data}{A data frame}
 
@@ -93,6 +93,10 @@ be adjacent to each other by virtue of appearing in different whole-plots.
 To correctly outline the split-plot factor, simply concatenate the
 whole-plot factor and sub-plot factor together.
 
+To get a map of a field with a true aspect ratio, include 'aspect=ylen/xlen'
+in the call, where 'ylen' is the vertical length of the field and 'xlen'
+is the horizontal length of the field.
+
 To call this function inside another function, you can hack like this:
 vr <- "yield"; vx <- "x"; vy <- "y";
 eval(parse(text=paste("desplot(", vr, "~", vx, "*", vy, ", data=yates.oats)")))
@@ -108,6 +112,9 @@ print(d1)
 
 # Show experiment layout
 data(yates.oats)
+# Older versions of agridat used x/y here instead of col/row
+if(is.element("x",names(yates.oats)))
+  yates.oats <- transform(yates.oats, col=x, row=y)
 desplot(yield ~ x+y, yates.oats, out1=block, out2=gen)
 
 desplot(block ~ x+y, yates.oats, col=nitro, text=gen, cex=1, out1=block,

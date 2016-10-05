@@ -6,4 +6,7 @@ cran-comments.md
 NEWS.md
 .travis\.yml
 data-done
+data-raw
 data-unused
+figure
+notes.org
