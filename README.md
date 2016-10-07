@@ -1,4 +1,4 @@
-# desplot <img src="figure/agridat_logo.png" align="right" />
+# desplot <img src="figure/desplot_logo.png" align="right" />
 
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/desplot)](https://cran.r-project.org/package=desplot)
 
