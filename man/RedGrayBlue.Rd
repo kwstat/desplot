@@ -18,9 +18,6 @@ A function to create a Red-Gray-Blue palette.
 \details{
 Using gray instead of white allows missing values to appear as white
 (actually, transparent).
-
-The 'coolwarm' palette by Kenneth Mooreland came later and added a bit
-more color to the red and blue, and reversed the scale.
 }
 \examples{
 pie(rep(1,11), col=RedGrayBlue(11))
@@ -28,12 +25,5 @@ title("RedGrayBlue(11)")
 }
 \author{
 Kevin Wright
-}
-\references{
-Kenneth Moreland. (2009).
-"Diverging Color Maps for Scientific Visualization."
-In Proceedings of the 5th International Symposium on Visual Computing.
-December 2009.
-\url{http://kennethmoreland.com/color-maps/}
 }
 

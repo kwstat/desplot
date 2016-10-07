@@ -1,8 +1,10 @@
 # desplot.r
-# Time-stamp: <17 Jun 2016 16:11:07 c:/x/rpack/desplot/R/desplot.r>
+# Time-stamp: <07 Oct 2016 11:26:02 c:/x/rpack/desplot/R/desplot.r>
 # Kevin Wright
 
 # TODO: If we have 'text' and shorten='no', don't bother with the key.
+
+# ----------------------------------------------------------------------------
 
 #' Function to create a Red-Gray-Blue palette
 #'
@@ -11,24 +13,17 @@
 #' Using gray instead of white allows missing values to appear as white
 #' (actually, transparent).
 #'
-#' The 'coolwarm' palette by Kenneth Mooreland came later and added a bit
-#' more color to the red and blue, and reversed the scale.
-#'
 #' @param n Number of colors to create
 #' @return A vector of n colors.
 #' @author Kevin Wright
-#' @references
-#' Kenneth Moreland. (2009).
-#' "Diverging Color Maps for Scientific Visualization."
-#' In Proceedings of the 5th International Symposium on Visual Computing.
-#' December 2009.
-#' \url{http://kennethmoreland.com/color-maps/}
 #'
 #' @examples
 #' pie(rep(1,11), col=RedGrayBlue(11))
 #' title("RedGrayBlue(11)")
 #' @export
 RedGrayBlue <- colorRampPalette(c("firebrick", "lightgray", "#375997"))
+
+# ----------------------------------------------------------------------------
 
 #' Plot the layout/data of a field experiment.
 #'
@@ -711,122 +706,5 @@ lel <- function (lim, prop = lattice.getOption("axis.padding")$numeric) {
 
 # ----------------------------------------------------------------------------
 if(FALSE){
-  dd <- data.frame(loc = c('loc1','loc1','loc1','loc1','loc2','loc2','loc2','loc2','loc2','loc2'),
-                   x=c(1,2,1,2, 1,2,3,1,2,3),
-                   y=c(1,1,2,2, 1,1,1,2,2,2),
-                   rep=c('R1','R1','R2','R2',' R1','R2','R3','R1','R2','R3'),
-                   yield=c(9.29, 11.20, 9.36, 9.89, 8.47, 9.17, 8.86, 10.48, 10.22, 11.29),
-                   trt1=c('Treat1','Treat2','Treat2','Treat1','Trt1','Trt2','Trt1','Trt2','Trt1','Trt2'),
-                   trt2=c('Hybrid1','Hybrid1','Hybrid2','Hybrid2','Hybrid1',
-                     'Hybrid2','Hybrid3','Hybrid1','Hybrid2','Hybrid3'))
-  windows(width=3, height=2)
-  desplot(yield ~ x+y|loc, data=dd)
-  desplot(yield ~ x+y|loc, data=dd, strip.cex=1.5)
-  desplot(yield ~ x+y|loc, data=dd, col.regions=terrain.colors)
-
-  desplot( ~ x+y|loc, data=dd, num=trt1, cex=1) # err
-  desplot( ~ x+y|loc, data=dd, col=trt1, cex=1)
-  desplot( ~ x+y|loc, data=dd, text=trt1, cex=.8)
-
-  desplot( ~ x+y|loc, data=dd, text=trt1, cex=.8, shorten='none')
-  desplot( ~ x+y|loc, data=dd, text=trt1, cex=.8, shorten='none', key.cex=.5)
-  desplot( ~ x+y|loc, data=dd, text=trt1, cex=.8, shorten='none', show.key=FALSE)
-  desplot( ~ x+y|loc, data=dd, text=trt2, col=trt1, cex=1,
-        col.text=c('red','black','blue','plum'), text.levels=c('A','B','C'))
-
-  desplot(rep ~ x+y|loc, data=dd, out1=rep)
-  desplot(rep ~ x+y|loc, data=dd, out1=rep, out2=y)
-  desplot(rep ~ x+y|loc, data=dd, out1=rep, flip=TRUE)
-  desplot(rep ~ x+y|loc, data=dd, tick=TRUE)
-  desplot(rep ~ x+y|loc, data=dd, main="title", xlab="xlab", ylab="ylab")
-  desplot(rep ~ x+y|loc, data=dd, aspect=2)
-  dev.off()
-
-  # data(yates.oats, package="agridat") # CRAN check doesn't like 'data' here
-  oats35 <- yates.oats
-
-  desplot(yield~x+y, oats35)
-  desplot(yield~x+y|block, oats35)
-
-  # Text over continuous colors
-  desplot(yield~x+y, oats35, out1=block, text=gen, cex=1,
-          xlab="x axis", ylab="y axis", ticks=TRUE)
-
-  desplot(yield~x+y, oats35, out2=block)
-  desplot(yield~x+y, oats35, out1=block, out2=gen)
-  desplot(gen~x+y, oats35, col=block, num=nitro, cex=1, out1=block)
-
-  # Test 'at' and 'col.regions' for the ribbon
-  RedYellowBlue <-
-    colorRampPalette(c("#D73027", "#F46D43", "#FDAE61", "#FEE090", "#FFFFBF",
-                       "#E0F3F8", "#ABD9E9", "#74ADD1", "#4575B4"))
-  eightnum <- function(x) {
-    x <- x[!is.na(x)]
-    st <- grDevices::boxplot.stats(x)$stats
-    # eps <- .Machine$double.eps
-    eps <- 10^(log10(127.4)-6)
-    c(min(x)-eps, st[1:2], st[3]-eps, st[3]+eps, st[4:5], max(x)+eps)
-  }
-  desplot(yield~x+y, oats35, col.regions=RedYellowBlue(7))
-  desplot(yield~x+y, oats35, at=eightnum(oats35$yield))
-  desplot(yield~x+y, oats35, col.regions=RedYellowBlue(7),
-          at=eightnum(oats35$yield))
-
-  # What if the response is character?  Treat it like a factor
-  oats35$genchar <- as.character(oats35$gen)
-  desplot(gen~x+y, oats35, col=block, num=nitro, cex=1, out1=block)
-  desplot(genchar~x+y, oats35, col=block, num=nitro, cex=1, out1=block)
-
-  # Test abbreviations
-  desplot(block~x+y, oats35, col=nitro, text=gen, cex=1, shorten='abb') # default
-  desplot(block~x+y, oats35, col=nitro, text=gen, cex=1, shorten='sub')
-  desplot(block~x+y, oats35, col=nitro, text=gen, cex=1, shorten='no')
-
-  # Show actual yield values
-  desplot(block~x+y, oats35, text=yield, shorten='no')
-
-  desplot(block~x+y, oats35, col=nitro, text=gen, cex=1, out1=block)
-  desplot(block~x+y, oats35, col=nitro, text=gen, cex=1, out1=block, out2=gen)
-  desplot(block~x+y, oats35, num="gen", col="nitro", cex=1)
-
-  # Test custom labels
-  desplot(block~x+y, oats35, text="gen", col="nitro", cex=1, text.levels=c('V','G','M'))
-  desplot(nitro~x+y, oats35, text="gen", cex=.9)
-  desplot(nitro~x+y, oats35)
-  desplot(nitro~x+y|block, oats35, text="gen", cex=.9)
-
-  # No fill color at all
-  desplot(~x+y|block, oats35, text="gen", cex=1)
-  desplot(~x+y, oats35, col="gen", cex=1)
-
-  desplot(nitro~x+y|block, oats35, text="gen", cex=1)
-  desplot(block~x+y|block, oats35, col="nitro", text="gen", cex=1)
-
-  # Test cases with 1 or 2 rows or columns
-
-  # data(besag.met, package="agridat") # CRAN check doesn't like 'data' here
-  dmet <- besag.met
-
-  desplot(yield~col*row|county, dmet, out1=rep, out2=block, tick=TRUE)
-
-  # Create new data in which C1 has one row, C2 two rows
-  # C4 has one column, C5 two columns
-  dmet2 <- dmet
-  dmet2 <- subset(dmet2, !(county=="C1" & row<18))
-  dmet2 <- subset(dmet2, !(county=="C2" & row<17))
-  dmet2 <- subset(dmet2, !(county=="C4" & col<11))
-  dmet2 <- subset(dmet2, !(county=="C5" & col<10))
-
-  desplot(yield~col*row|county, dmet2, tick=TRUE)
-  desplot(yield~col*row|county, dmet2, out1=rep, out2=block, tick=TRUE)
-
-  # stop here
-
-  # Check the 'cleanup' function.  These all err (as they should)
-  desplot(yield~x+y, oats35, num=junk)
-  desplot(yield~x+y, oats35, col=junk)
-  desplot(yield~x+y, oats35, text=junk)
-  desplot(yield~x+y, oats35, out1=junk)
-  desplot(yield~x+y, oats35, out2=junk)
 
 }
