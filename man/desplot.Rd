@@ -104,8 +104,8 @@ eval(parse(text=paste("desplot(", vr, "~", vx, "*", vy, ", data=yates.oats)")))
 \examples{
 if(require(agridat)){
 # Show how to customize any feature.  Here: make the strips bigger.
-data(besag.met)
-d1 <- desplot(yield ~ col*row|county, besag.met, main="besag.met",
+data(besag.corn)
+d1 <- desplot(yield ~ col*row|county, besag.corn, main="besag.corn",
               out1=rep, out2=block, out2.gpar=list(col="white"), strip.cex=3)
 d1 <- update(d1, par.settings = list(layout.heights=list(strip=2)))
 print(d1)
@@ -113,11 +113,11 @@ print(d1)
 # Show experiment layout
 data(yates.oats)
 # Older versions of agridat used x/y here instead of col/row
-if(is.element("x",names(yates.oats)))
-  yates.oats <- transform(yates.oats, col=x, row=y)
-desplot(yield ~ x+y, yates.oats, out1=block, out2=gen)
+#if(is.element("x",names(yates.oats)))
+#  yates.oats <- transform(yates.oats, col=x, row=y)
+desplot(yield ~ col+row, yates.oats, out1=block, out2=gen)
 
-desplot(block ~ x+y, yates.oats, col=nitro, text=gen, cex=1, out1=block,
+desplot(block ~ col+row, yates.oats, col=nitro, text=gen, cex=1, out1=block,
         out2=gen, out2.gpar=list(col = "gray50", lwd = 1, lty = 1))
 
   

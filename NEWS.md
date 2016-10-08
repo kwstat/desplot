@@ -1,3 +1,6 @@
+
+Need to release agridat before desplot
+
 # desplot 1.1 - unpublished
 
 Minor fix so vignette example with `yates.oats` data will work with next version of `agridat`.
