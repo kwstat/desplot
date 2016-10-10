@@ -44,4 +44,4 @@ require(desplot)
 desplot(yield ~ col*row, yates.oats,
         col=gen, num=nitro, cex=1, out1=block, aspect=511/176)
 ```
-![desplot](figure/yates_oats.png?raw=true)
+![desplot](figure/yates_oats_yield.png?raw=true)
