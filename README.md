@@ -17,7 +17,7 @@ Key features:
 install.packages("desplot")
 
 # Install the cutting edge development version from GitHub:
-# install.packages("devtools")
+install.packages("devtools")
 devtools::install_github("kwstat/desplot")
 ```
 
