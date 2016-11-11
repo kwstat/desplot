@@ -71,9 +71,12 @@ desplot(gen~col+row, oats35, col=block, num=nitro, cex=1, out1=block)
 desplot(genchar~col+row, oats35, col=block, num=nitro, cex=1, out1=block)
 
 # Test abbreviations
-desplot(block~col+row, oats35, col=nitro, text=gen, cex=1, shorten='abb') # default
+desplot(block~col+row, oats35, col=nitro, text=gen, cex=1) # default shorten='abb'
+desplot(block~col+row, oats35, col=nitro, text=gen, cex=1, shorten='abb')
 desplot(block~col+row, oats35, col=nitro, text=gen, cex=1, shorten='sub')
 desplot(block~col+row, oats35, col=nitro, text=gen, cex=1, shorten='no')
+desplot(block~col+row, oats35, col=nitro, text=gen, cex=1, shorten='none')
+desplot(block~col+row, oats35, col=nitro, text=gen, cex=1, shorten=FALSE)
 
 # Show actual yield values
 desplot(block~col+row, oats35, text=yield, shorten='no')

@@ -1,5 +1,5 @@
 
-Need to release agridat before desplot
+Need to release desplot before agridat
 
 # desplot 1.1 - unpublished
 

@@ -1,5 +1,5 @@
 # desplot.r
-# Time-stamp: <07 Oct 2016 19:59:57 c:/x/rpack/desplot/R/desplot.r>
+# Time-stamp: <10 Nov 2016 22:50:17 c:/x/rpack/desplot/R/desplot.r>
 # Kevin Wright
 
 # TODO: If we have 'text' and shorten='no', don't bother with the key.
@@ -46,9 +46,10 @@ RedGrayBlue <- colorRampPalette(c("firebrick", "lightgray", "#375997"))
 #' \emph{numeric}, the cells are colored according to \code{col.regions}, and
 #' a ribbon key is placed on the right.
 #' 
-#' The default \code{shorten='abb'} will shorten the cell text using the
-#' \code{abbreviate} function. Other choices include \code{shorten='sub'} to
-#' use a 3-character substring, and \code{shorten='no'} for no shortening.
+#' The default argument \code{shorten='abb'} will shorten the cell text using
+#' the \code{abbreviate} function.
+#' Use \code{shorten='sub'} to use a 3-character substring.
+#' Use \code{shorten='no'} or \code{shorten=FALSE} for no shortening.
 #' 
 #' Note that two sub-plots with identical levels of the split-plot factor can
 #' be adjacent to each other by virtue of appearing in different whole-plots.
@@ -63,35 +64,65 @@ RedGrayBlue <- colorRampPalette(c("firebrick", "lightgray", "#375997"))
 #' vr <- "yield"; vx <- "x"; vy <- "y";
 #' eval(parse(text=paste("desplot(", vr, "~", vx, "*", vy, ", data=yates.oats)")))
 #' 
-#' @param form A formula like \code{yield~x*y|location. Note x,y are numeric.}
-#' @param data A data frame
-#' @param num The column of the data to use for plotting numbers
-#' @param col Column of the data for the color of the number
-#' @param text Column to use for text labels
-#' @param out1 Column to use for outlining
-#' @param out2 Column to use for outlining
-#' @param col.regions Colors for regions
-#' @param col.text Colors for text strings
-#' @param text.levels Character strings to use instead of default 'levels'
-#' @param out1.gpar A list of graphics parameters for outlining.  Can either be an ordinary \code{list()} or A call to \code{gpar()} from the \code{grid} package.
-#' @param out2.gpar Second level of outlining.
-#' @param at Breakpoints for the color ribbon
-#' @param ticks If TRUE, show tick marks row/column
-#' @param flip If TRUE, vertically flip the image
-#' @param main Main title
-#' @param xlab Label for x axis
-#' @param ylab Label for y axis
-#' @param shorten Method for shortening text in the key
-#' @param show.key If TRUE, show the key
-#' @param key.cex Left legend cex
-#' @param cex Expansion factor for text/number in each cellExpansion factor for text/number in each cell
-#' @param strip.cex Strip cex
-#' @param ... Other
+#' @param form A formula like \code{yield~x*y|location}. Note x,y are numeric.
+#'
+#' @param data A data frame.
+#' 
+#' @param num The name of the column of the data to use for plotting numbers.
+#' 
+#' @param col Column of the data for the color of the number shown in each cell.
+#' 
+#' @param text Column of the data to use for text labels shown in each cell.
+#' 
+#' @param out1 Column of the data to use for outlining around blocks of cells.
+#' 
+#' @param out2 Column of the data to use for outlining around blocks of cells.
+#' 
+#' @param col.regions Colors for the fill color of cells.
+#' 
+#' @param col.text Colors for text strings.
+#' 
+#' @param text.levels Character strings to use instead of default 'levels'.
+#' 
+#' @param out1.gpar A list of graphics parameters for outlining.  Can either
+#'   be an ordinary \code{list()} or A call to \code{gpar()} from the
+#'   \code{grid} package.
+#' 
+#' @param out2.gpar Graphics parameters for the second level of outlining.
+#' 
+#' @param at Breakpoints for the color ribbon.  Use this in place of 'zlim'.
+#' 
+#' @param ticks If TRUE, show tick marks along the bottom and left sides.
+#' 
+#' @param flip If TRUE, vertically flip the image.
+#' 
+#' @param main Main title.
+#' 
+#' @param xlab Label for x axis.
+#' 
+#' @param ylab Label for y axis.
+#' 
+#' @param shorten Method for shortening text in the key, either 'abb', 'sub', 'no', or FALSE.
+#' 
+#' @param show.key If TRUE, show the key on the left side. (This is not the ribbon.)
+#' 
+#' @param key.cex Left legend cex.
+#'
+#' @param cex Expansion factor for text/number in each cell.
+#' 
+#' @param strip.cex Strip cex.
+#' 
+#' @param ... Other.
+#' 
 #' @return A lattice object
+#' 
 #' @author Kevin Wright
+#' 
 #' @references
+#' 
 #' K. Ryder (1981). Field plans: why the biometrician finds them useful.
 #' \emph{Experimental Agriculture}, 17, 243--256.
+#' 
 #' @import grid
 #' @import lattice
 #' @import reshape2
@@ -309,7 +340,7 @@ desplot <- function(form=formula(NULL ~ x + y), data,
   }
 
   if(has.text) { # text
-    text.val <- factor(data[[text.var]]) # in case not factor
+    text.val <- factor(data[[text.var]]) # In case it is not a factor
     lt.text <- levels(text.val)
     text.n <- length(lt.text)
     lr <- lr + 2 + text.n
@@ -318,7 +349,7 @@ desplot <- function(form=formula(NULL ~ x + y), data,
 
   # Set up short version of text
   if(has.text & is.null(text.levels)){
-    if(shorten=='no' | shorten=='none')
+    if(shorten=='no' | shorten=='none' | (is.logical(shorten) && !shorten))
       text.levels <- lt.text
     else if (shorten=='abb')
       text.levels <- abbreviate(lt.text, 2, method='both')
@@ -536,21 +567,34 @@ prepanel.desplot <- function (x, y, subscripts, flip, ...) {
 #' The code works, but is probably overkill and has not been streamlined.
 #' 
 #' @param x Coordinates
+#' 
 #' @param y Coordinates
-#' @param z Value for filling each cell
-#' @param subscripts For compatability
-#' @param at Breakpoints for the colors
+#' 
+#' @param z Value for filling each cell.
+#' 
+#' @param subscripts For compatability.
+#' 
+#' @param at Breakpoints for the colors.
+#' 
 #' @param ... Other
+#' 
 #' @param alpha.regions Transparency for fill colors. Not well tested.
+#' 
 #' @param out1f Factors to use for outlining.
+#' 
 #' @param out1g Factors to use for outlining.
+#' 
 #' @param out2f Graphics parameters to use for outlining.
+#' 
 #' @param out2g Graphics parameters to use for outlining.
+#' 
 #' @export 
 #' @references
 #' Derived from lattice::panel.levelplot
-panel.outlinelevelplot <- function(x, y, z, subscripts, at, ...,
-                                   alpha.regions = 1, out1f, out1g, out2f, out2g) {
+panel.outlinelevelplot <- function(x, y, z, subscripts, at,
+                                   ...,
+                                   alpha.regions = 1,
+                                   out1f, out1g, out2f, out2g) {
   dots=list(...)
   col.regions=dots$col.regions
   # Based on panel.levelplot
@@ -704,7 +748,3 @@ lel <- function (lim, prop = lattice.getOption("axis.padding")$numeric) {
   }
 }
 
-# ----------------------------------------------------------------------------
-if(FALSE){
-
-}
