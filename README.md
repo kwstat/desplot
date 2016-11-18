@@ -21,6 +21,9 @@ install.packages("devtools")
 devtools::install_github("kwstat/desplot")
 ```
 
+Vignette:
+[Plotting field maps with the desplot package](https://rawgit.com/kwstat/corrgram/master/vignettes/desplot.html)
+
 ## Example 1
 
 This data is is from a split-plot experiment with 6 replicates.  The replicates are shown by the colored regions and outlined by the thick lines.  The text codes and the thin lines define the whole-plots.  The nitrogen sub-plot treatments are shown by the text colors.
