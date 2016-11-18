@@ -22,7 +22,7 @@ devtools::install_github("kwstat/desplot")
 ```
 
 Vignette:
-[Plotting field maps with the desplot package](https://rawgit.com/kwstat/corrgram/master/vignettes/desplot.html)
+[Plotting field maps with the desplot package](https://rawgit.com/kwstat/desplot/master/vignettes/desplot.html)
 
 ## Example 1
 
