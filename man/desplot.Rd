@@ -8,57 +8,64 @@ desplot(form = formula(NULL ~ x + y), data, num = NULL, col = NULL,
   text = NULL, out1 = NULL, out2 = NULL, col.regions = RedGrayBlue,
   col.text = NULL, text.levels = NULL, out1.gpar = list(col = "black", lwd
   = 3), out2.gpar = list(col = "yellow", lwd = 1, lty = 1), at,
-  ticks = FALSE, flip = FALSE, main = NULL, xlab, ylab, shorten = "abb",
-  show.key = TRUE, key.cex, cex = 0.4, strip.cex = 0.75, ...)
+  midpoint = "median", ticks = FALSE, flip = FALSE, main = NULL, xlab,
+  ylab, shorten = "abb", show.key = TRUE, key.cex, cex = 0.4,
+  strip.cex = 0.75, ...)
 }
 \arguments{
-\item{form}{A formula like \code{yield~x*y|location. Note x,y are numeric.}}
+\item{form}{A formula like \code{yield~x*y|location}. Note x,y are numeric.}
 
-\item{data}{A data frame}
+\item{data}{A data frame.}
 
-\item{num}{The column of the data to use for plotting numbers}
+\item{num}{The name of the column of the data to use for plotting numbers.}
 
-\item{col}{Column of the data for the color of the number}
+\item{col}{Column of the data for the color of the number shown in each cell.}
 
-\item{text}{Column to use for text labels}
+\item{text}{Column of the data to use for text labels shown in each cell.}
 
-\item{out1}{Column to use for outlining}
+\item{out1}{Column of the data to use for outlining around blocks of cells.}
 
-\item{out2}{Column to use for outlining}
+\item{out2}{Column of the data to use for outlining around blocks of cells.}
 
-\item{col.regions}{Colors for regions}
+\item{col.regions}{Colors for the fill color of cells.}
 
-\item{col.text}{Colors for text strings}
+\item{col.text}{Colors for text strings.}
 
-\item{text.levels}{Character strings to use instead of default 'levels'}
+\item{text.levels}{Character strings to use instead of default 'levels'.}
 
-\item{out1.gpar}{A list of graphics parameters for outlining.  Can either be an ordinary \code{list()} or A call to \code{gpar()} from the \code{grid} package.}
+\item{out1.gpar}{A list of graphics parameters for outlining.  Can either
+be an ordinary \code{list()} or A call to \code{gpar()} from the
+\code{grid} package.}
 
-\item{out2.gpar}{Second level of outlining.}
+\item{out2.gpar}{Graphics parameters for the second level of outlining.}
 
-\item{at}{Breakpoints for the color ribbon}
+\item{at}{Breakpoints for the color ribbon.  Use this instead of 'zlim'.
+Note: using at causes midpoint to be set to NULL.}
 
-\item{ticks}{If TRUE, show tick marks row/column}
+\item{midpoint}{Method to find midpoint of the color ribbon.
+One of 'mid', 'median, or numeric value.}
 
-\item{flip}{If TRUE, vertically flip the image}
+\item{ticks}{If TRUE, show tick marks along the bottom and left sides.}
 
-\item{main}{Main title}
+\item{flip}{If TRUE, vertically flip the image.}
 
-\item{xlab}{Label for x axis}
+\item{main}{Main title.}
 
-\item{ylab}{Label for y axis}
+\item{xlab}{Label for x axis.}
 
-\item{shorten}{Method for shortening text in the key}
+\item{ylab}{Label for y axis.}
 
-\item{show.key}{If TRUE, show the key}
+\item{shorten}{Method for shortening text in the key, either 'abb', 'sub', 'no', or FALSE.}
 
-\item{key.cex}{Left legend cex}
+\item{show.key}{If TRUE, show the key on the left side. (This is not the ribbon.)}
 
-\item{cex}{Expansion factor for text/number in each cellExpansion factor for text/number in each cell}
+\item{key.cex}{Left legend cex.}
 
-\item{strip.cex}{Strip cex}
+\item{cex}{Expansion factor for text/number in each cell.}
 
-\item{...}{Other}
+\item{strip.cex}{Strip cex.}
+
+\item{...}{Other.}
 }
 \value{
 A lattice object
@@ -84,9 +91,10 @@ and a key is placed on the left.  If the response variable is
 \emph{numeric}, the cells are colored according to \code{col.regions}, and
 a ribbon key is placed on the right.
 
-The default \code{shorten='abb'} will shorten the cell text using the
-\code{abbreviate} function. Other choices include \code{shorten='sub'} to
-use a 3-character substring, and \code{shorten='no'} for no shortening.
+The default argument \code{shorten='abb'} will shorten the cell text using
+the \code{abbreviate} function.
+Use \code{shorten='sub'} to use a 3-character substring.
+Use \code{shorten='no'} or \code{shorten=FALSE} for no shortening.
 
 Note that two sub-plots with identical levels of the split-plot factor can
 be adjacent to each other by virtue of appearing in different whole-plots.
@@ -103,18 +111,25 @@ eval(parse(text=paste("desplot(", vr, "~", vx, "*", vy, ", data=yates.oats)")))
 }
 \examples{
 if(require(agridat)){
+
 # Show how to customize any feature.  Here: make the strips bigger.
-data(besag.corn)
-d1 <- desplot(yield ~ col*row|county, besag.corn, main="besag.corn",
-              out1=rep, out2=block, out2.gpar=list(col="white"), strip.cex=3)
+if(exists("besag.met")) { # in agridat version <= 1.12
+  data(besag.met)
+  dat <- besag.met
+} else {
+  data(besag.corn) # in agridat version >= 1.13
+  dat <- besag.corn
+}
+d1 <- desplot(yield ~ col*row|county, dat, main="besag.corn",
+              out1=rep, out2=block, out2.gpar=list(col="white"), strip.cex=2)
 d1 <- update(d1, par.settings = list(layout.heights=list(strip=2)))
 print(d1)
 
 # Show experiment layout
 data(yates.oats)
-# Older versions of agridat used x/y here instead of col/row
-#if(is.element("x",names(yates.oats)))
-#  yates.oats <- transform(yates.oats, col=x, row=y)
+# agridat version 1.12 used x/y here instead of col/row
+if(is.element("x",names(yates.oats)))
+  yates.oats <- transform(yates.oats, col=x, row=y)
 desplot(yield ~ col+row, yates.oats, out1=block, out2=gen)
 
 desplot(block ~ col+row, yates.oats, col=nitro, text=gen, cex=1, out1=block,

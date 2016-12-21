@@ -1,5 +1,5 @@
 # desplot.r
-# Time-stamp: <10 Nov 2016 22:50:17 c:/x/rpack/desplot/R/desplot.r>
+# Time-stamp: <17 Dec 2016 21:00:05 c:/x/rpack/desplot/R/desplot.r>
 # Kevin Wright
 
 # TODO: If we have 'text' and shorten='no', don't bother with the key.
@@ -90,7 +90,11 @@ RedGrayBlue <- colorRampPalette(c("firebrick", "lightgray", "#375997"))
 #' 
 #' @param out2.gpar Graphics parameters for the second level of outlining.
 #' 
-#' @param at Breakpoints for the color ribbon.  Use this in place of 'zlim'.
+#' @param at Breakpoints for the color ribbon.  Use this instead of 'zlim'.
+#' Note: using at causes midpoint to be set to NULL.
+#'
+#' @param midpoint Method to find midpoint of the color ribbon.
+#' One of 'mid', 'median, or numeric value.
 #' 
 #' @param ticks If TRUE, show tick marks along the bottom and left sides.
 #' 
@@ -126,22 +130,30 @@ RedGrayBlue <- colorRampPalette(c("firebrick", "lightgray", "#375997"))
 #' @import grid
 #' @import lattice
 #' @import reshape2
-#' @importFrom stats as.formula formula
-#' @export 
+#' @importFrom stats as.formula formula median
+#' @export
+#' 
 #' @examples
 #' if(require(agridat)){
+#' 
 #' # Show how to customize any feature.  Here: make the strips bigger.
-#' data(besag.corn)
-#' d1 <- desplot(yield ~ col*row|county, besag.corn, main="besag.corn",
+#' if(exists("besag.met")) { # in agridat version <= 1.12
+#'   data(besag.met)
+#'   dat <- besag.met
+#' } else {
+#'   data(besag.corn) # in agridat version >= 1.13
+#'   dat <- besag.corn
+#' }
+#' d1 <- desplot(yield ~ col*row|county, dat, main="besag.corn",
 #'               out1=rep, out2=block, out2.gpar=list(col="white"), strip.cex=2)
 #' d1 <- update(d1, par.settings = list(layout.heights=list(strip=2)))
 #' print(d1)
 #' 
 #' # Show experiment layout
 #' data(yates.oats)
-#' # Older versions of agridat used x/y here instead of col/row
-#' #if(is.element("x",names(yates.oats)))
-#' #  yates.oats <- transform(yates.oats, col=x, row=y)
+#' # agridat version 1.12 used x/y here instead of col/row
+#' if(is.element("x",names(yates.oats)))
+#'   yates.oats <- transform(yates.oats, col=x, row=y)
 #' desplot(yield ~ col+row, yates.oats, out1=block, out2=gen)
 #' 
 #' desplot(block ~ col+row, yates.oats, col=nitro, text=gen, cex=1, out1=block,
@@ -163,7 +175,8 @@ desplot <- function(form=formula(NULL ~ x + y), data,
                     col.regions=RedGrayBlue, col.text=NULL, text.levels=NULL,
                     out1.gpar=list(col="black", lwd=3),
                     out2.gpar=list(col="yellow", lwd=1, lty=1),
-                    at, ticks=FALSE, flip=FALSE,
+                    at, midpoint="median",
+                    ticks=FALSE, flip=FALSE,
                     main=NULL, xlab, ylab,
                     shorten='abb',
                     show.key=TRUE,
@@ -171,6 +184,14 @@ desplot <- function(form=formula(NULL ~ x + y), data,
                     cex=.4, # cell cex
                     strip.cex=.75, ...){
 
+  # Using 'at' overrides 'midpoint'
+  if(!missing(at) && !is.null(midpoint))
+    midpoint <- NULL
+
+  if(!missing(at) && is.vector(col.regions) &&
+       ( length(at) !=  length(col.regions)+1 ) )
+    stop("Length of 'at' must be 1 more than length of 'col.regions'\n")
+  
   # Use data name for default title
   if(missing(main)) main <- deparse(substitute(data))
 
@@ -183,7 +204,7 @@ desplot <- function(form=formula(NULL ~ x + y), data,
 
     if(!is.character(x)) x <- deparse(x)
     if(!is.element(x, dn))
-      stop("Couldn't find '", x,"' in the data frame.")
+      stop("Could not find '", x,"' in the data frame.")
     return(x)
   }
   num.var <- cleanup(substitute(num), dn)
@@ -197,7 +218,7 @@ desplot <- function(form=formula(NULL ~ x + y), data,
   has.text <- !is.null(text.var)
   has.out1 <- !is.null(out1.var)
   has.out2 <- !is.null(out2.var)
-  if(has.num & has.text) stop("Specify either 'num' or 'text'")
+  if(has.num & has.text) stop("Specify either 'num' or 'text'. Not both.")
 
   data <- droplevels(data) # In case the user called with subset(obj, ...)
 
@@ -250,8 +271,7 @@ desplot <- function(form=formula(NULL ~ x + y), data,
    if(fill.type=="none") {
     col.regions <- "transparent"
     at <- c(0.5,1.5)
-  }
-  else if(fill.type=="factor"){
+  } else if(fill.type=="factor"){
     # If col.regions is a function, switch to default fill colors
     if(is.function(col.regions))
       col.regions <- c("#E6E6E6","#FFD9D9","#FFB2B2","#FFD7B2","#FDFFB2",
@@ -262,24 +282,61 @@ desplot <- function(form=formula(NULL ~ x + y), data,
                        "#9FFF40","#C9CC3D")
     col.regions <- rep(col.regions, length=fill.n)
     at <- c((0:fill.n)+.5)
-  }
-  else if(fill.type=="num") {
-    # col.regions can be either a function, or vector.  Make it a vector.
-    zrng <- lel(range(as.numeric(fill.val), finite = TRUE))
-    if(is.function(col.regions)) {
-      # if 'at' is not given, use 16 break points (15 colors)
-      if(missing(at)) at <- seq(zrng[1], zrng[2], length.out = 16)
-      col.regions <- col.regions(length(at)-1)
-    } else {
-      nbins <- length(col.regions)
-      if(missing(at)) {
-        at <- seq(zrng[1], zrng[2], length.out = nbins + 1)
-      } else {
-        if(nbins != length(at)-1) stop("Length of 'at' must be 1 more than length of 'col.regions'\n")
-      }
+  } else if(fill.type=="num") {
+    if(missing(at) && is.null(midpoint)){
+        nbins <- 15
+        if(is.function(col.regions)) col.regions <- col.regions(nbins)
+        # Use lel = lattice:::extend.limits to move breakpoints past ends of fill.val
+        zrng <- lel(range(as.numeric(fill.val), finite = TRUE))
+        at <- seq(zrng[1], zrng[2], length.out = 16)
     }
-  }
-
+    if(missing(at) && midpoint=="median"){ # default case for continuous data
+      if(is.function(col.regions)) {
+        nbins <- 15
+        col.regions <- col.regions(nbins)
+      } else {
+        nbins <- length(col.regions)
+      }
+      #browser()
+      med <- median(fill.val, na.rm=TRUE)
+      radius <- max(max(fill.val, na.rm=TRUE)-med,
+                    med-min(fill.val, na.rm=TRUE)) + .Machine$double.eps
+      zrng <- lel(range(c(med-radius, med+radius)))
+      brks <- seq(zrng[1], zrng[2], length.out = nbins+1)
+      binno <- as.numeric(cut(fill.val, breaks=brks)) # bin number for each fill.val
+      # select only 'col.regions' and 'at' values we actually need
+      minbin <- min(binno, na.rm=TRUE); maxbin <- max(binno, na.rm=TRUE)
+      col.regions <- col.regions[minbin:maxbin]
+      at <- brks[minbin:(maxbin+1)]
+    }
+    if(missing(at) && is.numeric(midpoint)){
+      if(is.function(col.regions)) {
+        nbins <- 15
+        col.regions <- col.regions(nbins)
+      } else {
+        nbins <- length(col.regions)
+      }
+      radius <- max(max(fill.val, na.rm=TRUE)-midpoint,
+                    midpoint-min(fill.val, na.rm=TRUE)) + .Machine$double.eps
+      zrng <- lel(range(c(midpoint-radius, midpoint+radius)))
+      brks <- seq(zrng[1], zrng[2], length.out = nbins+1)
+      binno <- as.numeric(cut(fill.val, breaks=brks)) # bin number for each fill.val
+      # select only col.regions and at we actually need
+      minbin <- min(binno, na.rm=TRUE); maxbin <- max(binno, na.rm=TRUE)
+      col.regions <- col.regions[minbin:maxbin]
+      at <- brks[minbin:(maxbin+1)]
+    }
+    if(!missing(at)){
+      # user specified 'at' and 'col.regions'
+      nbins <- length(at)-1
+      if(is.function(col.regions)) col.regions <- col.regions(nbins)
+    }
+    
+  } # end fill.type
+  # comment: the Fields package defines breakpoints so that the first and last
+  # bins have their midpoints at the minimum and maximum values in z
+  # https://www.image.ucar.edu/~nychka/Fields/Help/image.plot.html
+  
   # Text colors
   if(is.null(col.text))
     col.text <- c("black", "red3", "darkorange2", "chartreuse4",

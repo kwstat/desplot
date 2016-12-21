@@ -12,11 +12,11 @@ panel.outlinelevelplot(x, y, z, subscripts, at, ..., alpha.regions = 1, out1f,
 
 \item{y}{Coordinates}
 
-\item{z}{Value for filling each cell}
+\item{z}{Value for filling each cell.}
 
-\item{subscripts}{For compatability}
+\item{subscripts}{For compatability.}
 
-\item{at}{Breakpoints for the colors}
+\item{at}{Breakpoints for the colors.}
 
 \item{...}{Other}
 

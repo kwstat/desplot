@@ -1,7 +1,7 @@
 
 require(desplot)
 
-dd <- data.frame(loc = c('loc1','loc1','loc1','loc1','loc2','loc2','loc2','loc2','loc2','loc2'),
+dat0 <- data.frame(loc = c('loc1','loc1','loc1','loc1','loc2','loc2','loc2','loc2','loc2','loc2'),
                    x=c(1,2,1,2, 1,2,3,1,2,3),
                    y=c(1,1,2,2, 1,1,1,2,2,2),
                    rep=c('R1','R1','R2','R2',' R1','R2','R3','R1','R2','R3'),
@@ -12,34 +12,41 @@ dd <- data.frame(loc = c('loc1','loc1','loc1','loc1','loc2','loc2','loc2','loc2'
 
 # Rcmd check does not like windows()
 # windows(width=3, height=2)
-desplot(yield ~ x+y|loc, data=dd)
-desplot(yield ~ x+y|loc, data=dd, strip.cex=1.5)
-desplot(yield ~ x+y|loc, data=dd, col.regions=terrain.colors)
+desplot(yield ~ x+y|loc, data=dat0)
+desplot(yield ~ x+y|loc, data=dat0, strip.cex=1.5)
+desplot(yield ~ x+y|loc, data=dat0, col.regions=terrain.colors)
 
-desplot( ~ x+y|loc, data=dd, num=trt1, cex=1) # err
-desplot( ~ x+y|loc, data=dd, col=trt1, cex=1)
-desplot( ~ x+y|loc, data=dd, text=trt1, cex=.8)
+desplot( ~ x+y|loc, data=dat0, num=trt1, cex=1)
+desplot( ~ x+y|loc, data=dat0, col=trt1, cex=1)
+desplot( ~ x+y|loc, data=dat0, text=trt1, cex=.8)
 
-desplot( ~ x+y|loc, data=dd, text=trt1, cex=.8, shorten='none')
-desplot( ~ x+y|loc, data=dd, text=trt1, cex=.8, shorten='none', key.cex=.5)
-desplot( ~ x+y|loc, data=dd, text=trt1, cex=.8, shorten='none', show.key=FALSE)
-desplot( ~ x+y|loc, data=dd, text=trt2, col=trt1, cex=1,
+desplot( ~ x+y|loc, data=dat0, text=trt1, cex=.8, shorten='none')
+desplot( ~ x+y|loc, data=dat0, text=trt1, cex=.8, shorten='none', key.cex=.5)
+desplot( ~ x+y|loc, data=dat0, text=trt1, cex=.8, shorten='none', show.key=FALSE)
+desplot( ~ x+y|loc, data=dat0, text=trt2, col=trt1, cex=1,
         col.text=c('red','black','blue','plum'), text.levels=c('A','B','C'))
 
-desplot(rep ~ x+y|loc, data=dd, out1=rep)
-desplot(rep ~ x+y|loc, data=dd, out1=rep, out2=y)
-desplot(rep ~ x+y|loc, data=dd, out1=rep, flip=TRUE)
-desplot(rep ~ x+y|loc, data=dd, tick=TRUE)
-desplot(rep ~ x+y|loc, data=dd, main="title", xlab="xlab", ylab="ylab")
-desplot(rep ~ x+y|loc, data=dd, aspect=2)
+desplot(rep ~ x+y|loc, data=dat0, out1=rep)
+desplot(rep ~ x+y|loc, data=dat0, out1=rep, out2=y)
+desplot(rep ~ x+y|loc, data=dat0, out1=rep, flip=TRUE)
+desplot(rep ~ x+y|loc, data=dat0, tick=TRUE)
+desplot(rep ~ x+y|loc, data=dat0, main="title", xlab="xlab", ylab="ylab")
+desplot(rep ~ x+y|loc, data=dat0, aspect=2)
 dev.off()
 
 require(agridat)
 
 oats35 <- yates.oats
+if(is.element("x",names(oats35)))
+   oats35 <- transform(oats35, col=x, row=y)
 
 desplot(yield~col+row, oats35)
 desplot(yield~col+row|block, oats35)
+
+# missing values
+oats34 <- oats35
+oats34[1,'yield'] <- NA
+desplot(yield~col+row|block, oats34)
 
 # Text over continuous colors
 desplot(yield~col+row, oats35, out1=block, text=gen, cex=1,
@@ -60,10 +67,32 @@ eightnum <- function(x) {
   eps <- 10^(log10(127.4)-6)
   c(min(x)-eps, st[1:2], st[3]-eps, st[3]+eps, st[4:5], max(x)+eps)
 }
+
 desplot(yield~col+row, oats35, col.regions=RedYellowBlue(7))
-desplot(yield~col+row, oats35, at=eightnum(oats35$yield))
-desplot(yield~col+row, oats35, col.regions=RedYellowBlue(7),
-        at=eightnum(oats35$yield))
+# extreme values barely visible on ribbon
+desplot(yield~col+row, oats35, at=eightnum(oats35$yield), midpoint=NULL)
+
+# fails
+#desplot(yield~col+row, oats35, col.regions=RedYellowBlue(7),
+#        at=eightnum(oats35$yield))
+
+# Midpoint options
+# midpoint
+# mean=103.97
+# median=102.5
+# mid=113.5
+desplot(yield~col+row, oats35)
+desplot(yield~col+row, oats35, midpoint=113.5) # same as default
+desplot(yield~col+row, oats35, midpoint="median")
+desplot(yield~col+row, oats35, midpoint=102.5) # same as median
+#desplot(yield~col+row, oats35, midpoint="mean")
+desplot(yield~col+row, oats35, midpoint=103.97)
+
+# Remove the ribbon completely
+dd <- desplot(yield ~  col+row, oats35)
+dd
+dd$legend$right=NULL
+dd
 
 # What if the response is character?  Treat it like a factor
 oats35$genchar <- as.character(oats35$gen)
@@ -124,3 +153,19 @@ if(FALSE){
   desplot(yield~col+row, oats35, out1=junk)
   desplot(yield~col+row, oats35, out2=junk)
 }
+
+# Another midpoint example with strong difference between midpoint
+# styles. Only works with agridat 1.13 or greater
+if(FALSE){
+  library(agridat)
+  # Old style
+  desplot(yield~col*row, wiedemann.safflower.uniformity,
+          flip=TRUE, tick=TRUE, aspect =99/165, # true aspect
+          main="wiedemann.safflower.uniformity (true shape)",
+          midpoint=NULL)
+  desplot(yield~col*row, wiedemann.safflower.uniformity,
+          flip=TRUE, tick=TRUE, aspect =99/165, # true aspect
+          main="wiedemann.safflower.uniformity (true shape)",
+          midpoint="median")
+  }
+
