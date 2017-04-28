@@ -1,7 +1,8 @@
-# desplot <img src="figure/desplot_logo.png" align="right" />
+# desplot <img src="figure/desplot_logo_150.png" align="right" />
 
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/desplot)](https://cran.r-project.org/package=desplot)
 [![CRAN_Downloads](https://cranlogs.r-pkg.org/badges/desplot)](https://cranlogs.r-pkg.org/badges/desplot)
+[![Research software impact](http://depsy.org/api/package/cran/desplot/badge.svg)](http://depsy.org/package/r/desplot)
 
 Functions for plotting experimental designs of field trials in agriculture.
 

@@ -12,7 +12,8 @@ Imports:
     reshape2,
 Suggests:
     agridat,
-    knitr
+    knitr,
+    testthat
 License: GPL-3
 LazyData: yes
 URL: https://github.com/kwstat/desplot
