@@ -1,6 +1,6 @@
-# desplot 1.2
+# desplot 1.2 - Jul 2017
 
-Switched to testthat and covr packages. Currently `covr` fails.
+Now using `testthat` and `covr` packages. (Currently covr fails).
 
 # desplot 1.1 - Dec 2016
 

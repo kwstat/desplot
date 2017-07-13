@@ -1,5 +1,5 @@
 # desplot.R
-# Time-stamp: <25 Apr 2017 17:09:55 c:/x/rpack/desplot/R/desplot.R>
+# Time-stamp: <12 Jul 2017 19:33:31 c:/x/rpack/desplot/R/desplot.R>
 # Kevin Wright
 
 # TODO: If we have 'text' and shorten='no', don't bother with the key.
@@ -137,13 +137,8 @@ RedGrayBlue <- colorRampPalette(c("firebrick", "lightgray", "#375997"))
 #' if(require(agridat)){
 #' 
 #' # Show how to customize any feature.  Here: make the strips bigger.
-#' if(exists("besag.met")) { # in agridat version <= 1.12
-#'   data(besag.met)
-#'   dat <- besag.met
-#' } else {
-#'   data(besag.corn) # in agridat version >= 1.13
-#'   dat <- besag.corn
-#' }
+#' data(besag.met)
+#' dat <- besag.met
 #' d1 <- desplot(yield ~ col*row|county, dat, main="besag.met",
 #'               out1=rep, out2=block, out2.gpar=list(col="white"), strip.cex=2)
 #' d1 <- update(d1, par.settings = list(layout.heights=list(strip=2)))
