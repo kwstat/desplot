@@ -310,7 +310,6 @@ desplot <- function(form=formula(NULL ~ x + y), data,
       } else {
         nbins <- length(col.regions)
       }
-      #browser()
       med <- median(range(fill.val, na.rm=TRUE))
       radius <- max(max(fill.val, na.rm=TRUE)-med,
                     med-min(fill.val, na.rm=TRUE)) + .Machine$double.eps
