@@ -43,7 +43,7 @@ be an ordinary \code{list()} or A call to \code{gpar()} from the
 Note: using at causes midpoint to be set to NULL.}
 
 \item{midpoint}{Method to find midpoint of the color ribbon.
-One of 'mid', 'median, or numeric value.}
+One of 'midrange', 'median, or a numeric value.}
 
 \item{ticks}{If TRUE, show tick marks along the bottom and left sides.}
 
@@ -113,13 +113,8 @@ eval(parse(text=paste("desplot(", vr, "~", vx, "*", vy, ", data=yates.oats)")))
 if(require(agridat)){
 
 # Show how to customize any feature.  Here: make the strips bigger.
-if(exists("besag.met")) { # in agridat version <= 1.12
-  data(besag.met)
-  dat <- besag.met
-} else {
-  data(besag.corn) # in agridat version >= 1.13
-  dat <- besag.corn
-}
+data(besag.met)
+dat <- besag.met
 d1 <- desplot(yield ~ col*row|county, dat, main="besag.met",
               out1=rep, out2=block, out2.gpar=list(col="white"), strip.cex=2)
 d1 <- update(d1, par.settings = list(layout.heights=list(strip=2)))

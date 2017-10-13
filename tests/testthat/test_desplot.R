@@ -147,16 +147,18 @@ desplot(yield~col+row, oats35, at=eightnum(oats35$yield), midpoint=NULL)
 #        at=eightnum(oats35$yield))
 
 # Midpoint options
-# midpoint
 # mean=103.97
 # median=102.5
-# mid=113.5
-desplot(yield~col+row, oats35)
-desplot(yield~col+row, oats35, midpoint=113.5) # same as default
-desplot(yield~col+row, oats35, midpoint="median")
-desplot(yield~col+row, oats35, midpoint=102.5) # same as median
-#desplot(yield~col+row, oats35, midpoint="mean")
-desplot(yield~col+row, oats35, midpoint=103.97)
+# middle of range =113.5
+desplot(yield~col+row, oats35) # default is median
+desplot(yield~col+row, oats35, midpoint="median") # same as default
+desplot(yield~col+row, oats35, midpoint=102.5) # same as default
+desplot(yield~col+row, oats35, midpoint="midrange")
+desplot(yield~col+row, oats35, midpoint=NULL) # same as midrange
+desplot(yield~col+row, oats35, midpoint=113.5) # same as midrange
+desplot(yield~col+row, oats35, midpoint=103.97) # custom, mean
+desplot(yield~col+row, oats35, midpoint=0) # nonsensical low
+desplot(yield~col+row, oats35, midpoint=200) # nonsensical hi
 
 # Remove the ribbon completely
 dd <- desplot(yield ~  col+row, oats35)
@@ -206,14 +208,20 @@ desplot(yield~col*row|county, dmet2, out1=rep, out2=block, tick=TRUE)
 # styles. Only works with agridat 1.13 or greater
 if(FALSE){
   library(agridat)
-  # Old style
+  # The high outlier makes most of the field look red
   desplot(yield~col*row, wiedemann.safflower.uniformity,
           flip=TRUE, tick=TRUE, aspect =99/165, # true aspect
-          main="wiedemann.safflower.uniformity (true shape)",
-          midpoint=NULL)
+          main="wiedemann.safflower.uniformity - midpoint='midrange'",
+          midpoint=NULL) # same as "midrange"
+  # Using the median balances the blue/red colors better
   desplot(yield~col*row, wiedemann.safflower.uniformity,
           flip=TRUE, tick=TRUE, aspect =99/165, # true aspect
-          main="wiedemann.safflower.uniformity (true shape)",
+          main="wiedemann.safflower.uniformity - midpoint='median'",
           midpoint="median")
-  }
+  desplot(yield~col*row, wiedemann.safflower.uniformity,
+          flip=TRUE, tick=TRUE, aspect =99/165, # true aspect
+          main="wiedemann.safflower.uniformity - eightnum",
+          at=eightnum(wiedemann.safflower.uniformity$yield))
+
+}
 

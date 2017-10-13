@@ -1,5 +1,5 @@
 # desplot.R
-# Time-stamp: <12 Jul 2017 19:33:31 c:/x/rpack/desplot/R/desplot.R>
+# Time-stamp: <29 Sep 2017 14:30:47 c:/x/rpack/desplot/R/desplot.R>
 # Kevin Wright
 
 # TODO: If we have 'text' and shorten='no', don't bother with the key.
@@ -94,7 +94,7 @@ RedGrayBlue <- colorRampPalette(c("firebrick", "lightgray", "#375997"))
 #' Note: using at causes midpoint to be set to NULL.
 #'
 #' @param midpoint Method to find midpoint of the color ribbon.
-#' One of 'mid', 'median, or numeric value.
+#' One of 'midrange', 'median, or a numeric value.
 #' 
 #' @param ticks If TRUE, show tick marks along the bottom and left sides.
 #' 
@@ -292,8 +292,26 @@ desplot <- function(form=formula(NULL ~ x + y), data,
       } else {
         nbins <- length(col.regions)
       }
-      #browser()
       med <- median(fill.val, na.rm=TRUE)
+      radius <- max(max(fill.val, na.rm=TRUE)-med,
+                    med-min(fill.val, na.rm=TRUE)) + .Machine$double.eps
+      zrng <- lel(range(c(med-radius, med+radius)))
+      brks <- seq(zrng[1], zrng[2], length.out = nbins+1)
+      binno <- as.numeric(cut(fill.val, breaks=brks)) # bin number for each fill.val
+      # select only 'col.regions' and 'at' values we actually need
+      minbin <- min(binno, na.rm=TRUE); maxbin <- max(binno, na.rm=TRUE)
+      col.regions <- col.regions[minbin:maxbin]
+      at <- brks[minbin:(maxbin+1)]
+    }
+    if(missing(at) && midpoint=="midrange"){ # halfway between min & max
+      if(is.function(col.regions)) {
+        nbins <- 15
+        col.regions <- col.regions(nbins)
+      } else {
+        nbins <- length(col.regions)
+      }
+      #browser()
+      med <- median(range(fill.val, na.rm=TRUE))
       radius <- max(max(fill.val, na.rm=TRUE)-med,
                     med-min(fill.val, na.rm=TRUE)) + .Machine$double.eps
       zrng <- lel(range(c(med-radius, med+radius)))
