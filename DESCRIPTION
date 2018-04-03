@@ -1,8 +1,8 @@
 Package: desplot
 Title: Plotting Field Plans for Agricultural Experiments
-Version: 1.3
-Date: 2017-10-12
-Authors@R: person("Kevin","Wright", email="kw.stat@gmail.com", role=c("aut","cre"))
+Version: 1.4
+Date: 2018-04-02
+Authors@R: person("Kevin","Wright", email="kw.stat@gmail.com", comment=c(ORCID = "0000-0002-0617-8673"), role=c("aut","cre"))
 Type: Package
 Description: A function for plotting maps of agricultural field experiments that
     are laid out in grids.

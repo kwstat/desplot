@@ -2,7 +2,7 @@
 
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/desplot)](https://cran.r-project.org/package=desplot)
 [![CRAN_Downloads](https://cranlogs.r-pkg.org/badges/desplot)](https://cranlogs.r-pkg.org/badges/desplot)
-[![Research software impact](http://depsy.org/api/package/cran/desplot/badge.svg)](http://depsy.org/package/r/desplot)
+
 
 Functions for plotting experimental designs of field trials in agriculture.
 
@@ -23,7 +23,8 @@ install.packages("devtools")
 devtools::install_github("kwstat/desplot")
 ```
 
-Vignette:
+## Vignettes
+
 [Plotting field maps with the desplot package](https://rawgit.com/kwstat/desplot/master/vignettes/desplot_examples.html)
 
 ## Example 1

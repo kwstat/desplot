@@ -8,7 +8,6 @@ output:
     highlight: tango
 vignette: >
   % \VignetteIndexEntry{Plotting field maps with the desplot package}
-  % \VignetteEncoding{UTF-8}
   % \VignetteEngine{knitr::rmarkdown}
 ---
 <style type="text/css">

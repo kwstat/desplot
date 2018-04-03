@@ -1,3 +1,22 @@
+# desplot 1.4
+
+Minor update.
+
+## test environments
+
+local R 3.4.4 Windows 7
+win-builder r-release 3.4.4
+win-builder r-devel
+
+## R CMD check results
+
+There were no ERRORs, WARNINGs, or NOTEs.
+
+## Downstream dependencies
+
+None.
+
+
 # desplot 1.3 
 
 Minor update with a small bugfix.

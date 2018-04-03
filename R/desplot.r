@@ -1,8 +1,9 @@
 # desplot.R
-# Time-stamp: <29 Sep 2017 14:30:47 c:/x/rpack/desplot/R/desplot.R>
-# Kevin Wright
+# Time-stamp: <20 Feb 2018 15:28:01 c:/x/rpack/desplot/R/desplot.R>
 
-# TODO: If we have 'text' and shorten='no', don't bother with the key.
+# TODO:
+# If we have 'text' and shorten='no', don't bother with the key.
+# Use tidyeval instead ?
 
 # ----------------------------------------------------------------------------
 
@@ -116,6 +117,8 @@ RedGrayBlue <- colorRampPalette(c("firebrick", "lightgray", "#375997"))
 #' 
 #' @param strip.cex Strip cex.
 #' 
+#' @param subset An expression that evaluates to logical index vector for subsetting the data.
+#' 
 #' @param ... Other.
 #' 
 #' @return A lattice object
@@ -177,8 +180,22 @@ desplot <- function(form=formula(NULL ~ x + y), data,
                     show.key=TRUE,
                     key.cex, # left legend cex
                     cex=.4, # cell cex
-                    strip.cex=.75, ...){
+                    strip.cex=.75, 
+                    subset=TRUE, ...){
 
+  # based on subset() function
+  ix <- if (missing(subset)) 
+    rep_len(TRUE, nrow(data))
+  else {
+    e <- substitute(subset)
+    ix <- eval(e, data, parent.frame())
+    if (!is.logical(ix)) 
+      stop("'subset' must be logical")
+    ix & !is.na(ix)
+  }
+  data <- data[ix, ]
+  
+  
   # Using 'at' overrides 'midpoint'
   if(!missing(at) && !is.null(midpoint))
     midpoint <- NULL

@@ -1,5 +1,10 @@
+# desplot 1.4 - Apr 2018
+
+New argument `subset` to subset data before analysis.
+
 # desplot 1.3 - Oct 2017
 
+Bug fix.
 
 # desplot 1.2 - Jul 2017
 

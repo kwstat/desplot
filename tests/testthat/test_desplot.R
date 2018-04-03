@@ -20,20 +20,19 @@ dat0 <- data.frame(loc = c('loc1','loc1','loc1','loc1',
 require(agridat)
 data(yates.oats)
 oats35 <- yates.oats
-if(is.element("x",names(oats35)))
-   oats35 <- transform(oats35, col=x, row=y)
-
 
 # ----------------------------------------------------------------------------
 
 # col.regions, at, midpoint
 
 test_that("num,col,text", {
-  desplot(~col+row|block, oats35, cex=1, num=gen)
-  desplot(~col+row|block, oats35, cex=1, col=gen)
-  desplot(~col+row|block, oats35, cex=1, text=gen)
-  desplot(~col+row|block, oats35, cex=1, num=gen,col=nitro)
-  desplot(~col+row|block, oats35, cex=1, text=gen,col=nitro)
+  expect_silent({
+    desplot(~col+row|block, oats35, cex=1, num=gen)
+    desplot(~col+row|block, oats35, cex=1, col=gen)
+    desplot(~col+row|block, oats35, cex=1, text=gen)
+    desplot(~col+row|block, oats35, cex=1, num=gen,col=nitro)
+    desplot(~col+row|block, oats35, cex=1, text=gen,col=nitro)
+  })
 })
 
 test_that("cleanup function checks variables", {
@@ -46,65 +45,75 @@ test_that("cleanup function checks variables", {
 
 
 test_that("shorten", {
-  desplot(block~col+row, oats35, text=gen, cex=1) # default shorten='abb'
-  desplot(block~col+row, oats35, text=gen, cex=1, shorten='abb')
-  desplot(block~col+row, oats35, text=gen, cex=1, shorten='sub')
-  desplot(block~col+row, oats35, text=gen, cex=1, shorten='no')
-  desplot(block~col+row, oats35, text=gen, cex=1, shorten='none')
-  desplot(block~col+row, oats35, text=gen, cex=1, shorten=FALSE)
+  expect_silent({
+    desplot(block~col+row, oats35, text=gen, cex=1) # default shorten='abb'
+    desplot(block~col+row, oats35, text=gen, cex=1, shorten='abb')
+    desplot(block~col+row, oats35, text=gen, cex=1, shorten='sub')
+    desplot(block~col+row, oats35, text=gen, cex=1, shorten='no')
+    desplot(block~col+row, oats35, text=gen, cex=1, shorten='none')
+    desplot(block~col+row, oats35, text=gen, cex=1, shorten=FALSE)
+  })
 })
-
 
 test_that("out1,out2,out1.gpar,out2.gpar", {
-          desplot(yield~col+row, oats35, out1=block)
-          desplot(yield~col+row, oats35, out2=block)
-          desplot(yield~col+row, oats35, out1=block, out2=gen)
-          desplot(yield~col+row, oats35,
-                  out1=block, out1.gpar=list(col="white",lwd=2))
-          desplot(yield~col+row, oats35,
-                  out2=block, out2.gpar=list(col="deeppink",lwd=2))
+  expect_silent({
+    desplot(yield~col+row, oats35, out1=block)
+    desplot(yield~col+row, oats35, out2=block)
+    desplot(yield~col+row, oats35, out1=block, out2=gen)
+    desplot(yield~col+row, oats35,
+            out1=block, out1.gpar=list(col="white",lwd=2))
+    desplot(yield~col+row, oats35,
+            out2=block, out2.gpar=list(col="deeppink",lwd=2))
+  })
 })
-
 
 test_that("strip.cex", {
-  desplot(yield ~ x+y|loc, data=dat0, strip.cex=1.5)
+  expect_silent({
+    desplot(yield ~ x+y|loc, data=dat0, strip.cex=1.5)
+  })
 })
 
-
 test_that("text.levels", {
-  desplot(block~col+row, oats35, col="nitro",
-          text="gen", cex=1, text.levels=c('V','G','M'))
+  expect_silent({
+    desplot(block~col+row, oats35, col="nitro",
+            text="gen", cex=1, text.levels=c('V','G','M'))
+  })
 })
 
 test_that("key.cex, show.key", {
-  desplot( ~ x+y|loc, data=dat0,
-          text=trt1, key.cex=1, shorten='none')
-  desplot( ~ x+y|loc, data=dat0,
-          text=trt1, cex=.8, shorten='none', show.key=FALSE)
+  expect_silent({
+    desplot( ~ x+y|loc, data=dat0,
+             text=trt1, key.cex=1, shorten='none')
+    desplot( ~ x+y|loc, data=dat0,
+             text=trt1, cex=.8, shorten='none', show.key=FALSE)
+  })
 })
 
 test_that("text,xlab,ylab", {
-  desplot(rep ~ x+y|loc, data=dat0,
-          main="title", xlab="xlab", ylab="ylab")
+  expect_silent({  desplot(rep ~ x+y|loc, data=dat0,
+                           main="title", xlab="xlab", ylab="ylab")
+  })
 })
 
 test_that("tick,flip", {
-  desplot(yield~col+row, oats35, tick=TRUE)
-  desplot(yield~col+row, oats35, tick=TRUE, flip=TRUE)  
+  expect_silent({
+    desplot(yield~col+row, oats35, tick=TRUE)
+    desplot(yield~col+row, oats35, tick=TRUE, flip=TRUE)  
+  })
 })
 
 test_that("other arguments via ...", {
-  desplot(rep ~ x+y|loc, data=dat0)
-  desplot(rep ~ x+y|loc, data=dat0, aspect=1)
+  expect_silent({
+    desplot(rep ~ x+y|loc, data=dat0)
+    desplot(rep ~ x+y|loc, data=dat0, aspect=1)
+  })
 })
 
-test_that("", {
+test_that("subset", {
+  expect_silent({
+    desplot(~col+row|block, oats35, subset = block %in% c("B1","B2"), cex=1, num=gen)
+  })
 })
-
-test_that("", {
-})
-
-
 
 # ----------------------------------------------------------------------------
 

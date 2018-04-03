@@ -10,7 +10,7 @@ desplot(form = formula(NULL ~ x + y), data, num = NULL, col = NULL,
   = 3), out2.gpar = list(col = "yellow", lwd = 1, lty = 1), at,
   midpoint = "median", ticks = FALSE, flip = FALSE, main = NULL, xlab,
   ylab, shorten = "abb", show.key = TRUE, key.cex, cex = 0.4,
-  strip.cex = 0.75, ...)
+  strip.cex = 0.75, subset = TRUE, ...)
 }
 \arguments{
 \item{form}{A formula like \code{yield~x*y|location}. Note x,y are numeric.}
@@ -64,6 +64,8 @@ One of 'midrange', 'median, or a numeric value.}
 \item{cex}{Expansion factor for text/number in each cell.}
 
 \item{strip.cex}{Strip cex.}
+
+\item{subset}{An expression that evaluates to logical index vector for subsetting the data.}
 
 \item{...}{Other.}
 }
