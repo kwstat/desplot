@@ -1,16 +1,19 @@
 # desplot 1.5
 
-Small bug fix.
+Small bug fix to yesterday's update.
 
 ## test environments
 
 local R 3.4.4 Windows 7
 win-builder r-release 3.4.4
-win-builder r-devel
+win-builder r-devel 3.5.0 alpha
 
 ## R CMD check results
 
-There were no ERRORs, WARNINGs, or NOTEs.
+No ERRORs or WARNINGs.
+1 NOTE
+Maintainer: 'Kevin Wright <kw.stat@gmail.com>'
+Days since last update: 1
 
 ## Downstream dependencies
 
