@@ -1,6 +1,6 @@
-# desplot 1.4
+# desplot 1.5
 
-Minor update.
+Small bug fix.
 
 ## test environments
 
@@ -14,7 +14,9 @@ There were no ERRORs, WARNINGs, or NOTEs.
 
 ## Downstream dependencies
 
-None.
+Reverse suggests:	agridat
+
+Checked OK.
 
 
 # desplot 1.3 

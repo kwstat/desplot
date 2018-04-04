@@ -1,4 +1,4 @@
-# desplot 1.4 - Apr 2018
+# desplot 1.5 - Apr 2018
 
 New argument `subset` to subset data before analysis.
 

@@ -149,9 +149,6 @@ RedGrayBlue <- colorRampPalette(c("firebrick", "lightgray", "#375997"))
 #' 
 #' # Show experiment layout
 #' data(yates.oats)
-#' # agridat version 1.12 used x/y here instead of col/row
-#' if(is.element("x",names(yates.oats)))
-#'   yates.oats <- transform(yates.oats, col=x, row=y)
 #' desplot(yield ~ col+row, yates.oats, out1=block, out2=gen)
 #' 
 #' desplot(block ~ col+row, yates.oats, col=nitro, text=gen, cex=1, out1=block,
@@ -183,6 +180,9 @@ desplot <- function(form=formula(NULL ~ x + y), data,
                     strip.cex=.75, 
                     subset=TRUE, ...){
 
+  # Use data name for default title.  Do this BEFORE subset!
+  if(missing(main)) main <- deparse(substitute(data))
+
   # based on subset() function
   ix <- if (missing(subset)) 
     rep_len(TRUE, nrow(data))
@@ -204,9 +204,6 @@ desplot <- function(form=formula(NULL ~ x + y), data,
        ( length(at) !=  length(col.regions)+1 ) )
     stop("Length of 'at' must be 1 more than length of 'col.regions'\n")
   
-  # Use data name for default title
-  if(missing(main)) main <- deparse(substitute(data))
-
   # Force character, in case we forgot to quote the argument.
   # This is non-standard evaluation.  Beware.
   

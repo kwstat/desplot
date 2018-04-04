@@ -124,9 +124,6 @@ print(d1)
 
 # Show experiment layout
 data(yates.oats)
-# agridat version 1.12 used x/y here instead of col/row
-if(is.element("x",names(yates.oats)))
-  yates.oats <- transform(yates.oats, col=x, row=y)
 desplot(yield ~ col+row, yates.oats, out1=block, out2=gen)
 
 desplot(block ~ col+row, yates.oats, col=nitro, text=gen, cex=1, out1=block,
