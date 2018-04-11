@@ -552,6 +552,8 @@ desplot <- function(form=formula(NULL ~ x + y), data,
   out1.val <- if(has.out1) data[[out1.var]] else NULL
   out2.val <- if(has.out2) data[[out2.var]] else NULL
 
+  # junk
+  
   out <-
     levelplot(form,
               data=data
