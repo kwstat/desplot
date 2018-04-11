@@ -414,7 +414,7 @@ ggdesplot <- function(form=formula(NULL ~ x + y), data,
   #if(has.num)
   #  out = out + geom_text(aes_string(x.var, y.var, label=text.var), size=1)
 
-  if(has.col){}
+  #if(has.col){}
 
   if(!show.key)
     out <- out + theme(legend.position="none")
