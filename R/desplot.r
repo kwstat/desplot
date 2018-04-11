@@ -1,5 +1,5 @@
 # desplot.R
-# Time-stamp: <20 Feb 2018 15:28:01 c:/x/rpack/desplot/R/desplot.R>
+# Time-stamp: <09 Apr 2018 13:22:30 c:/x/rpack/desplot/R/desplot.R>
 
 # TODO:
 # If we have 'text' and shorten='no', don't bother with the key.
@@ -720,11 +720,12 @@ panel.outlinelevelplot <- function(x, y, z, subscripts, at,
                       alpha = alpha.regions))
   
   draw.outline <- function(x, y, lab, gp) {
-    # x,y are coords, lab=grouping for outline, gp=graphics par
+    # x,y are coords, lab=grouping factor for outline, gp=graphics par
     out1 <- data.frame(x=x, y=y, lab=lab, stringsAsFactors = FALSE)
     out1 <- reshape2::melt(out1, id.var=c('x','y'))
-    # reshape melts char vector to char, reshape 2 melts to factor!
-    # both packages could be attached, hack to fix this...
+    # reshape melts char vector to char, reshape2 melts to factor!
+    # # both packages might be attached, so
+    # call reshape2::melt and then convert to factor
     out1$value <- as.character(out1$value)
     
     out1 <- reshape2::acast(out1, y~x)
@@ -733,12 +734,12 @@ panel.outlinelevelplot <- function(x, y, z, subscripts, at,
     # Since 'out' could be 1 row or column, surround it with NAs
     out1 <- cbind(NA, rbind(NA, out1, NA), NA)
     
-    # Horizontal lines above boxes
+    # Create dataframe with horizontal lines above boxes
     hor <- out1[2:nrow(out1)-1, ] != out1[2:nrow(out1), ]
     hor <- reshape2::melt(hor)
     hor <- hor[!(hor$value==FALSE | is.na(hor$value)),]
     if(nrow(hor)>0) {
-      hx <- hor[,2] # reshape uses X2, reshape2 uses Var2
+      hx <- hor[,2]
       hy <- hor[,1]
       grid.polyline(x=c(hx-.5, hx+.5), y=c(hy+.5, hy+.5),
                     id=rep(1:length(hx), 2), default.units="native", gp=gp)
@@ -817,7 +818,6 @@ panel.outlinelevelplot <- function(x, y, z, subscripts, at,
 }
 
 # lel is a very simple version of lattice:::extend.limits
-# Copied here because CRAN does not like ::: anymore 
 lel <- function (lim, prop = lattice.getOption("axis.padding")$numeric) {
 
   if (lim[1] == lim[2])
@@ -827,4 +827,3 @@ lel <- function (lim, prop = lattice.getOption("axis.padding")$numeric) {
     lim + prop * d * c(-1, 1)
   }
 }
-
