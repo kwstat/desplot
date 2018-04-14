@@ -6,7 +6,7 @@
 #' 
 #' @inheritParams layer
 #' @inheritParams geom_segment
-#' @param class Classification 
+#' @param grp Classification variable for the tiles. 
 #' @export
 #' @examples
 #' dd <- data.frame(

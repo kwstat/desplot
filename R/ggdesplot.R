@@ -1,5 +1,25 @@
-# Ideas for ggplot version of desplot
+# ggdesplot.R
+
 if(0){
+  
+  # multiple legends
+  # https://stackoverflow.com/questions/18394391/r-custom-legend-for-multiple-layer-ggplot#18395012
+  
+  # example tufte geom
+  #https://github.com/jrnold/ggthemes/blob/master/R/geom-tufteboxplot.R
+  
+  # perfect example for desplot, but no facets
+  # https://stackoverflow.com/questions/25704567/overlay-ggplot-grouped-tiles-with-polygon-border-depending-on-extra-factor
+  
+  # https://stackoverflow.com/questions/36156387/how-to-make-a-custom-ggplot2-geom-with-multiple-geometries
+  
+  # https://stackoverflow.com/questions/25704567/overlay-ggplot-grouped-tiles-with-polygon-border-depending-on-extra-factor
+  # https://stackoverflow.com/questions/11846295/how-to-add-different-lines-for-facets#11847210
+  
+}
+
+if(0){
+  lib(agridat)
   ggdesplot( ~ col*row|county, data=besag.met, out1=rep, out2=block)
   ggdesplot(yield ~ col*row|county, data=besag.met, out1=rep, out2=block)
   ggdesplot(rep ~ col*row|county, data=besag.met)
@@ -25,6 +45,7 @@ if(0){
   ##                   strip.cex=.75, 
   ##                   subset=TRUE
 }
+
 
 #' @importFrom ggplot2 ggplot
 #' @importFrom stats as.formula formula median
@@ -315,106 +336,43 @@ ggdesplot <- function(form=formula(NULL ~ x + y), data,
   if(class(out1.gpar) != "gpar") class(out1.gpar) <- "gpar"
   if(class(out2.gpar) != "gpar") class(out2.gpar) <- "gpar"
 
-  #browser()
-
-  compute_borders <- function(data, x, y, facet, outline){
-    # x,y,facet,outline are STRINGS naming the columns of data that are to
-    # be used for x,y coordinates; facets; outline.
-    # return a list of two dataframes:
-    #   top has cell coordinates that have a border along the top
-    #   right has ceel coordinates that have a border along the right
-    
-    # re-name columns for simplification
-    names(data)[names(data)==x] <- "x"
-    names(data)[names(data)==y] <- "y"
-    names(data)[names(data)==facet] <- "facet"
-    names(data)[names(data)==outline] <- "outline"
-    
-    topall <- rightall <- NULL
-    # loop over facets
-    for(ii in unique(data$facet)){
-      datai <- data[data$facet == ii, ]
-      datai <- datai[ , c('outline','x','y')]
-      # create a matrix with the outline factor in each cell
-      outi <- reshape2::melt(datai, id.var=c('x','y'))
-      # reshape melts char vector to char, reshape2 melts to factor!
-      # # both packages might be attached, so
-      # call reshape2::melt and then conright to factor
-      outi$value <- as.character(outi$value) # do I really need character?
-      outi <- reshape2::acast(outi, y~x)
-      # Careful.  The 'out' matrix is upside down from the levelplot
-      
-      # Since 'out' could be 1 row or column, surround it with NAs
-      outi <- cbind(NA, rbind(NA, outi, NA), NA)
-      
-      # top borders
-      top <- outi[2:nrow(outi)-1, ] != outi[2:nrow(outi), ]
-      top <- reshape2::melt(top)
-      top <- top[!(top$value==FALSE | is.na(top$value)),]
-      if(nrow(top)>0) {
-        #names(top) <- c('hy','hx')
-        top$facet <- ii
-        topall <- rbind(topall, top)
-      }
-      # right borders
-      right <- outi[ , 2:ncol(outi)-1] != outi[ , 2:ncol(outi)]
-      right <- reshape2::melt(right)
-      right <- right[!(right$value==FALSE | is.na(right$value)),]
-      if(nrow(right)>0) {
-        #names(right) <- c('vy','vx')
-        right$facet <- ii
-        rightall <- rbind(rightall, right)
-      }
-    } # loop over facets
-    names(topall) <- names(rightall) <- c("y","x","flag",facet)
-    list(top=topall, right=rightall)
+  # Cell text
+  if(has.text) {
+    data$cell.text <- text.levels[as.numeric(text.val)]
+  } else if(has.num) {
+    data$cell.text <- as.numeric(num.val)
+  } else if(has.col) {
+    data$cell.text <- rep("x", length=nrow(data))
   }
 
-  # ----- build the plot -----
+  # --------------- build the plot ---------------
+
   out <- ggplot(data, aes_string(x=x.var, y=y.var))
+  
   if(!is.null(panel.var))
     out <- out + 
       facet_wrap(panel.var, scales="free")
+  
   if(fill.type=="num")
     out <- out +
       geom_tile(aes_string(fill = fill.var)) +
       scale_fill_gradientn(colours=col.regions, guide="colorbar")
-  if(fill.type=="factor"){
-    #browser()
+  
+  if(fill.type=="factor")
     out <- out +
       geom_tile(aes_string(fill = fill.var)) +
       scale_fill_manual(values=col.regions)
-    
-    # categorical fill colors
-    # scale_fill_manual(values = c('A' = '#F8766D','C' = '#8ABF54','B' = '#C1DDA5'))+
-  }
-  if(has.out1) {
-    borders <- compute_borders(data, x.var, y.var, panel.var, out1.var)
-    out <- out + 
-      geom_segment(data=borders$top,
-                   aes(x=x-.5, xend=x+.5, y=y+.5, yend=y+.5),
-                   col="black", lwd=1) + 
-      geom_segment(data=borders$right,
-                   aes(x=x+.5, xend=x+.5, y=y-.5, yend=y+.5),
-                   col="black", lwd=1)
-  }
-  if(has.out2) {
-    borders <- compute_borders(data, x.var, y.var, panel.var, out2.var)
-    out <- out + 
-      geom_segment(data=borders$top,
-                   aes(x=x-.5, xend=x+.5, y=y+.5, yend=y+.5),
-                   col="yellow", lwd=.5) + 
-      geom_segment(data=borders$right,
-                   aes(x=x+.5, xend=x+.5, y=y-.5, yend=y+.5),
-                   col="yellow", lwd=.5)
-  }
-  if(has.text) { # fill text
-    out = out + geom_text(aes_string(x.var, y.var, label=text.var), size=1)
-  }
-  #if(has.num)
-  #  out = out + geom_text(aes_string(x.var, y.var, label=text.var), size=1)
 
-  #if(has.col){}
+  if(has.out1)
+    out <- out + geom_tileborder(aes_string(group=1, grp=out1.var),
+                                 lineend="round", lwd=1.5)
+
+  if(has.out2)
+    out <- out + geom_tileborder(aes_string(group=1, grp=out2.var), 
+                                 color="yellow", lwd=0.5)
+
+  if(has.text|has.num|has.col) # fill text
+    out = out + geom_text(aes_string(x.var, y.var, label="cell.text"), size=1)
 
   if(!show.key)
     out <- out + theme(legend.position="none")
@@ -425,6 +383,7 @@ ggdesplot <- function(form=formula(NULL ~ x + y), data,
     theme(plot.title = element_text(hjust = 0.5)) + # center title
     xlab(xlab) + 
     ylab(ylab)
+  
   if(flip)
     out <- out + scale_y_reverse()
   
@@ -434,140 +393,18 @@ ggdesplot <- function(form=formula(NULL ~ x + y), data,
       theme(axis.text.x=element_blank(),
             axis.text.y=element_blank(),
             axis.ticks=element_blank())
+
   # blank theme
   out <- out + 
-    theme(axis.line = element_line(colour = "white"),
+    theme(#aspect.ratio = (18*2)/(11*1),
+          axis.line = element_line(colour = "white"),
           panel.grid.major = element_blank(),
           panel.grid.minor = element_blank(),
           panel.border = element_blank(),
-          panel.background = element_blank())
+          panel.background = element_blank(),
+          panel.spacing = unit(0, "lines"),   # space between panels
+          strip.text = element_text(size=5)
+          )
+  
   out
-
-} # end ggdesplot
-
-if(0){
-  
-  libs(ggplot2)
-  libs(proto)
-  libs(grid)
-  
-  
-  # multiple legends
-  # https://stackoverflow.com/questions/18394391/r-custom-legend-for-multiple-layer-ggplot#18395012
-  
-  # example tufte geom
-  #https://github.com/jrnold/ggthemes/blob/master/R/geom-tufteboxplot.R
-  
-  # how to create new geom
-  # https://cran.r-project.org/web/packages/ggplot2/vignettes/extending-ggplot2.html
-
-  # perfect example for desplot, but no facets
-  # https://stackoverflow.com/questions/25704567/overlay-ggplot-grouped-tiles-with-polygon-border-depending-on-extra-factor
-
-  # https://stackoverflow.com/questions/24578352/add-a-segment-only-to-one-facet-using-ggplot2
-
-
-
-  # https://stackoverflow.com/questions/36156387/how-to-make-a-custom-ggplot2-geom-with-multiple-geometries
-
-  GeomOutline <- ggproto("GeomOutline",
-                         Geom,
-                         setup_data = function(self, data, params) {
-                           data <- ggproto_parent(Geom, self)$setup_data(data, params)
-                           data
-                         },
-                         required_aes=c("x","y"))
-  
-  ggdesplot <- function(dat, form, out1=block){
-    ggplot(besag.met, aes(col, row)) + 
-      facet_wrap(~county, scales="free") + 
-      geom_tile(aes(fill = yield)) + 
-      scale_fill_gradientn(colours=RedGrayBlue(15), guide="colorbar") +
-      theme(axis.line = element_line(colour = "white"),
-            panel.grid.major = element_blank(),
-            panel.grid.minor = element_blank(),
-            panel.border = element_blank(),
-            panel.background = element_blank())
-  }
-  ggdesplot(besag.met, yield~col*row)
-
-  # ----------------------------------------------------------------------------
-  
-  # hard-coded, but outlines work with facets
-  
-  # https://stackoverflow.com/questions/25704567/overlay-ggplot-grouped-tiles-with-polygon-border-depending-on-extra-factor
-  # https://stackoverflow.com/questions/11846295/how-to-add-different-lines-for-facets#11847210
-  
-  dat <- agridat::besag.met
-  # give one county a different set of coordinates
-  dat[dat$county=="C6", "col"] <- dat[dat$county=="C6", "col"] + 10
-  dat[dat$county=="C6", "row"] <- dat[dat$county=="C6", "row"] + 10
-  
-  # make sure we have missing values in response
-  dat[is.na(dat$yield),"rep"] <- NA
-  
-  horall <- vertall <- NULL
-  # loop over facets
-  for(ii in unique(dat$county)){
-    dati <- subset(dat, county==ii)
-    dati$x <- dati$col # need to fix these variable names
-    dati$y <- dati$row
-    dati <- dati[ , c('rep','x','y')]
-    outi <- reshape2::melt(dati, id.var=c('x','y'))
-    # reshape melts char vector to char, reshape2 melts to factor!
-    # # both packages might be attached, so
-    # call reshape2::melt and then convert to factor
-    # do I really need character?
-    outi$value <- as.character(outi$value)
-    
-    outi <- reshape2::acast(outi, y~x)
-    # Careful.  The 'out' matrix is upside down from the levelplot
-    
-    # Since 'out' could be 1 row or column, surround it with NAs
-    outi <- cbind(NA, rbind(NA, outi, NA), NA)
-    
-    # Horizontal lines above boxes
-    hor <- outi[2:nrow(outi)-1, ] != outi[2:nrow(outi), ]
-    hor <- reshape2::melt(hor)
-    hor <- hor[!(hor$value==FALSE | is.na(hor$value)),]
-    if(nrow(hor)>0) {
-      names(hor) <- c('hy','hx')
-      hor$county <- ii
-      horall <- rbind(horall, hor)
-    }
-    # Vertical lines along right side of boxes
-    vert <- outi[ , 2:ncol(outi)-1] != outi[ , 2:ncol(outi)]
-    vert <- reshape2::melt(vert)
-    vert <- vert[!(vert$value==FALSE | is.na(vert$value)),]
-    if(nrow(vert)>0) {
-      names(vert) <- c('vy','vx')
-      vert$county <- ii
-      vertall <- rbind(vertall, vert)
-    }
-  } # loop over facets
-  
-  oo <- ggplot(dat, aes(col, row)) + 
-    facet_wrap(~county, scales="free") + 
-    geom_tile(aes(fill = yield)) + 
-    scale_fill_gradientn(colours=RedGrayBlue(15), guide="colorbar") +
-    # categorical fill colors
-    # scale_fill_manual(values = c('A' = '#F8766D','C' = '#8ABF54','B' = '#C1DDA5'))+
-    geom_segment(data=horall, aes(x=hx-.5, xend=hx+.5, y=hy+.5, yend=hy+.5), lwd=1) + 
-    geom_segment(data=vertall, aes(x=vx+.5, xend=vx+.5, y=vy-.5, yend=vy+.5), lwd=1) +
-    # fill text
-    geom_text(aes(col, row, label=dat$rep), size=1) +
-    # remove axis ticks and labels
-    
-    theme(axis.text.x=element_blank(),
-          axis.text.y=element_blank(),
-          axis.ticks=element_blank()) + 
-    # labels
-    xlab("") + 
-    ylab("") + 
-    theme(axis.line = element_line(colour = "white"),
-          panel.grid.major = element_blank(),
-          panel.grid.minor = element_blank(),
-          panel.border = element_blank(),
-          panel.background = element_blank())
-
 }

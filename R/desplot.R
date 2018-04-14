@@ -383,7 +383,8 @@ desplot <- function(form=formula(NULL ~ x + y), data,
   if(any(tt>1))
     warning("There are multiple data for each x/y/panel combination")
 
-  # Calculate 'lr' rows in legend, 'lt' legend text strings
+  # lr = legend row count
+  # lt = legend text strings
   lr <- 0
   lt <- NULL
 
@@ -551,29 +552,27 @@ desplot <- function(form=formula(NULL ~ x + y), data,
 
   out1.val <- if(has.out1) data[[out1.var]] else NULL
   out2.val <- if(has.out2) data[[out2.var]] else NULL
-
-  # junk
   
   out <-
     levelplot(form,
-              data=data
-              , out1f=out1.val, out1g=out1.gpar
-              , out2f=out2.val, out2g=out2.gpar
-              , flip=flip
-              , col.regions=col.regions
-              , colorkey = if(fill.type=="num") TRUE else FALSE
-              , as.table=TRUE
-              , at=at
-              , legend=if(show.key) list(left=list(fun=foo)) else list()
-              , main=main
-              , xlab=xlab
-              , ylab=ylab
-              , scales=list(relation='free' # Different scales for each panel
-                  , draw=ticks # Don't draw panel axes
-                  )
-              , prepanel = prepanel.desplot
-              , panel=function(x, y, z, subscripts, groups, ...,
-                  out1f, out1g, out2f, out2g){
+              data=data,
+              out1f=out1.val, out1g=out1.gpar,
+              out2f=out2.val, out2g=out2.gpar,
+              flip=flip,
+              col.regions=col.regions,
+              colorkey = if(fill.type=="num") TRUE else FALSE,
+              as.table=TRUE,
+              at=at,
+              legend=if(show.key) list(left=list(fun=foo)) else list(),
+              main=main,
+              xlab=xlab,
+              ylab=ylab,
+              scales=list(relation='free', # Different scales for each panel
+                          draw=ticks # Don't draw panel axes
+              ),
+              prepanel = prepanel.desplot,
+              panel=function(x, y, z, subscripts, groups, ...,
+                             out1f, out1g, out2f, out2g){
                 # First fill the cells and outline
                 panel.outlinelevelplot(x, y, z, subscripts, at, ...,
                                        out1f=out1f, out1g=out1g,
