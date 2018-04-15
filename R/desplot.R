@@ -719,52 +719,20 @@ panel.outlinelevelplot <- function(x, y, z, subscripts, at,
             default.units = "native",
             gp = gpar(fill = zcol, lwd = 1e-05, col="transparent",
                       alpha = alpha.regions))
-  
-  draw.outline <- function(x, y, lab, gp) {
-    # x,y are coords, lab=grouping factor for outline, gp=graphics par
-    out1 <- data.frame(x=x, y=y, lab=lab, stringsAsFactors = FALSE)
-    out1 <- reshape2::melt(out1, id.var=c('x','y'))
-    # reshape melts char vector to char, reshape2 melts to factor!
-    # # both packages might be attached, so
-    # call reshape2::melt and then convert to factor
-    out1$value <- as.character(out1$value)
-    
-    out1 <- reshape2::acast(out1, y~x)
-    # Careful.  The 'out' matrix is upside down from the levelplot
-    
-    # Since 'out' could be 1 row or column, surround it with NAs
-    out1 <- cbind(NA, rbind(NA, out1, NA), NA)
-    
-    # Create dataframe with horizontal lines above boxes
-    hor <- out1[2:nrow(out1)-1, ] != out1[2:nrow(out1), ]
-    hor <- reshape2::melt(hor)
-    hor <- hor[!(hor$value==FALSE | is.na(hor$value)),]
-    if(nrow(hor)>0) {
-      hx <- hor[,2]
-      hy <- hor[,1]
-      grid.polyline(x=c(hx-.5, hx+.5), y=c(hy+.5, hy+.5),
-                    id=rep(1:length(hx), 2), default.units="native", gp=gp)
-    }
-    # Vertical lines along right side of boxes
-    vert <- out1[ , 2:ncol(out1)-1] != out1[ , 2:ncol(out1)]
-    vert <- reshape2::melt(vert)
-    vert <- vert[!(vert$value==FALSE | is.na(vert$value)),]
-    if(nrow(vert)>0) {
-      vx <- vert[,2]
-      vy <- vert[,1]
-      grid.polyline(x=c(vx+.5, vx+.5), y=c(vy-.5, vy+.5),
-                    id=rep(1:length(vx), 2), default.units="native", gp=gp)
-    }
-    
-  }
-  
+
   # Outline factor 1
-  if(!is.null(out1f))
-    draw.outline(x, y, as.character(out1f[subscripts]), out1g)
-  
+  if(!is.null(out1f)){
+    bb <- calc_borders(x, y, as.character(out1f[subscripts]))
+    grid.segments(x0 = bb$x, y0=bb$y, x1=bb$xend, y1=bb$yend,
+                  default.units="native", gp=out1g)
+  }
+
   # Outline factor 2
-  if(!is.null(out2f))
-    draw.outline(x, y, as.character(out2f[subscripts]), out2g)
+  if(!is.null(out2f)){
+    bb <- calc_borders(x, y, as.character(out2f[subscripts]))
+    grid.segments(x0 = bb$x, y0=bb$y, x1=bb$xend, y1=bb$yend,
+                  default.units="native", gp=out2g)
+  }
   
   return()
 }
