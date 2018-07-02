@@ -1,30 +1,42 @@
 # geom_tileborder.R
 
-# http://ggplot2.tidyverse.org/reference/aes_group_order.html
-# By default, the group is set to the interaction of all discrete variables in the
-# plot. This often partitions the data correctly, but when it does not, or when
-# no discrete variable is used in the plot, you will need to explicitly define the
-# grouping structure, by mapping group to a variable that has a different value
-# for each group.
-
-# We do not want to split the data into separate groups for each level of grp,
-# so we need to include aes(group=1).
-
+if(0){
+  ggplot(agridat::besag.met, aes(x=col, y=row)) +
+    facet_wrap( ~ county) +
+    geom_tile(aes(fill=yield)) +
+    geom_tileborder(aes(group=1, grp=rep), lwd=1.5, lineend="round") +
+    geom_tileborder(aes(group=1, grp=block), color="yellow", lwd=0.5)
+  
+    desplot(yield~col*row|county, agridat::besag.met, out1=rep, out2=block)
+    ggdesplot(yield~col*row|county, agridat::besag.met, out1=rep, out2=block)
+}
 
 #' Borders between tiles
 #' 
-#' `geom_tileborder` draws a border between tiles of different classes
+#' `geom_tileborder` draws a border between tiles of different classes.
+#' The reqired aesthetics are `aes(x,y,grp)`, where `grp` is the grouping
+#' classification that separates tiles.
 #' 
-#' @inheritParams layer
-#' @inheritParams geom_segment
-#' @param grp Classification variable for the tiles. 
+#' Note, we cannot use `aes(group)` because it groups the interaction of
+#' ALL discrete variables including facets.  Since we do not want to draw
+#' a border between facets, we had to define a new aesthetic. 
+#' See: # http://ggplot2.tidyverse.org/reference/aes_group_order.html
+#' 
+#' Also, we do not want to split the data into separate groups for each level 
+#' of `grp`, so we need to include `aes(group=1)`.
+#' 
+#' @inheritParams ggplot2::layer
+#' @inheritParams ggplot2::geom_segment
+#' @import ggplot2
 #' @export
+#' 
 #' @examples
 #' dd <- data.frame(
 #'   x=c(1,2,1,2,3,1,2,1,2,3),
 #'   y=c(2,2,2,2,2,1,1,1,1,1),
 #'   loc=factor(c(1,1,2,2,2,1,1,2,2,2)),
 #'   rep=factor(c(2,2,1,2,3,1,1,1,2,3)))
+#' library(ggplot2)
 #' ggplot(dd, aes(x=x, y=y)) +
 #'   facet_wrap( ~ loc) +
 #'   geom_tile(aes(fill=rep)) +
@@ -52,19 +64,17 @@ geom_tileborder<- function(mapping = NULL, data = NULL, geom = "segment",
 #' @rdname geom_tileborder
 #' @format NULL
 #' @usage NULL
+#' @importFrom ggplot2 ggproto Stat
 #' @export
 StatTileBorder <-
-  ggproto("StatTileBorder",
-          Stat,
+  ggplot2::ggproto("StatTileBorder",
+          ggplot2::Stat,
           required_aes=c("x","y","grp"),
           compute_group = function(data, scales) {
             # print(data) # so we can see the data groups
             calc_borders(data$x, data$y, data$grp)
           })
 
-
-# with(subset(dd, loc==1), calc_borders(x=x, y=y, grp=rep))
-# with(subset(dd, loc==2), calc_borders(x=x, y=y, grp=rep))
 calc_borders <- function(x,y,grp){
   # x,y: coordinates for tiles in a heatmap
   # grp: class identifier for each tile
@@ -98,14 +108,4 @@ calc_borders <- function(x,y,grp){
   
   segs <- rbind(top,right)
   segs[,c("x","y","xend","yend")]
-}
-
-if(0){
-  ggplot(agridat::besag.met, aes(x=col, y=row)) +
-    facet_wrap( ~ county) +
-    geom_tile(aes(fill=yield)) +
-    geom_tileborder(aes(group=1, grp=rep), lwd=1.5, lineend="round") +
-    geom_tileborder(aes(group=1, grp=block), color="yellow", lwd=0.5)
-  
-  desplot(yield~col*row|county, agridat::besag.met, out1=rep, out2=block)
 }

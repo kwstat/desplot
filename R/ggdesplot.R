@@ -25,13 +25,13 @@ if(0){
   ggdesplot(rep ~ col*row|county, data=besag.met)
   ggdesplot(rep ~ col*row|county, data=besag.met, text=rep)
   ggdesplot(rep ~ col*row|county, data=besag.met, num=rep)
-  ggdesplot(rep ~ col*row|county, data=besag.met, col=rep)
+  ggdesplot(rep ~ col*row|county, data=besag.met, col=rep) # fails
 
   ggdesplot(rep ~ col*row|county, data=besag.met, ticks=TRUE)
   ggdesplot(rep ~ col*row|county, data=besag.met, ticks=TRUE, flip=TRUE)
                       
   ggdesplot(rep ~ col*row|county, data=besag.met, out1=rep, ticks=TRUE,
-            main="BESAG", xlab="column", ylab="row")
+            main="besag.met", xlab="column", ylab="row")
   ggdesplot(rep ~ col*row|county, data=besag.met, out1=rep)
   ggdesplot(rep ~ col*row|county, data=besag.met, out1=rep, show.key=FALSE)
   ## num=NULL, col=NULL, text=NULL,
@@ -44,12 +44,14 @@ if(0){
   ##                   cex=.4, # cell cex
   ##                   strip.cex=.75, 
   ##                   subset=TRUE
+  
 }
 
 
-#' @importFrom ggplot2 ggplot
+#' @import ggplot2
 #' @importFrom stats as.formula formula median
 #' @export
+#' @rdname desplot
 ggdesplot <- function(form=formula(NULL ~ x + y), data,
                     num=NULL, col=NULL, text=NULL,
                     out1=NULL, out2=NULL,
@@ -102,6 +104,7 @@ ggdesplot <- function(form=formula(NULL ~ x + y), data,
       stop("Could not find '", x,"' in the data frame.")
     return(x)
   }
+  #browser()
   num.var <- cleanup(substitute(num), dn)
   col.var <- cleanup(substitute(col), dn)
   text.var <- cleanup(substitute(text), dn)
@@ -355,25 +358,27 @@ ggdesplot <- function(form=formula(NULL ~ x + y), data,
   
   if(fill.type=="num")
     out <- out +
-      geom_tile(aes_string(fill = fill.var)) +
-      scale_fill_gradientn(colours=col.regions, guide="colorbar")
+    geom_tile(aes_string(fill = fill.var)) +
+    scale_fill_gradientn(colours=col.regions, guide="colorbar")
   
   if(fill.type=="factor")
     out <- out +
-      geom_tile(aes_string(fill = fill.var)) +
-      scale_fill_manual(values=col.regions)
-
+    geom_tile(aes_string(fill = fill.var)) +
+    scale_fill_manual(values=col.regions)
+  
   if(has.out1)
-    out <- out + geom_tileborder(aes_string(group=1, grp=out1.var),
-                                 lineend="round", lwd=1.5)
-
+    out <- out + 
+    geom_tileborder(aes_string(group=1, grp=out1.var),
+                    lineend="round", lwd=1.5)
+  
   if(has.out2)
-    out <- out + geom_tileborder(aes_string(group=1, grp=out2.var), 
-                                 color="yellow", lwd=0.5)
-
+    out <- out + 
+    geom_tileborder(aes_string(group=1, grp=out2.var), 
+                    color="yellow", lwd=0.5)
+  
   if(has.text|has.num|has.col) # fill text
     out = out + geom_text(aes_string(x.var, y.var, label="cell.text"), size=1)
-
+  
   if(!show.key)
     out <- out + theme(legend.position="none")
   

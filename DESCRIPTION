@@ -7,6 +7,7 @@ Type: Package
 Description: A function for plotting maps of agricultural field experiments that
     are laid out in grids.
 Imports:
+    ggplot2,
     grid,
     lattice,
     reshape2,

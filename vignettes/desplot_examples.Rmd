@@ -4,6 +4,7 @@ author: "Kevin Wright"
 date: "`r Sys.Date()`"
 bibliography: desplot.bib
 output:
+  rmarkdown::html_vignette: default
   html_document:
     highlight: tango
 vignette: >
@@ -20,8 +21,7 @@ pre > code { border: 0; }
 
 # Abstract
 
-This short note shows how to plot a field map from an agricultural experiment
-and why that may be useful.
+This short note shows how to plot a field map from an agricultural experiment and why that may be useful.
 
 # R setup
 
@@ -48,8 +48,8 @@ desplot(block ~ col+row, yates.oats,
 
 ## Example 2
 
-This next example is from @ryder1981field.  Fit an ordinary RCB model with fixed
-effects for `block` and `genotype`.  Plot a heatmap of the residuals.
+This next example is from @ryder1981field.  Fit an ordinary RCB model with fixed effects for `block` and `genotype`.  Plot a heatmap of the residuals.
+
 ```{r ryder}
 library(agridat)
 library(desplot)
@@ -64,11 +64,6 @@ Note the largest positive/negative residuals are adjacent to each other,
 perhaps caused by the original data values being swapped.  Checking with
 experiment investigators (managers, data collectors, etc.) is recommended.
 
-## Session info
-
-```{r session}
-sessionInfo()
-```
 
 ## References
 	

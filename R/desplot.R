@@ -3,6 +3,7 @@
 
 # TODO:
 # If we have 'text' and shorten='no', don't bother with the key.
+
 # Use tidyeval instead ?
 
 # ----------------------------------------------------------------------------
@@ -135,6 +136,7 @@ RedGrayBlue <- colorRampPalette(c("firebrick", "lightgray", "#375997"))
 #' @import reshape2
 #' @importFrom stats as.formula formula median
 #' @export
+#' @rdname desplot
 #' 
 #' @examples
 #' if(require(agridat)){
@@ -180,6 +182,17 @@ desplot <- function(form=formula(NULL ~ x + y), data,
                     strip.cex=.75, 
                     subset=TRUE, ...){
 
+  # if(isTRUE(options()$desplot.ggplot))
+  #   return(ggdesplot(form=form, data=data, num=num, col=col, text=text, 
+  #                    out1=out1, out2=out2, 
+  #                    col.regions=col.regions, col.text=col.text,
+  #                    out1.gpar=out1.gpar, out2.gpar=out2.gpar,
+  #                    at=at, midpoint=midpoint,
+  #                    ticks=ticks, flip=flip, main=main, xlab=xlab, ylab=ylab,
+  #                    shorten=shorten, show.key=show.key,
+  #                    key.cex=key.cex, cex=cex, strip.cex=strip.cex,
+  #                    subset=subset))
+                          
   # Use data name for default title.  Do this BEFORE subset!
   if(missing(main)) main <- deparse(substitute(data))
 
