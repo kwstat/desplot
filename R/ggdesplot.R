@@ -24,8 +24,8 @@ if(0){
   ggdesplot(yield ~ col*row|county, data=besag.met, out1=rep, out2=block)
   ggdesplot(rep ~ col*row|county, data=besag.met)
   ggdesplot(rep ~ col*row|county, data=besag.met, text=rep)
-  ggdesplot(rep ~ col*row|county, data=besag.met, num=rep)
-  ggdesplot(rep ~ col*row|county, data=besag.met, col=rep) # fails
+  ggdesplot(rep ~ col*row|county, data=besag.met, num=block, cex=1) # cex ignored
+  ggdesplot(rep ~ col*row|county, data=besag.met, col=rep) # col ignored
 
   ggdesplot(rep ~ col*row|county, data=besag.met, ticks=TRUE)
   ggdesplot(rep ~ col*row|county, data=besag.met, ticks=TRUE, flip=TRUE)
@@ -34,7 +34,6 @@ if(0){
             main="besag.met", xlab="column", ylab="row")
   ggdesplot(rep ~ col*row|county, data=besag.met, out1=rep)
   ggdesplot(rep ~ col*row|county, data=besag.met, out1=rep, show.key=FALSE)
-  ## num=NULL, col=NULL, text=NULL,
   ##                   col.regions=RedGrayBlue, col.text=NULL, text.levels=NULL,
   ##                   out1.gpar=list(col="black", lwd=3),
   ##                   out2.gpar=list(col="yellow", lwd=1, lty=1),
@@ -43,7 +42,6 @@ if(0){
   ##                   key.cex, # left legend cex
   ##                   cex=.4, # cell cex
   ##                   strip.cex=.75, 
-  ##                   subset=TRUE
   
 }
 
@@ -53,25 +51,28 @@ if(0){
 #' @export
 #' @rdname desplot
 ggdesplot <- function(form=formula(NULL ~ x + y), data,
-                    num=NULL, col=NULL, text=NULL,
-                    out1=NULL, out2=NULL,
-                    col.regions=RedGrayBlue, col.text=NULL, text.levels=NULL,
-                    out1.gpar=list(col="black", lwd=3),
-                    out2.gpar=list(col="yellow", lwd=1, lty=1),
-                    at, midpoint="median",
-                    ticks=FALSE, flip=FALSE,
-                    main=NULL, xlab, ylab,
-                    shorten='abb',
-                    show.key=TRUE,
-                    key.cex, # left legend cex
-                    cex=.4, # cell cex
-                    strip.cex=.75, 
-                    subset=TRUE, ...){
+                      num=NULL, num.string=NULL,
+                      col=NULL, col.string=NULL,
+                      text=NULL, text.string=NULL,
+                      out1=NULL, out1.string=NULL,
+                      out2=NULL, out2.string=NULL,
+                      col.regions=RedGrayBlue, col.text=NULL, text.levels=NULL,
+                      out1.gpar=list(col="black", lwd=3),
+                      out2.gpar=list(col="yellow", lwd=1, lty=1),
+                      at, midpoint="median",
+                      ticks=FALSE, flip=FALSE,
+                      main=NULL, xlab, ylab,
+                      shorten='abb',
+                      show.key=TRUE,
+                      key.cex, # left legend cex
+                      cex=.4, # cell cex
+                      strip.cex=.75, 
+                      subset=TRUE, gg=FALSE, ...){
 
   # Use data name for default title.  Do this BEFORE subset!
   if(missing(main)) main <- deparse(substitute(data))
 
-  # based on subset() function
+  # subset, based on subset() function
   ix <- if (missing(subset)) 
     rep_len(TRUE, nrow(data))
   else {
@@ -82,6 +83,7 @@ ggdesplot <- function(form=formula(NULL ~ x + y), data,
     ix & !is.na(ix)
   }
   data <- data[ix, ]
+  data <- droplevels(data) # In case the user called with subset(obj, ...)
   
   
   # Using 'at' overrides 'midpoint'
@@ -92,33 +94,73 @@ ggdesplot <- function(form=formula(NULL ~ x + y), data,
        ( length(at) !=  length(col.regions)+1 ) )
     stop("Length of 'at' must be 1 more than length of 'col.regions'\n")
   
-  # Force character, in case we forgot to quote the argument.
-  # This is non-standard evaluation.  Beware.
+  # Assume num.string contains the name of a column in data. 
+  # If num.string is NULL, then get its value by converting 'num' 
+  # from a bare name to a string.  We MUST do this here
+  # so that if we switch from desplot to ggdesplot, we can pass 
+  # arguments as strings.  
+  mc <- as.list(match.call())
   
-  dn <- names(data)
-  cleanup <- function(x, dn){
-    if(is.null(x)) return(x)
-
-    if(!is.character(x)) x <- deparse(x)
-    if(!is.element(x, dn))
-      stop("Could not find '", x,"' in the data frame.")
-    return(x)
+  if(is.null(num.string)){
+    if("num" %in% names(mc)) { # user did supply argument
+      if(!is.character(mc$num) & !is.null(mc$num)) { # it is a bare name
+        num.string <- deparse(substitute(num)) # evaluate to string
+      }
+    }
   }
-  #browser()
-  num.var <- cleanup(substitute(num), dn)
-  col.var <- cleanup(substitute(col), dn)
-  text.var <- cleanup(substitute(text), dn)
-  out1.var <- cleanup(substitute(out1), dn)
-  out2.var <- cleanup(substitute(out2), dn)
+  
+  if(is.null(col.string)){
+    if("col" %in% names(mc)) {
+      if(!is.character(mc$col) & !is.null(mc$col)) {
+        col.string <- deparse(substitute(col))
+      }
+    }
+  }
+  
+  if(is.null(text.string)){
+    if("text" %in% names(mc)) {
+      if(!is.character(mc$text) & !is.null(mc$text)) {
+        text.string <- deparse(substitute(text))
+      }
+    }
+  }
+  
+  if(is.null(out1.string)){
+    if("out1" %in% names(mc)) {
+      if(!is.character(mc$out1) & !is.null(mc$out1)) {
+        out1.string <- deparse(substitute(out1))
+      }
+    }
+  }
+  
+  if(is.null(out2.string)){
+    if("out2" %in% names(mc)) {
+      if(!is.character(mc$out2) & !is.null(mc$out2)) {
+        out2.string <- deparse(substitute(out2))
+      }
+    }
+  }
+  
+    # Force character, in case we forgot to quote the argument.
+  # This is non-standard evaluation.  Beware.
+ 
+  dn <- names(data)
+  checkvars <- function(x, dn){
+    if(!is.null(x) && !is.element(x, dn))
+      stop("Could not find '", x,"' in the data frame.")
+  }
+  checkvars(num.string, dn)
+  checkvars(col.string, dn)
+  checkvars(text.string, dn)
+  checkvars(out1.string, dn)
+  checkvars(out2.string, dn)
 
-  has.num <- !is.null(num.var)
-  has.col <- !is.null(col.var)
-  has.text <- !is.null(text.var)
-  has.out1 <- !is.null(out1.var)
-  has.out2 <- !is.null(out2.var)
+  has.num <- !is.null(num.string)
+  has.col <- !is.null(col.string)
+  has.text <- !is.null(text.string)
+  has.out1 <- !is.null(out1.string)
+  has.out2 <- !is.null(out2.string)
   if(has.num & has.text) stop("Specify either 'num' or 'text'. Not both.")
-
-  data <- droplevels(data) # In case the user called with subset(obj, ...)
 
   # Split a formula like: resp~x*y|cond into a list of text strings called
   # resp, xy (vector like 'x' '*' 'y') , cond ('cond' could be a vector)
@@ -128,23 +170,23 @@ ggdesplot <- function(form=formula(NULL ~ x + y), data,
              cond = names(ff$condition))
   if(length(ff$resp)==0L) ff$resp <- NULL
 
-  fill.var <- ff$resp
-  x.var <- ff$xy[1]
-  y.var <- ff$xy[3]
-  panel.var <- ff$cond[1]
+  fill.string <- ff$resp
+  x.string <- ff$xy[1]
+  y.string <- ff$xy[3]
+  panel.string <- ff$cond[1]
 
   # If ticks are requested, add axis labels
   if (missing(xlab))
-    xlab <- ifelse(ticks, x.var, "")
+    xlab <- ifelse(ticks, x.string, "")
   if (missing(ylab))
-    ylab <- ifelse(ticks, y.var, "")
+    ylab <- ifelse(ticks, y.string, "")
 
   # Determine what fills the cells: nothing, character/factor, or numeric
-  if(is.null(fill.var)) fill.type="none"
-  else if (is.factor(data[[fill.var]]))
+  if(is.null(fill.string)) fill.type="none"
+  else if (is.factor(data[[fill.string]]))
     fill.type <- "factor"
-  else if (is.character(data[[fill.var]])){
-    data[[fill.var]] <- as.factor(data[[fill.var]])
+  else if (is.character(data[[fill.string]])){
+    data[[fill.string]] <- as.factor(data[[fill.string]])
     fill.type <- "factor"
   } else {
     fill.type <- "num"
@@ -158,9 +200,9 @@ ggdesplot <- function(form=formula(NULL ~ x + y), data,
     form <- as.formula(paste(".const", form[[1]], deparse(form[[2]]), sep=""))
     data[['.const']] <- fill.val
   } else if(fill.type=="num"){
-    fill.val <- data[[fill.var]]
+    fill.val <- data[[fill.string]]
   } else { # character/factor
-    fill.val <- data[[fill.var]]
+    fill.val <- data[[fill.string]]
     fill.n <- nlevels(fill.val)
   }
 
@@ -259,15 +301,15 @@ ggdesplot <- function(form=formula(NULL ~ x + y), data,
 
   # Change x/y from factor to numeric if needed.  Add missing x,y levels.
   fac2num <- function(x) as.numeric(levels(x))[x]
-  if(is.factor(data[[x.var]])) data[[x.var]] <- fac2num(data[[x.var]])
-  if(is.factor(data[[y.var]])) data[[y.var]] <- fac2num(data[[y.var]])
-  data <- .addLevels(data, x.var, y.var, panel.var)
+  if(is.factor(data[[x.string]])) data[[x.string]] <- fac2num(data[[x.string]])
+  if(is.factor(data[[y.string]])) data[[y.string]] <- fac2num(data[[y.string]])
+  data <- .addLevels(data, x.string, y.string, panel.string)
 
   # Check for multiple values
-  if(is.null(panel.var)){
-    tt <- table(data[[x.var]], data[[y.var]])
+  if(is.null(panel.string)){
+    tt <- table(data[[x.string]], data[[y.string]])
   } else {
-    tt <- table(data[[x.var]], data[[y.var]], data[[panel.var]])
+    tt <- table(data[[x.string]], data[[y.string]], data[[panel.string]])
   }
   if(any(tt>1))
     warning("There are multiple data for each x/y/panel combination")
@@ -278,11 +320,11 @@ ggdesplot <- function(form=formula(NULL ~ x + y), data,
 
   if(has.out1){ # out1
     lr <- lr + 1
-    lt <- c(lt, out1.var)
+    lt <- c(lt, out1.string)
   }
   if(has.out2){ # out2
     lr <- lr + 1
-    lt <- c(lt, out2.var)
+    lt <- c(lt, out2.string)
   }
   if(has.out1 | has.out2) lr <- lr + 1 # blank line
 
@@ -293,7 +335,7 @@ ggdesplot <- function(form=formula(NULL ~ x + y), data,
   }
 
   if(has.num) { # number
-    num.val <- factor(data[[num.var]])
+    num.val <- factor(data[[num.string]])
     lt.num <- levels(num.val)
     num.n <- length(lt.num)
     lr <- lr + 2 + num.n
@@ -301,7 +343,7 @@ ggdesplot <- function(form=formula(NULL ~ x + y), data,
   }
 
   if(has.col) { # color
-    col.val <- factor(data[[col.var]]) # In case it is numeric
+    col.val <- factor(data[[col.string]]) # In case it is numeric
     lt.col <- levels(col.val)
     col.n <- length(lt.col)
     lr <- lr + 2 + col.n
@@ -312,7 +354,7 @@ ggdesplot <- function(form=formula(NULL ~ x + y), data,
   }
 
   if(has.text) { # text
-    text.val <- factor(data[[text.var]]) # In case it is not a factor
+    text.val <- factor(data[[text.string]]) # In case it is not a factor
     lt.text <- levels(text.val)
     text.n <- length(lt.text)
     lr <- lr + 2 + text.n
@@ -350,34 +392,34 @@ ggdesplot <- function(form=formula(NULL ~ x + y), data,
 
   # --------------- build the plot ---------------
 
-  out <- ggplot(data, aes_string(x=x.var, y=y.var))
+  out <- ggplot(data, aes_string(x=x.string, y=y.string))
   
-  if(!is.null(panel.var))
+  if(!is.null(panel.string))
     out <- out + 
-      facet_wrap(panel.var, scales="free")
+      facet_wrap(panel.string, scales="free")
   
   if(fill.type=="num")
     out <- out +
-    geom_tile(aes_string(fill = fill.var)) +
+    geom_tile(aes_string(fill = fill.string)) +
     scale_fill_gradientn(colours=col.regions, guide="colorbar")
   
   if(fill.type=="factor")
     out <- out +
-    geom_tile(aes_string(fill = fill.var)) +
+    geom_tile(aes_string(fill = fill.string)) +
     scale_fill_manual(values=col.regions)
   
   if(has.out1)
     out <- out + 
-    geom_tileborder(aes_string(group=1, grp=out1.var),
+    geom_tileborder(aes_string(group=1, grp=out1.string),
                     lineend="round", lwd=1.5)
   
   if(has.out2)
     out <- out + 
-    geom_tileborder(aes_string(group=1, grp=out2.var), 
+    geom_tileborder(aes_string(group=1, grp=out2.string), 
                     color="yellow", lwd=0.5)
   
   if(has.text|has.num|has.col) # fill text
-    out = out + geom_text(aes_string(x.var, y.var, label="cell.text"), size=1)
+    out = out + geom_text(aes_string(x.string, y.string, label="cell.text"), size=1)
   
   if(!show.key)
     out <- out + theme(legend.position="none")
