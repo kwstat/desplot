@@ -20,19 +20,26 @@ if(0){
 
 if(0){
   lib(agridat)
-  ggdesplot( ~ col*row|county, data=besag.met, out1=rep, out2=block)
-  ggdesplot(yield ~ col*row|county, data=besag.met, out1=rep, out2=block)
+  ggdesplot( ~ col*row|county, data=besag.met)
+  ggdesplot( ~ col*row|county, data=besag.met, col=block)
+  ggdesplot( ~ col*row|county, data=besag.met, num=block)
+  ggdesplot( ~ col*row|county, data=besag.met, text=block)
+  
   ggdesplot(rep ~ col*row|county, data=besag.met)
-  ggdesplot(rep ~ col*row|county, data=besag.met, text=rep)
-  ggdesplot(rep ~ col*row|county, data=besag.met, num=block, cex=1) # cex ignored
-  ggdesplot(rep ~ col*row|county, data=besag.met, col=rep) # col ignored
-
+  ggdesplot(rep ~ col*row|county, data=besag.met, col=block, cex=.8)
+  ggdesplot(rep ~ col*row|county, data=besag.met, num=block, cex=.8)
+  ggdesplot(rep ~ col*row|county, data=besag.met, text=block, cex=.8)
+  
+  ggdesplot(yield ~ col*row|county, data=besag.met, out1=rep)
+  ggdesplot(yield ~ col*row|county, data=besag.met, out2=block)
+  ggdesplot(yield ~ col*row|county, data=besag.met, out1=rep, out2=block)
+  
   ggdesplot(rep ~ col*row|county, data=besag.met, ticks=TRUE)
   ggdesplot(rep ~ col*row|county, data=besag.met, ticks=TRUE, flip=TRUE)
                       
   ggdesplot(rep ~ col*row|county, data=besag.met, out1=rep, ticks=TRUE,
             main="besag.met", xlab="column", ylab="row")
-  ggdesplot(rep ~ col*row|county, data=besag.met, out1=rep)
+
   ggdesplot(rep ~ col*row|county, data=besag.met, out1=rep, show.key=FALSE)
   ##                   col.regions=RedGrayBlue, col.text=NULL, text.levels=NULL,
   ##                   out1.gpar=list(col="black", lwd=3),
@@ -40,7 +47,6 @@ if(0){
   ##                   at, midpoint="median",
   ##                   shorten='abb',
   ##                   key.cex, # left legend cex
-  ##                   cex=.4, # cell cex
   ##                   strip.cex=.75, 
   
 }
@@ -141,9 +147,6 @@ ggdesplot <- function(form=formula(NULL ~ x + y), data,
     }
   }
   
-    # Force character, in case we forgot to quote the argument.
-  # This is non-standard evaluation.  Beware.
- 
   dn <- names(data)
   checkvars <- function(x, dn){
     if(!is.null(x) && !is.element(x, dn))
@@ -181,6 +184,9 @@ ggdesplot <- function(form=formula(NULL ~ x + y), data,
   if (missing(ylab))
     ylab <- ifelse(ticks, y.string, "")
 
+  if(has.col){
+    data[[col.string]] <- factor(data[[col.string]]) # In case it is numeric
+  }
   # Determine what fills the cells: nothing, character/factor, or numeric
   if(is.null(fill.string)) fill.type="none"
   else if (is.factor(data[[fill.string]]))
@@ -342,8 +348,9 @@ ggdesplot <- function(form=formula(NULL ~ x + y), data,
     lt <- c(lt, lt.num)
   }
 
+  # fixme, col.val not used anywhere
   if(has.col) { # color
-    col.val <- factor(data[[col.string]]) # In case it is numeric
+    col.val <- data[[col.string]]
     lt.col <- levels(col.val)
     col.n <- length(lt.col)
     lr <- lr + 2 + col.n
@@ -411,20 +418,24 @@ ggdesplot <- function(form=formula(NULL ~ x + y), data,
   if(has.out1)
     out <- out + 
     geom_tileborder(aes_string(group=1, grp=out1.string),
-                    lineend="round", lwd=1.5)
+                    lineend="round", color="black", lwd=1.5)
   
   if(has.out2)
     out <- out + 
     geom_tileborder(aes_string(group=1, grp=out2.string), 
                     color="yellow", lwd=0.5)
   
-  if(has.text|has.num|has.col) # fill text
-    out = out + geom_text(aes_string(x.string, y.string, label="cell.text"), size=1)
+  # use '4*cex' so that cex in lattice/ggplot2 is roughly the same size
+  if(has.text|has.num|has.col) # cell text
+    out = out + geom_text(aes_string(x.string, y.string, 
+                                     label="cell.text", color=col.string), 
+                          size=4*cex) + 
+    scale_color_manual(values=col.text)
   
   if(!show.key)
     out <- out + theme(legend.position="none")
   
-  # labels
+  # axis labels
   out <- out +
     ggtitle(main) +
     theme(plot.title = element_text(hjust = 0.5)) + # center title

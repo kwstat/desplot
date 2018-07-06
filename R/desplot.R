@@ -36,7 +36,7 @@ RedGrayBlue <- colorRampPalette(c("firebrick", "lightgray", "#375997"))
 #' To create the plot with ggplot2 graphics, use one of the following.
 #' 1. \code{ggdesplot()}.
 #' 2. \code{desplot(gg=TRUE)}. 
-#' 3. \code{options(desplot.ggplot=TRUE); desplot()}. 
+#' 3. \code{options(desplot.gg=TRUE); desplot()}. 
 #' Method 3 is useful to modify all results from existing scripts.
 #' 
 #' The lattice version is complete, mature, and robust.
@@ -221,7 +221,7 @@ desplot <- function(form=formula(NULL ~ x + y), data,
        ( length(at) !=  length(col.regions)+1 ) )
     stop("Length of 'at' must be 1 more than length of 'col.regions'\n")
   
-  # Assume num.string contains the name of a column in data. 
+  # Assume num.string contains the name/string of a column in data. 
   # If num.string is NULL, then get its value by converting 'num' 
   # from a bare name to a string.  We MUST do this here
   # so that if we switch from desplot to ggdesplot, we can pass 
@@ -268,7 +268,7 @@ desplot <- function(form=formula(NULL ~ x + y), data,
     }
   }
 
-  if(gg | isTRUE(options()$desplot.ggplot)) {
+  if(gg | isTRUE(options()$desplot.gg)) {
     #if (!requireNamespace("ggplot2")) 
     #  stop("You must first install the ggplot2 package: install.packages('ggplot2')")
     out <- ggdesplot(form=form, data=data, 

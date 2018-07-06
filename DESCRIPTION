@@ -7,12 +7,12 @@ Type: Package
 Description: A function for plotting maps of agricultural field experiments that
     are laid out in grids.
 Imports:
+    ggplot2,
     grid,
     lattice,
     reshape2,
 Suggests:
     agridat,
-    ggplot2,
     knitr,
     testthat
 License: GPL-3

@@ -10,7 +10,9 @@ Key features:
 
 * Flexible options to customize appearance of graphic.
 
-* Stable, well-tested.
+* Stable, well-tested using lattice graphics.
+
+* Beta version using ggplot2 graphics.
 
 ## Installation
 
@@ -36,9 +38,23 @@ require(agridat)
 require(desplot)
 desplot(block ~ col+row, yates.oats,
         col=nitro, text=gen, cex=1, aspect=511/176,
-        out1=block, out2=gen, out2.gpar=list(col = "gray50", lwd = 1, lty = 1))
+        out1=block, out2=gen, 
+        out2.gpar=list(col = "gray50", lwd = 1, lty = 1))
 ```
 ![desplot](figure/yates_oats_design.png?raw=true)
+
+The default graphics are based on lattice.  It is also possible to create graphics based on ggplot2 by adding 'gg=TRUE' to the function. This functionality is in development and the legend for the ggplot version is not as polished as the lattice version.
+
+```R
+require(agridat)
+require(desplot)
+desplot(block ~ col+row, yates.oats,
+        col=nitro, text=gen, cex=1, aspect=511/176,
+        out1=block, out2=gen, 
+        out2.gpar=list(col = "gray50", lwd = 1, lty = 1), gg=TRUE)
+```
+
+![desplot](figure/yates_oats_design_ggplot.png?raw=true)
 
 ## Example 2
 
