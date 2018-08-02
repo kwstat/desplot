@@ -752,7 +752,7 @@ panel.outlinelevelplot <- function(x, y, z, subscripts, at,
   dots=list(...)
   col.regions=dots$col.regions
   # Based on panel.levelplot
-  
+
   # parent function forces x,y to be numeric, not factors
   
   if (length(subscripts) == 0L) return()
@@ -790,21 +790,26 @@ panel.outlinelevelplot <- function(x, y, z, subscripts, at,
             width=lx[idx],
             height = ly[idy],
             default.units = "native",
-            gp = gpar(fill = zcol, lwd = 1e-05, col="transparent",
+            gp = gpar(fill = zcol, lwd = 1e-05, 
+                      col="transparent",
                       alpha = alpha.regions))
 
   # Outline factor 1
   if(!is.null(out1f)){
     bb <- calc_borders(x, y, as.character(out1f[subscripts]))
-    grid.segments(x0 = bb$x, y0=bb$y, x1=bb$xend, y1=bb$yend,
-                  default.units="native", gp=out1g)
+    if(nrow(bb)>0) {
+      grid.segments(x0 = bb$x, y0=bb$y, x1=bb$xend, y1=bb$yend,
+                    default.units="native", gp=out1g)
+    }
   }
 
   # Outline factor 2
   if(!is.null(out2f)){
     bb <- calc_borders(x, y, as.character(out2f[subscripts]))
-    grid.segments(x0 = bb$x, y0=bb$y, x1=bb$xend, y1=bb$yend,
-                  default.units="native", gp=out2g)
+    if(nrow(bb)>0){
+      grid.segments(x0 = bb$x, y0=bb$y, x1=bb$xend, y1=bb$yend,
+                    default.units="native", gp=out2g)
+    }
   }
   
   return()

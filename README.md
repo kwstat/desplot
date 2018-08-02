@@ -52,6 +52,7 @@ desplot(block ~ col+row, yates.oats,
         col=nitro, text=gen, cex=1, aspect=511/176,
         out1=block, out2=gen, 
         out2.gpar=list(col = "gray50", lwd = 1, lty = 1), gg=TRUE)
+        # note, out2.gpar is ignored
 ```
 
 ![desplot](figure/yates_oats_design_ggplot.png?raw=true)
