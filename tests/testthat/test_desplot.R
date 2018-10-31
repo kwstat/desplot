@@ -24,8 +24,7 @@ dat3 <- data.frame(
   block = c("B1","B1", "B1","B1","B2","B2","B2"))
 
 require(agridat)
-data(yates.oats)
-oats35 <- yates.oats
+oats35 <- agridat::yates.oats
 
 # ----------------------------------------------------------------------------
 
@@ -70,7 +69,10 @@ test_that("out1,out2,out1.gpar,out2.gpar", {
             out1=block, out1.gpar=list(col="white",lwd=2))
     desplot(yield~col+row, oats35,
             out2=block, out2.gpar=list(col="deeppink",lwd=2))
-    desplot(yield ~ x*y|loc, dat3, out1=block, out2=block) # no borders
+    desplot(yield ~ x*y|loc, dat3, out1=block, out2=block) # no outline available
+    # note, the following line gives a warning, I think because there are
+    # no combinations of L1 & B2 ???
+    # desplot(yield ~ x*y|loc, dat3, out1=block, gg=TRUE)
   })
 })
 

@@ -1,9 +1,6 @@
 # desplot.R
 # Time-stamp: <09 Apr 2018 13:22:30 c:/x/rpack/desplot/R/desplot.R>
 
-# TODO:
-# If we have 'text' and shorten='no', don't bother with the key.
-
 # ----------------------------------------------------------------------------
 
 #' Function to create a Red-Gray-Blue palette
@@ -30,13 +27,13 @@ RedGrayBlue <- colorRampPalette(c("firebrick", "lightgray", "#375997"))
 #' Use this function to plot the layout of a rectangular lattice
 #' field experiment and also the observed data values.
 #' 
-#' To create the plot the lattice graphics: 
-#' 1. \code{desplot()}.
+#' To create the plot using lattice graphics: 
+#' 1. \code{desplot(...)}.
 #' 
-#' To create the plot with ggplot2 graphics, use one of the following.
-#' 1. \code{ggdesplot()}.
-#' 2. \code{desplot(gg=TRUE)}. 
-#' 3. \code{options(desplot.gg=TRUE); desplot()}. 
+#' To create the plot using ggplot2 graphics, use one of the following:
+#' 1. \code{ggdesplot(...)}.
+#' 2. \code{desplot(..., gg=TRUE)}. 
+#' 3. \code{options(desplot.gg=TRUE); desplot(...)}. 
 #' Method 3 is useful to modify all results from existing scripts.
 #' 
 #' The lattice version is complete, mature, and robust.
@@ -80,25 +77,35 @@ RedGrayBlue <- colorRampPalette(c("firebrick", "lightgray", "#375997"))
 #'
 #' @param data A data frame.
 #' 
-#' @param num Bare name of the column of the data to use for plotting numbers.
+#' @param num Bare name (no quotes) of the column of the data to use 
+#' as a factor for number-coding the text in each cell.
 #' 
-#' @param num.string String name of the column of the data to use for plotting numbers.
+#' @param num.string String name of the column of the data to use 
+#' as a factor for number-coding the text in each cell.
 #' 
-#' @param col Bare name of the column of the data for the color of the number shown in each cell.
+#' @param col Bare name (no quotes) of the column of the data to use
+#' for color-coding the text shown in each cell.
 #' 
-#' @param col.string String name of the column of the data for the color of the number shown in each cell.
+#' @param col.string String name of the column of the data to use
+#' for color-coding the text shown in each cell.
 #' 
-#' @param text Bare name of the column of the data to use for text labels shown in each cell.
+#' @param text Bare name (no quotes) of the column of the data to use 
+#' for the actual text shown in each cell.
 #' 
-#' @param text.string String name of the column of the data to use for text labels shown in each cell.
+#' @param text.string String name of the column of the data to use 
+#' for the actual text shown in each cell.
 #' 
-#' @param out1 Bare name of the column of the data to use for first-level outlining around blocks of cells.
+#' @param out1 Bare name (no quotes) of the column of the data to use 
+#' for first-level outlining around blocks of cells.
 #' 
-#' @param out1.string String name of the column of the data to use for first-level outlining around blocks of cells.
+#' @param out1.string String name of the column of the data to use 
+#' for first-level outlining around blocks of cells.
 #' 
-#' @param out2 Bare name of the column of the data to use for second-level outlining around blocks of cells.
+#' @param out2 Bare name (no quotes) of the column of the data to use 
+#' for second-level outlining around blocks of cells.
 #' 
-#' @param out2.string String name of the column of the data to use for second-level outlining around blocks of cells.
+#' @param out2.string String name of the column of the data to use 
+#' for second-level outlining around blocks of cells.
 #' 
 #' @param col.regions Colors for the fill color of cells.
 #' 

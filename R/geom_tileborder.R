@@ -45,7 +45,7 @@ if(0){
 #' # desplot::desplot(rep ~ x*y|loc, data=dd, out1=rep)
 #' 
 geom_tileborder<- function(mapping = NULL, data = NULL, geom = "segment",
-                           position = "identity", na.rm = FALSE, 
+                           position = "identity", na.rm = TRUE, 
                            show.legend = NA, 
                            inherit.aes = TRUE, ...) {
   ggplot2::layer(
@@ -72,6 +72,7 @@ StatTileBorder <-
           required_aes=c("x","y","grp"),
           compute_group = function(data, scales) {
             # print(data) # so we can see the data groups
+            cat("hello\n")
             calc_borders(data$x, data$y, data$grp)
           })
 
@@ -108,4 +109,5 @@ calc_borders <- function(x,y,grp){
   
   segs <- rbind(top,right)
   segs[,c("x","y","xend","yend")]
+  if(nrow(segs)>0) segs else NULL
 }
