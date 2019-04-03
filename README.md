@@ -12,7 +12,7 @@ Key features:
 
 * Stable, well-tested using lattice graphics.
 
-* Beta version using ggplot2 graphics.
+* Beta version using ggplot2 graphics. Note ggplot2 is about 4 times slower.
 
 ## Installation
 

@@ -5,36 +5,60 @@
 \alias{ggdesplot}
 \title{Plot the layout/data of a field experiment.}
 \usage{
-desplot(form = formula(NULL ~ x + y), data, num = NULL, col = NULL,
-  text = NULL, out1 = NULL, out2 = NULL, col.regions = RedGrayBlue,
-  col.text = NULL, text.levels = NULL, out1.gpar = list(col = "black", lwd
-  = 3), out2.gpar = list(col = "yellow", lwd = 1, lty = 1), at,
-  midpoint = "median", ticks = FALSE, flip = FALSE, main = NULL, xlab,
-  ylab, shorten = "abb", show.key = TRUE, key.cex, cex = 0.4,
-  strip.cex = 0.75, subset = TRUE, ...)
+desplot(form = formula(NULL ~ x + y), data, num = NULL,
+  num.string = NULL, col = NULL, col.string = NULL, text = NULL,
+  text.string = NULL, out1 = NULL, out1.string = NULL, out2 = NULL,
+  out2.string = NULL, col.regions = RedGrayBlue, col.text = NULL,
+  text.levels = NULL, out1.gpar = list(col = "black", lwd = 3),
+  out2.gpar = list(col = "yellow", lwd = 1, lty = 1), at,
+  midpoint = "median", ticks = FALSE, flip = FALSE, main = NULL,
+  xlab, ylab, shorten = "abb", show.key = TRUE, key.cex, cex = 0.4,
+  strip.cex = 0.75, subset = TRUE, gg = FALSE, ...)
 
-ggdesplot(form = formula(NULL ~ x + y), data, num = NULL, col = NULL,
-  text = NULL, out1 = NULL, out2 = NULL, col.regions = RedGrayBlue,
-  col.text = NULL, text.levels = NULL, out1.gpar = list(col = "black", lwd
-  = 3), out2.gpar = list(col = "yellow", lwd = 1, lty = 1), at,
-  midpoint = "median", ticks = FALSE, flip = FALSE, main = NULL, xlab,
-  ylab, shorten = "abb", show.key = TRUE, key.cex, cex = 0.4,
-  strip.cex = 0.75, subset = TRUE, ...)
+ggdesplot(form = formula(NULL ~ x + y), data, num = NULL,
+  num.string = NULL, col = NULL, col.string = NULL, text = NULL,
+  text.string = NULL, out1 = NULL, out1.string = NULL, out2 = NULL,
+  out2.string = NULL, col.regions = RedGrayBlue, col.text = NULL,
+  text.levels = NULL, out1.gpar = list(col = "black", lwd = 3),
+  out2.gpar = list(col = "yellow", lwd = 1, lty = 1), at,
+  midpoint = "median", ticks = FALSE, flip = FALSE, main = NULL,
+  xlab, ylab, shorten = "abb", show.key = TRUE, key.cex, cex = 0.4,
+  strip.cex = 0.75, subset = TRUE, gg = FALSE, ...)
 }
 \arguments{
 \item{form}{A formula like \code{yield~x*y|location}. Note x,y are numeric.}
 
 \item{data}{A data frame.}
 
-\item{num}{The name of the column of the data to use for plotting numbers.}
+\item{num}{Bare name (no quotes) of the column of the data to use 
+as a factor for number-coding the text in each cell.}
 
-\item{col}{Column of the data for the color of the number shown in each cell.}
+\item{num.string}{String name of the column of the data to use 
+as a factor for number-coding the text in each cell.}
 
-\item{text}{Column of the data to use for text labels shown in each cell.}
+\item{col}{Bare name (no quotes) of the column of the data to use
+for color-coding the text shown in each cell.}
 
-\item{out1}{Column of the data to use for outlining around blocks of cells.}
+\item{col.string}{String name of the column of the data to use
+for color-coding the text shown in each cell.}
 
-\item{out2}{Column of the data to use for outlining around blocks of cells.}
+\item{text}{Bare name (no quotes) of the column of the data to use 
+for the actual text shown in each cell.}
+
+\item{text.string}{String name of the column of the data to use 
+for the actual text shown in each cell.}
+
+\item{out1}{Bare name (no quotes) of the column of the data to use 
+for first-level outlining around blocks of cells.}
+
+\item{out1.string}{String name of the column of the data to use 
+for first-level outlining around blocks of cells.}
+
+\item{out2}{Bare name (no quotes) of the column of the data to use 
+for second-level outlining around blocks of cells.}
+
+\item{out2.string}{String name of the column of the data to use 
+for second-level outlining around blocks of cells.}
 
 \item{col.regions}{Colors for the fill color of cells.}
 
@@ -42,14 +66,14 @@ ggdesplot(form = formula(NULL ~ x + y), data, num = NULL, col = NULL,
 
 \item{text.levels}{Character strings to use instead of default 'levels'.}
 
-\item{out1.gpar}{A list of graphics parameters for outlining.  Can either
-be an ordinary \code{list()} or A call to \code{gpar()} from the
-\code{grid} package.}
+\item{out1.gpar}{A list of graphics parameters for first-level outlining.
+Can either be an ordinary \code{list()} or a call to \code{gpar()} from the
+  \code{grid} package.}
 
-\item{out2.gpar}{Graphics parameters for the second level of outlining.}
+\item{out2.gpar}{Graphics parameters for second-level of outlining.}
 
 \item{at}{Breakpoints for the color ribbon.  Use this instead of 'zlim'.
-Note: using at causes midpoint to be set to NULL.}
+Note: using 'at' causes 'midpoint' to be set to NULL.}
 
 \item{midpoint}{Method to find midpoint of the color ribbon.
 One of 'midrange', 'median, or a numeric value.}
@@ -76,23 +100,36 @@ One of 'midrange', 'median, or a numeric value.}
 
 \item{subset}{An expression that evaluates to logical index vector for subsetting the data.}
 
+\item{gg}{If TRUE, desplot() switches to ggdesplot().}
+
 \item{...}{Other.}
 }
 \value{
-A lattice object
+A lattice or ggplot2 object
 }
 \description{
-Note, not all lattice parameters are passed down to \code{xyplot}, but it
+Use this function to plot the layout of a rectangular lattice
+field experiment and also the observed data values.
+}
+\details{
+To create the plot using lattice graphics: 
+1. \code{desplot(...)}.
+
+To create the plot using ggplot2 graphics, use one of the following:
+1. \code{ggdesplot(...)}.
+2. \code{desplot(..., gg=TRUE)}. 
+3. \code{options(desplot.gg=TRUE); desplot(...)}. 
+Method 3 is useful to modify all results from existing scripts.
+
+The lattice version is complete, mature, and robust.
+The ggplot2 version is incomplete.  The legend can only show colors, 
+and some function arguments are ignored.
+In general, lattice graphics are about 4-5 times faster than ggplot2 graphics.
+Not all lattice parameters are passed down to \code{xyplot}, but it
 is possible to make almost any change to the plot by assigning the
 desplot object to a variable and then edit the object by hand or use
 \code{update} to modify the object.  Then print it manually.  See the
 first example below.
-}
-\details{
-Ryder (1981) discusses the need to examine the layout of the
-experiment design, and not just the data.  This function provides a
-a tool for plotting the layout of a field experiment and also the
-observed data.
 
 Use \code{col.regions} to specify fill colors.  This can either be a vector
 of colors or a function that produces a vector of colors.  If the response
@@ -102,7 +139,7 @@ and a key is placed on the left.  If the response variable is
 \emph{numeric}, the cells are colored according to \code{col.regions}, and
 a ribbon key is placed on the right.
 
-The default argument \code{shorten='abb'} will shorten the cell text using
+Use \code{shorten='abb'} (this is default) to shorten the cell text using
 the \code{abbreviate} function.
 Use \code{shorten='sub'} to use a 3-character substring.
 Use \code{shorten='no'} or \code{shorten=FALSE} for no shortening.
@@ -112,7 +149,8 @@ be adjacent to each other by virtue of appearing in different whole-plots.
 To correctly outline the split-plot factor, simply concatenate the
 whole-plot factor and sub-plot factor together.
 
-To get a map of a field with a true aspect ratio, include 'aspect=ylen/xlen'
+To get a map of a field with a true aspect ratio (lattice version only), 
+include 'aspect=ylen/xlen'
 in the call, where 'ylen' is the vertical length of the field and 'xlen'
 is the horizontal length of the field.
 
@@ -125,8 +163,7 @@ if(require(agridat)){
 
 # Show how to customize any feature.  Here: make the strips bigger.
 data(besag.met)
-dat <- besag.met
-d1 <- desplot(yield ~ col*row|county, dat, main="besag.met",
+d1 <- desplot(yield ~ col*row|county, besag.met, main="besag.met",
               out1=rep, out2=block, out2.gpar=list(col="white"), strip.cex=2)
 d1 <- update(d1, par.settings = list(layout.heights=list(strip=2)))
 print(d1)
@@ -138,15 +175,6 @@ desplot(yield ~ col+row, yates.oats, out1=block, out2=gen)
 desplot(block ~ col+row, yates.oats, col=nitro, text=gen, cex=1, out1=block,
         out2=gen, out2.gpar=list(col = "gray50", lwd = 1, lty = 1))
 
-  
-# Example from Ryder.
-data(ryder.groundnut)
-gnut <- ryder.groundnut
-m1 <- lm(dry~block+gen, gnut)
-gnut$res <- resid(m1)
-# Note largest positive/negative residuals are adjacent
-desplot(res ~ col + row, gnut, text=gen, cex=1,
-        main="ryder.groundnut residuals from RCB model")
 }
 }
 \references{

@@ -72,7 +72,7 @@ StatTileBorder <-
           required_aes=c("x","y","grp"),
           compute_group = function(data, scales) {
             # print(data) # so we can see the data groups
-            cat("hello\n")
+            #cat("hello\n")
             calc_borders(data$x, data$y, data$grp)
           })
 

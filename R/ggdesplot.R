@@ -1,5 +1,7 @@
 # ggdesplot.R
 
+# todo: try plotly with this
+
 if(0){
   
   # multiple legends
@@ -17,9 +19,18 @@ if(0){
   # https://stackoverflow.com/questions/11846295/how-to-add-different-lines-for-facets#11847210
   
 }
-
 if(0){
-  lib(agridat)
+  # yikes, ggplot is SLOW!
+  libs(bench)
+  # calculating: lattice 33 ms, ggplot 17 ms
+  bench::mark(desplot(rep ~ col*row|county, data=besag.met, col=block, cex=.8))
+  bench::mark(ggdesplot(rep ~ col*row|county, data=besag.met, col=block, cex=.8))
+  # printing: lattice 212 ms, ggplot 934 ms
+  bench::mark(print(desplot(rep ~ col*row|county, data=besag.met, col=block, cex=.8)))
+  bench::mark(print(ggdesplot(rep ~ col*row|county, data=besag.met, col=block, cex=.8)))
+}
+if(0){
+  libs(agridat)
   ggdesplot( ~ col*row|county, data=besag.met)
   ggdesplot( ~ col*row|county, data=besag.met, col=block)
   ggdesplot( ~ col*row|county, data=besag.met, num=block)

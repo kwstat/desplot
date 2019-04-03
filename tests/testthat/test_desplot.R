@@ -206,8 +206,7 @@ desplot(block~col+row|block, oats35, col="nitro", text="gen", cex=1)
 
 # Test cases with 1 or 2 rows or columns
 
-# data(besag.met, package="agridat") # CRAN check doesn't like 'data' here
-if(exists("besag.met")) dmet <- besag.met else dmet <- besag.corn
+dmet <- agridat::besag.met
 
 desplot(yield~col*row|county, dmet, out1=rep, out2=block, tick=TRUE)
 
@@ -220,6 +219,7 @@ dmet2 <- subset(dmet2, !(county=="C4" & col<11))
 dmet2 <- subset(dmet2, !(county=="C5" & col<10))
 
 desplot(yield~col*row|county, dmet2, tick=TRUE)
+# fixme
 desplot(yield~col*row|county, dmet2, out1=rep, out2=block, tick=TRUE)
 
 # Another midpoint example with strong difference between midpoint

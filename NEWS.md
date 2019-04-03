@@ -1,4 +1,6 @@
-# desplot 1.5 - Apr 2018
+# desplot 1.5 - Apr 2019
+
+Beta version of ggplot2 version of desplot.
 
 New argument `subset` to subset data before analysis.
 

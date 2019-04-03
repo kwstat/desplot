@@ -1,7 +1,4 @@
 # desplot.R
-# Time-stamp: <09 Apr 2018 13:22:30 c:/x/rpack/desplot/R/desplot.R>
-
-# ----------------------------------------------------------------------------
 
 #' Function to create a Red-Gray-Blue palette
 #'
@@ -39,6 +36,7 @@ RedGrayBlue <- colorRampPalette(c("firebrick", "lightgray", "#375997"))
 #' The lattice version is complete, mature, and robust.
 #' The ggplot2 version is incomplete.  The legend can only show colors, 
 #' and some function arguments are ignored.
+#' In general, lattice graphics are about 4-5 times faster than ggplot2 graphics.
 
 #' Not all lattice parameters are passed down to \code{xyplot}, but it
 #' is possible to make almost any change to the plot by assigning the
@@ -173,7 +171,7 @@ RedGrayBlue <- colorRampPalette(c("firebrick", "lightgray", "#375997"))
 #' # Show how to customize any feature.  Here: make the strips bigger.
 #' data(besag.met)
 #' d1 <- desplot(yield ~ col*row|county, besag.met, main="besag.met",
-#'               out1=rep, out2=block, out2.gpar=list(col="white"), strip.cex=2, gg=TRUE)
+#'               out1=rep, out2=block, out2.gpar=list(col="white"), strip.cex=2)
 #' d1 <- update(d1, par.settings = list(layout.heights=list(strip=2)))
 #' print(d1)
 #' 
@@ -802,7 +800,7 @@ panel.outlinelevelplot <- function(x, y, z, subscripts, at,
                       alpha = alpha.regions))
 
   # Outline factor 1
-  if(!is.null(out1f)){
+  if(!is.null(out1f) && length(unique(out1f))>1 ){
     bb <- calc_borders(x, y, as.character(out1f[subscripts]))
     if(nrow(bb)>0) {
       grid.segments(x0 = bb$x, y0=bb$y, x1=bb$xend, y1=bb$yend,
@@ -811,7 +809,7 @@ panel.outlinelevelplot <- function(x, y, z, subscripts, at,
   }
 
   # Outline factor 2
-  if(!is.null(out2f)){
+  if(!is.null(out2f) && length(unique(out2f))>1 ){
     bb <- calc_borders(x, y, as.character(out2f[subscripts]))
     if(nrow(bb)>0){
       grid.segments(x0 = bb$x, y0=bb$y, x1=bb$xend, y1=bb$yend,
