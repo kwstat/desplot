@@ -790,7 +790,7 @@ panel.outlinelevelplot <- function(x, y, z, subscripts, at,
   idx <- match(x, ux)
   idy <- match(y, uy)
   
-  # Fill the cells
+  # Fill the cells with background color
   grid.rect(x = cx[idx], y = cy[idy],
             width=lx[idx],
             height = ly[idy],
@@ -800,18 +800,18 @@ panel.outlinelevelplot <- function(x, y, z, subscripts, at,
                       alpha = alpha.regions))
 
   # Outline factor 1
-  if(!is.null(out1f) && length(unique(out1f))>1 ){
+  if(!is.null(out1f)){
     bb <- calc_borders(x, y, as.character(out1f[subscripts]))
-    if(nrow(bb)>0) {
+    if(!is.null(bb) && nrow(bb)>0) {
       grid.segments(x0 = bb$x, y0=bb$y, x1=bb$xend, y1=bb$yend,
                     default.units="native", gp=out1g)
     }
   }
 
   # Outline factor 2
-  if(!is.null(out2f) && length(unique(out2f))>1 ){
+  if(!is.null(out2f)){
     bb <- calc_borders(x, y, as.character(out2f[subscripts]))
-    if(nrow(bb)>0){
+    if(!is.null(bb) && nrow(bb)>0){
       grid.segments(x0 = bb$x, y0=bb$y, x1=bb$xend, y1=bb$yend,
                     default.units="native", gp=out2g)
     }

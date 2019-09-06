@@ -1,8 +1,6 @@
 
 require(desplot)
 
-context("test_desplot.R")
-
 # ----------------------------------------------------------------------------
 # create data for tests
 
@@ -15,7 +13,8 @@ dat0 <- data.frame(loc = c('loc1','loc1','loc1','loc1',
                    trt1=c('Treat1','Treat2','Treat2','Treat1',
                           'Trt1','Trt2','Trt1','Trt2','Trt1','Trt2'),
                    trt2=c('Hybrid1','Hybrid1','Hybrid2','Hybrid2','Hybrid1',
-                          'Hybrid2','Hybrid3','Hybrid1','Hybrid2','Hybrid3'))
+                          'Hybrid2','Hybrid3','Hybrid1','Hybrid2','Hybrid3'),
+                   trt3=c("A","A","B","B","A","A","A","A","A","A"))
 dat3 <- data.frame(
   yield = 7:1,
   x = c(5,  6,     1,  3,  4, 5, 5),
@@ -24,7 +23,8 @@ dat3 <- data.frame(
   block = c("B1","B1", "B1","B1","B2","B2","B2"))
 
 require(agridat)
-oats35 <- agridat::yates.oats
+data(yates.oats, package="agridat")
+oats35 <- yates.oats
 
 # ----------------------------------------------------------------------------
 
