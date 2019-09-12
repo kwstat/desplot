@@ -1,12 +1,8 @@
 
 
-Idea: For this warning, maybe I should return a tibble
-with the multiple data???
+# desplot 1.6 - Sep 2019
 
-In desplot(rep ~ y * x | loc, data = dd) :
-  There are multiple data for each x/y/panel combination
-
-Idea: Add a lightweight 'x' for bad-quality data.  How to make this general (for multiple quality levels)?
+* New argument `dq` for showing data quality on heatmaps.
 
 # desplot 1.5 - Apr 2019
 

@@ -105,6 +105,15 @@ RedGrayBlue <- colorRampPalette(c("firebrick", "lightgray", "#375997"))
 #' @param out2.string String name of the column of the data to use 
 #' for second-level outlining around blocks of cells.
 #' 
+#' @param dq Bare name (no quotes) of the column of the data to use 
+#' for indicating bad data quality with diagonal lines.
+#' This can either be a numeric vector or a factor/text. 
+#' Cells with 1/"Q"/"Questionable" have one diagonal line.
+#' Cells with 2/"B"/"Bad","S","Suppressed" have crossed diagonal lines.
+#' 
+#' @param dq.string String name of the column of the data to use 
+#' for indicating bad data quality with diagonal lines.
+#' 
 #' @param col.regions Colors for the fill color of cells.
 #' 
 #' @param col.text Vector of colors for text strings.
@@ -189,6 +198,7 @@ desplot <- function(form=formula(NULL ~ x + y), data,
                     text=NULL, text.string=NULL,
                     out1=NULL, out1.string=NULL,
                     out2=NULL, out2.string=NULL,
+                    dq=NULL, dq.string=NULL,
                     col.regions=RedGrayBlue, col.text=NULL, text.levels=NULL,
                     out1.gpar=list(col="black", lwd=3),
                     out2.gpar=list(col="yellow", lwd=1, lty=1),
@@ -273,13 +283,22 @@ desplot <- function(form=formula(NULL ~ x + y), data,
     }
   }
 
+  if(is.null(dq.string)){
+    if("dq" %in% names(mc)) {
+      if(!is.character(mc$dq) & !is.null(mc$dq)) {
+        dq.string <- deparse(substitute(dq))
+      }
+    }
+  }
+
   if(gg | isTRUE(options()$desplot.gg)) {
     #if (!requireNamespace("ggplot2")) 
     #  stop("You must first install the ggplot2 package: install.packages('ggplot2')")
     out <- ggdesplot(form=form, data=data, 
                      num.string=num.string, col.string=col.string, 
                      text.string=text.string, 
-                     out1.string=out1.string, out2.string=out2.string, 
+                     out1.string=out1.string, out2.string=out2.string,
+                     dq.string=dq.string,
                      col.regions=col.regions, col.text=col.text,
                      out1.gpar=out1.gpar, out2.gpar=out2.gpar,
                      at=at, midpoint=midpoint,
@@ -300,12 +319,14 @@ desplot <- function(form=formula(NULL ~ x + y), data,
   checkvars(text.string, dn)
   checkvars(out1.string, dn)
   checkvars(out2.string, dn)
+  checkvars(dq.string, dn)
 
   has.num <- !is.null(num.string)
   has.col <- !is.null(col.string)
   has.text <- !is.null(text.string)
   has.out1 <- !is.null(out1.string)
   has.out2 <- !is.null(out2.string)
+  has.dq <- !is.null(dq.string)
   if(has.num & has.text) stop("Specify either 'num' or 'text'. Not both.")
 
 
@@ -437,10 +458,7 @@ desplot <- function(form=formula(NULL ~ x + y), data,
     }
     
   } # end fill.type
-  # comment: the Fields package defines breakpoints so that the first and last
-  # bins have their midpoints at the minimum and maximum values in z
-  # https://www.image.ucar.edu/~nychka/Fields/Help/image.plot.html
-  
+
   # Text colors
   if(is.null(col.text))
     col.text <- c("black", "red3", "darkorange2", "chartreuse4",
@@ -466,6 +484,8 @@ desplot <- function(form=formula(NULL ~ x + y), data,
   lr <- 0
   lt <- NULL
 
+  # should I add a legend line for dq ?
+  
   if(has.out1){ # out1
     lr <- lr + 1
     lt <- c(lt, out1.string)
@@ -594,7 +614,7 @@ desplot <- function(form=formula(NULL ~ x + y), data,
       foo <- placeGrob(foo, textGrob(label = col.string, gp=gpar(cex=key.cex)),
                        row = offset, col = 2)
       for(kk in 1:col.n){
-        foo <- placeGrob(foo, pointsGrob(.5,.5, pch=19,
+        foo <- placeGrob(foo, pointsGrob(.5,.5, pch=19, # 19 = solid circle
                                          gp=gpar(col=col.text[kk],
                                            cex=key.cex)),
                          row = offset + kk, col = 1)
@@ -625,9 +645,18 @@ desplot <- function(form=formula(NULL ~ x + y), data,
   } else if(has.num) {
     cell.text <- as.numeric(num.val)
   } else if(has.col) {
-    cell.text <- rep("x", length=nrow(data))
+    cell.text <- rep("+", length=nrow(data))
   }
-
+  
+  # Data quality flag
+  if(has.dq) {
+    dq.val <- as.factor(data[[dq.string]])
+    levels(dq.val) <- list("0"=c("0","G","Good"),
+                           "1"=c("1","Q","Questionable"),
+                           "2"=c("2","B","Bad","S","Suppressed"))
+    dq.val <- as.numeric(as.character(dq.val))
+  } else dq.val <- NULL
+    
   out1.val <- if(has.out1) data[[out1.string]] else NULL
   out2.val <- if(has.out2) data[[out2.string]] else NULL
   
@@ -636,6 +665,7 @@ desplot <- function(form=formula(NULL ~ x + y), data,
               data=data,
               out1f=out1.val, out1g=out1.gpar,
               out2f=out2.val, out2g=out2.gpar,
+              dq=dq.val,
               flip=flip,
               col.regions=col.regions,
               colorkey = if(fill.type=="num") TRUE else FALSE,
@@ -650,12 +680,14 @@ desplot <- function(form=formula(NULL ~ x + y), data,
               ),
               prepanel = prepanel.desplot,
               panel=function(x, y, z, subscripts, groups, ...,
-                             out1f, out1g, out2f, out2g){
-                # First fill the cells and outline
+                             out1f, out1g, out2f, out2g, dq){
+                # Fill the cells and outline
                 panel.outlinelevelplot(x, y, z, subscripts, at, ...,
                                        out1f=out1f, out1g=out1g,
-                                       out2f=out2f, out2g=out2g)
-                # Then, if we have numbers, colors, or text
+                                       out2f=out2f, out2g=out2g,
+                                       dq=dq)
+
+                # Numbers, colors, or text
                 if(has.num|has.text|has.col)
                   panel.text(x[subscripts], y[subscripts],
                              cell.text[subscripts],
@@ -739,21 +771,31 @@ prepanel.desplot <- function (x, y, subscripts, flip, ...) {
 #' 
 #' @param alpha.regions Transparency for fill colors. Not well tested.
 #' 
-#' @param out1f Factors to use for outlining.
+#' @param out1f Factor to use for outlining (level 1).
 #' 
-#' @param out1g Factors to use for outlining.
+#' @param out1g Factor to use for outlining (level 2).
 #' 
 #' @param out2f Graphics parameters to use for outlining.
 #' 
 #' @param out2g Graphics parameters to use for outlining.
 #' 
+#' @param dq Indicator of which cells should be flagged for data quality.
+#' 
 #' @export 
 #' @references
+#' @examples 
+#' dd <- data.frame(
+#'   x=c(1,2,1,2,3,1,2,1,2,3),
+#'   y=c(2,2,2,2,2,1,1,1,1,1),
+#'   loc=factor(c(1,1,2,2,2,1,1,2,2,2)),
+#'   rep=factor(c(2,2,1,2,3,1,1,1,2,3)))
+#'   
 #' Derived from lattice::panel.levelplot
 panel.outlinelevelplot <- function(x, y, z, subscripts, at,
                                    ...,
                                    alpha.regions = 1,
-                                   out1f, out1g, out2f, out2g) {
+                                   out1f, out1g, out2f, out2g,
+                                   dq) {
   dots=list(...)
   col.regions=dots$col.regions
   # Based on panel.levelplot
@@ -799,6 +841,22 @@ panel.outlinelevelplot <- function(x, y, z, subscripts, at,
                       col="transparent",
                       alpha = alpha.regions))
 
+  # Data quality indicator
+  gp=list(col="black", lwd=1)
+  class(gp) <- "gpar"
+  # lower-left to upper-right
+  xd=x[dq >= 1L]
+  yd=y[dq >= 1L]
+  if(length(xd)>0) grid.segments(x0=xd-.5, y0=yd-.5,
+                                 x1=xd+.5, y1=yd+.5, 
+                                 default.units="native", gp=gp)
+  # upper-left to lower-right
+  xd=x[dq >= 2L]
+  yd=y[dq >= 2L]
+  if(length(xd)>0) grid.segments(x0=xd-.5, y0=yd+.5,
+                                 x1=xd+.5, y1=yd-.5, 
+                                 default.units="native", gp=gp)
+  
   # Outline factor 1
   if(!is.null(out1f)){
     bb <- calc_borders(x, y, as.character(out1f[subscripts]))

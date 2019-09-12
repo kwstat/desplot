@@ -25,10 +25,6 @@ install.packages("devtools")
 devtools::install_github("kwstat/desplot")
 ```
 
-## Vignettes
-
-[Plotting field maps with the desplot package](https://rawgit.com/kwstat/desplot/master/vignettes/desplot_examples.html)
-
 ## Example 1
 
 This data is is from a split-plot experiment with 6 replicates.  The replicates are shown by the colored regions and outlined by the thick lines.  The text codes and the thin lines define the whole-plots.  The nitrogen sub-plot treatments are shown by the text colors.
@@ -41,7 +37,7 @@ desplot(block ~ col+row, yates.oats,
         out1=block, out2=gen, 
         out2.gpar=list(col = "gray50", lwd = 1, lty = 1))
 ```
-![desplot](figure/yates_oats_design.png?raw=true)
+![desplot](man/figures/yates_oats_design.png?raw=true)
 
 The default graphics are based on lattice.  It is also possible to create graphics based on ggplot2 by adding 'gg=TRUE' to the function. This functionality is in development and the legend for the ggplot version is not as polished as the lattice version.
 
@@ -55,7 +51,7 @@ desplot(block ~ col+row, yates.oats,
         # note, out2.gpar is ignored
 ```
 
-![desplot](figure/yates_oats_design_ggplot.png?raw=true)
+![desplot](man/figures/yates_oats_design_ggplot.png?raw=true)
 
 ## Example 2
 
@@ -67,4 +63,4 @@ require(desplot)
 desplot(yield ~ col*row, yates.oats,
         col=gen, num=nitro, cex=1, out1=block, aspect=511/176)
 ```
-![desplot](figure/yates_oats_yield.png?raw=true)
+![desplot](man/figures/yates_oats_yield.png?raw=true)

@@ -5,7 +5,7 @@
 \title{Panel Function for desplot}
 \usage{
 panel.outlinelevelplot(x, y, z, subscripts, at, ..., alpha.regions = 1,
-  out1f, out1g, out2f, out2g)
+  out1f, out1g, out2f, out2g, dq)
 }
 \arguments{
 \item{x}{Coordinates}
@@ -22,13 +22,15 @@ panel.outlinelevelplot(x, y, z, subscripts, at, ..., alpha.regions = 1,
 
 \item{alpha.regions}{Transparency for fill colors. Not well tested.}
 
-\item{out1f}{Factors to use for outlining.}
+\item{out1f}{Factor to use for outlining (level 1).}
 
-\item{out1g}{Factors to use for outlining.}
+\item{out1g}{Factor to use for outlining (level 2).}
 
 \item{out2f}{Graphics parameters to use for outlining.}
 
 \item{out2g}{Graphics parameters to use for outlining.}
+
+\item{dq}{Indicator of which cells should be flagged for data quality.}
 }
 \description{
 This is a panel function for \code{desplot} which fills cells with

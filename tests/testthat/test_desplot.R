@@ -14,7 +14,8 @@ dat0 <- data.frame(loc = c('loc1','loc1','loc1','loc1',
                           'Trt1','Trt2','Trt1','Trt2','Trt1','Trt2'),
                    trt2=c('Hybrid1','Hybrid1','Hybrid2','Hybrid2','Hybrid1',
                           'Hybrid2','Hybrid3','Hybrid1','Hybrid2','Hybrid3'),
-                   trt3=c("A","A","B","B","A","A","A","A","A","A"))
+                   trt3=c("A","A","B","B","A","A","A","A","A","A"),
+                   dq=c(0,0,0,1,2))
 dat3 <- data.frame(
   yield = 7:1,
   x = c(5,  6,     1,  3,  4, 5, 5),
@@ -25,7 +26,7 @@ dat3 <- data.frame(
 require(agridat)
 data(yates.oats, package="agridat")
 oats35 <- yates.oats
-
+oats35$dq <- rep(c(0,0,0,0,0,0,0,0,1,2), length=72)
 # ----------------------------------------------------------------------------
 
 # col.regions, at, midpoint
@@ -74,6 +75,10 @@ test_that("out1,out2,out1.gpar,out2.gpar", {
     # no combinations of L1 & B2 ???
     # desplot(yield ~ x*y|loc, dat3, out1=block, gg=TRUE)
   })
+})
+
+test_that("dq", {
+  desplot(yield~col+row, oats35, out1=block, dq=dq)
 })
 
 test_that("strip.cex", {

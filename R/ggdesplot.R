@@ -73,6 +73,7 @@ ggdesplot <- function(form=formula(NULL ~ x + y), data,
                       text=NULL, text.string=NULL,
                       out1=NULL, out1.string=NULL,
                       out2=NULL, out2.string=NULL,
+                      dq=NULL, dq.string=NULL,
                       col.regions=RedGrayBlue, col.text=NULL, text.levels=NULL,
                       out1.gpar=list(col="black", lwd=3),
                       out2.gpar=list(col="yellow", lwd=1, lty=1),
@@ -158,6 +159,14 @@ ggdesplot <- function(form=formula(NULL ~ x + y), data,
     }
   }
   
+  if(is.null(dq.string)){
+    if("dq" %in% names(mc)) {
+      if(!is.character(mc$dq) & !is.null(mc$dq)) {
+        dq.string <- deparse(substitute(dq))
+      }
+    }
+  }
+  
   dn <- names(data)
   checkvars <- function(x, dn){
     if(!is.null(x) && !is.element(x, dn))
@@ -168,12 +177,14 @@ ggdesplot <- function(form=formula(NULL ~ x + y), data,
   checkvars(text.string, dn)
   checkvars(out1.string, dn)
   checkvars(out2.string, dn)
-
+  checkvars(dq.string, dn)
+  
   has.num <- !is.null(num.string)
   has.col <- !is.null(col.string)
   has.text <- !is.null(text.string)
   has.out1 <- !is.null(out1.string)
   has.out2 <- !is.null(out2.string)
+  has.dq <- !is.null(dq.string)
   if(has.num & has.text) stop("Specify either 'num' or 'text'. Not both.")
 
   # Split a formula like: resp~x*y|cond into a list of text strings called
@@ -408,6 +419,15 @@ ggdesplot <- function(form=formula(NULL ~ x + y), data,
     data$cell.text <- rep("x", length=nrow(data))
   }
 
+  # Data quality flag
+  if(has.dq) {
+    data$dq.val <- factor(data[[dq.string]])
+    levels(data$dq.val) <- list("0"=c("0","G","Good"),
+                           "1"=c("1","Q","Questionable"),
+                           "2"=c("2","B","Bad","S","Suppressed"))
+    data$dq.val <- as.numeric(as.character(data$dq.val))
+  }
+
   # --------------- build the plot ---------------
 
   out <- ggplot(data, aes_string(x=x.string, y=y.string))
@@ -442,6 +462,30 @@ ggdesplot <- function(form=formula(NULL ~ x + y), data,
                                      label="cell.text", color=col.string), 
                           size=4*cex) + 
     scale_color_manual(values=col.text)
+  
+  if(has.dq) {
+    # Data quality indicator
+
+    # lower-left to upper-right
+    data$x1l = data[[x.string]]-.5
+    data$x1r = data[[x.string]]+.5
+    data$y1l = data[[y.string]]-.5
+    data$y1r = data[[y.string]]+.5
+    # need to use aes_string to prevent CRAN check
+    # "no visible binding for global variable"
+    # Same for data[data$dq.val ,] instead of subset
+    out <- out +
+      geom_segment(data=data[data$dq.val >= 1L, ],
+                   aes_string(x="x1l", xend="x1r", y="y1l", yend="y1r"),
+                   color="black")
+    # upper-left to lower-right
+    data$y1l = data[[y.string]]+.5
+    data$y1r = data[[y.string]]-.5
+    out <- out +
+      geom_segment(data=data[data$dq.val >= 2L, ],
+                   aes_string(x="x1l", xend="x1r", y="y1l", yend="y1r"),
+                   color="black")
+  }
   
   if(!show.key)
     out <- out + theme(legend.position="none")

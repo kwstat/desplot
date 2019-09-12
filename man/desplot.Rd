@@ -8,22 +8,24 @@
 desplot(form = formula(NULL ~ x + y), data, num = NULL,
   num.string = NULL, col = NULL, col.string = NULL, text = NULL,
   text.string = NULL, out1 = NULL, out1.string = NULL, out2 = NULL,
-  out2.string = NULL, col.regions = RedGrayBlue, col.text = NULL,
-  text.levels = NULL, out1.gpar = list(col = "black", lwd = 3),
-  out2.gpar = list(col = "yellow", lwd = 1, lty = 1), at,
-  midpoint = "median", ticks = FALSE, flip = FALSE, main = NULL,
-  xlab, ylab, shorten = "abb", show.key = TRUE, key.cex, cex = 0.4,
-  strip.cex = 0.75, subset = TRUE, gg = FALSE, ...)
+  out2.string = NULL, dq = NULL, dq.string = NULL,
+  col.regions = RedGrayBlue, col.text = NULL, text.levels = NULL,
+  out1.gpar = list(col = "black", lwd = 3), out2.gpar = list(col =
+  "yellow", lwd = 1, lty = 1), at, midpoint = "median", ticks = FALSE,
+  flip = FALSE, main = NULL, xlab, ylab, shorten = "abb",
+  show.key = TRUE, key.cex, cex = 0.4, strip.cex = 0.75,
+  subset = TRUE, gg = FALSE, ...)
 
 ggdesplot(form = formula(NULL ~ x + y), data, num = NULL,
   num.string = NULL, col = NULL, col.string = NULL, text = NULL,
   text.string = NULL, out1 = NULL, out1.string = NULL, out2 = NULL,
-  out2.string = NULL, col.regions = RedGrayBlue, col.text = NULL,
-  text.levels = NULL, out1.gpar = list(col = "black", lwd = 3),
-  out2.gpar = list(col = "yellow", lwd = 1, lty = 1), at,
-  midpoint = "median", ticks = FALSE, flip = FALSE, main = NULL,
-  xlab, ylab, shorten = "abb", show.key = TRUE, key.cex, cex = 0.4,
-  strip.cex = 0.75, subset = TRUE, gg = FALSE, ...)
+  out2.string = NULL, dq = NULL, dq.string = NULL,
+  col.regions = RedGrayBlue, col.text = NULL, text.levels = NULL,
+  out1.gpar = list(col = "black", lwd = 3), out2.gpar = list(col =
+  "yellow", lwd = 1, lty = 1), at, midpoint = "median", ticks = FALSE,
+  flip = FALSE, main = NULL, xlab, ylab, shorten = "abb",
+  show.key = TRUE, key.cex, cex = 0.4, strip.cex = 0.75,
+  subset = TRUE, gg = FALSE, ...)
 }
 \arguments{
 \item{form}{A formula like \code{yield~x*y|location}. Note x,y are numeric.}
@@ -59,6 +61,15 @@ for second-level outlining around blocks of cells.}
 
 \item{out2.string}{String name of the column of the data to use 
 for second-level outlining around blocks of cells.}
+
+\item{dq}{Bare name (no quotes) of the column of the data to use 
+for indicating bad data quality with diagonal lines.
+This can either be a numeric vector or a factor/text. 
+Cells with 1/"Q"/"Questionable" have one diagonal line.
+Cells with 2/"B"/"Bad","S","Suppressed" have crossed diagonal lines.}
+
+\item{dq.string}{String name of the column of the data to use 
+for indicating bad data quality with diagonal lines.}
 
 \item{col.regions}{Colors for the fill color of cells.}
 
