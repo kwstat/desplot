@@ -57,7 +57,7 @@ to the paired geom/stat.}
 }
 \description{
 `geom_tileborder` draws a border between tiles of different classes.
-The reqired aesthetics are `aes(x,y,grp)`, where `grp` is the grouping
+The required aesthetics are `aes(x,y,grp)`, where `grp` is the grouping
 classification that separates tiles.
 }
 \details{

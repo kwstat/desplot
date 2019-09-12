@@ -783,19 +783,14 @@ prepanel.desplot <- function (x, y, subscripts, flip, ...) {
 #' 
 #' @export 
 #' @references
-#' @examples 
-#' dd <- data.frame(
-#'   x=c(1,2,1,2,3,1,2,1,2,3),
-#'   y=c(2,2,2,2,2,1,1,1,1,1),
-#'   loc=factor(c(1,1,2,2,2,1,1,2,2,2)),
-#'   rep=factor(c(2,2,1,2,3,1,1,1,2,3)))
-#'   
-#' Derived from lattice::panel.levelplot
+#' None
+#' 
 panel.outlinelevelplot <- function(x, y, z, subscripts, at,
                                    ...,
                                    alpha.regions = 1,
                                    out1f, out1g, out2f, out2g,
                                    dq) {
+  #  Derived from lattice::panel.levelplot
   dots=list(...)
   col.regions=dots$col.regions
   # Based on panel.levelplot
