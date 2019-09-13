@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>desplot 1.5 • desplot</title>
+<title>desplot 1.6 • desplot</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
@@ -42,7 +42,7 @@
 
 
 
-<meta property="og:title" content="desplot 1.5" />
+<meta property="og:title" content="desplot 1.6" />
 <meta property="og:image" content="/logo.png" />
 <meta name="twitter:card" content="summary" />
 
@@ -127,26 +127,33 @@
 <div class="row">
   <div class="contents col-md-9">
     <div class="page-header">
-      <h1>desplot 1.5</h1>
+      <h1>desplot 1.6</h1>
     </div>
 
 
-<div id="desplot-15" class="section level1">
+<div id="desplot-16" class="section level1">
 
 <div id="test-environments" class="section level2">
 <h2 class="hasAnchor">
 <a href="#test-environments" class="anchor"></a>test environments</h2>
 <ul>
-<li>local R 3.5.3 Windows 7</li>
+<li>local R 3.6.1 Windows 7</li>
+<li>win-builder R 3.6.1
+<ul>
 <li>win-builder R 3.6.0 alpha</li>
-<li>win-builder R 3.5.3</li>
+</ul>
+</li>
 </ul>
 </div>
 <div id="r-cmd-check-results" class="section level2">
 <h2 class="hasAnchor">
 <a href="#r-cmd-check-results" class="anchor"></a>R CMD check results</h2>
 <p>One NOTE:</p>
-<p>Found the following (possibly) invalid URLs: URL: <a href="https://doi.org/10.2307/2983638" class="uri">https://doi.org/10.2307/2983638</a> From: inst/doc/desplot_examples.html Status: 403 Message: Forbidden</p>
+<pre><code>Found the following (possibly) invalid URLs:
+  URL: https://doi.org/10.2307/2983638
+    From: inst/doc/desplot_examples.html
+    Status: 403
+    Message: Forbidden</code></pre>
 <p>This URL works fine in a web browser. Please advise if changes are needed.</p>
 </div>
 <div id="downstream-dependencies" class="section level2">
@@ -156,33 +163,41 @@
 <p>Checked OK.</p>
 </div>
 </div>
-<div id="desplot-13" class="section level1">
+<div id="desplot-15" class="section level1">
 <h1 class="hasAnchor">
-<a href="#desplot-13" class="anchor"></a>desplot 1.3</h1>
+<a href="#desplot-15" class="anchor"></a>desplot 1.5</h1>
 <div id="test-environments-1" class="section level2">
 <h2 class="hasAnchor">
 <a href="#test-environments-1" class="anchor"></a>test environments</h2>
 <ul>
-<li>local R 3.4.2 Windows 7</li>
-<li>win-builder r-release 3.4.2</li>
-<li>win-builder r-devel</li>
+<li>local R 3.5.3 Windows 7</li>
+<li>win-builder R 3.6.0 alpha</li>
+<li>win-builder R 3.5.3</li>
 </ul>
 </div>
 <div id="r-cmd-check-results-1" class="section level2">
 <h2 class="hasAnchor">
 <a href="#r-cmd-check-results-1" class="anchor"></a>R CMD check results</h2>
-<p>There were no ERRORs, WARNINGs, or NOTEs.</p>
+<p>One NOTE:</p>
+<p>Found the following (possibly) invalid URLs: URL: <a href="https://doi.org/10.2307/2983638" class="uri">https://doi.org/10.2307/2983638</a> From: inst/doc/desplot_examples.html Status: 403 Message: Forbidden</p>
+<p>This URL works fine in a web browser. Please advise if changes are needed.</p>
+</div>
+<div id="downstream-dependencies-1" class="section level2">
+<h2 class="hasAnchor">
+<a href="#downstream-dependencies-1" class="anchor"></a>Downstream dependencies</h2>
+<p>Reverse suggests: agridat</p>
+<p>Checked OK.</p>
 </div>
 </div>
-<div id="desplot-12" class="section level1">
+<div id="desplot-13" class="section level1">
 <h1 class="hasAnchor">
-<a href="#desplot-12" class="anchor"></a>desplot 1.2</h1>
+<a href="#desplot-13" class="anchor"></a>desplot 1.3</h1>
 <div id="test-environments-2" class="section level2">
 <h2 class="hasAnchor">
 <a href="#test-environments-2" class="anchor"></a>test environments</h2>
 <ul>
-<li>local R 3.4.0 Windows 7</li>
-<li>win-builder R 3.4.1</li>
+<li>local R 3.4.2 Windows 7</li>
+<li>win-builder r-release 3.4.2</li>
 <li>win-builder r-devel</li>
 </ul>
 </div>
@@ -192,16 +207,16 @@
 <p>There were no ERRORs, WARNINGs, or NOTEs.</p>
 </div>
 </div>
-<div id="desplot-11" class="section level1">
+<div id="desplot-12" class="section level1">
 <h1 class="hasAnchor">
-<a href="#desplot-11" class="anchor"></a>desplot 1.1</h1>
+<a href="#desplot-12" class="anchor"></a>desplot 1.2</h1>
 <div id="test-environments-3" class="section level2">
 <h2 class="hasAnchor">
 <a href="#test-environments-3" class="anchor"></a>test environments</h2>
 <ul>
-<li>local R 3.3.2 on Windows 7</li>
-<li>win-builder R 3.3.2</li>
-<li>R-hub Debian Linux, R-devel, GCC</li>
+<li>local R 3.4.0 Windows 7</li>
+<li>win-builder R 3.4.1</li>
+<li>win-builder r-devel</li>
 </ul>
 </div>
 <div id="r-cmd-check-results-3" class="section level2">
@@ -210,22 +225,40 @@
 <p>There were no ERRORs, WARNINGs, or NOTEs.</p>
 </div>
 </div>
+<div id="desplot-11" class="section level1">
+<h1 class="hasAnchor">
+<a href="#desplot-11" class="anchor"></a>desplot 1.1</h1>
+<div id="test-environments-4" class="section level2">
+<h2 class="hasAnchor">
+<a href="#test-environments-4" class="anchor"></a>test environments</h2>
+<ul>
+<li>local R 3.3.2 on Windows 7</li>
+<li>win-builder R 3.3.2</li>
+<li>R-hub Debian Linux, R-devel, GCC</li>
+</ul>
+</div>
+<div id="r-cmd-check-results-4" class="section level2">
+<h2 class="hasAnchor">
+<a href="#r-cmd-check-results-4" class="anchor"></a>R CMD check results</h2>
+<p>There were no ERRORs, WARNINGs, or NOTEs.</p>
+</div>
+</div>
 <div id="desplot-10" class="section level1">
 <h1 class="hasAnchor">
 <a href="#desplot-10" class="anchor"></a>desplot 1.0</h1>
 <p>This is a new package submission. The functions in this package are being split off from the ‘agridat’ package so that the latter can be a data-only package.</p>
-<div id="test-environments-4" class="section level2">
+<div id="test-environments-5" class="section level2">
 <h2 class="hasAnchor">
-<a href="#test-environments-4" class="anchor"></a>test environments</h2>
+<a href="#test-environments-5" class="anchor"></a>test environments</h2>
 <ul>
 <li>local R 3.2.3 on Windows 7</li>
 <li>win-builder release</li>
 <li>win-builder devel</li>
 </ul>
 </div>
-<div id="r-cmd-check-results-4" class="section level2">
+<div id="r-cmd-check-results-5" class="section level2">
 <h2 class="hasAnchor">
-<a href="#r-cmd-check-results-4" class="anchor"></a>R CMD check results</h2>
+<a href="#r-cmd-check-results-5" class="anchor"></a>R CMD check results</h2>
 <p>There were no ERRORs, WARNINGs, or NOTEs.</p>
 </div>
 </div>
