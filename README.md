@@ -3,11 +3,11 @@
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/desplot)](https://cran.r-project.org/package=desplot)
 [![CRAN_Downloads](https://cranlogs.r-pkg.org/badges/desplot)](https://cranlogs.r-pkg.org/badges/desplot)
 
-Homepage: https://kwstat.github.io/desplot/
+Homepage: https://kwstat.github.io/desplot
 
 Repository: https://github.com/kwstat/desplot
 
-Functions for plotting experimental designs of field trials in agriculture.
+`desplot` makes it easy to plot experimental designs of field trials in agriculture.
 
 Key features:
 

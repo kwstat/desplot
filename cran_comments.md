@@ -4,7 +4,8 @@
 
 * local R 3.6.1 Windows 7
 * win-builder R 3.6.1
-  * win-builder R 3.6.0 alpha
+* win-builder R 3.5.3
+* R-hub Debian Linux, R-devel, GCC
 
 ## R CMD check results
 
@@ -25,6 +26,7 @@ This URL works fine in a web browser. Please advise if changes are needed.
 Reverse suggests:	agridat
 
 Checked OK.
+
 
 
 # desplot 1.5
