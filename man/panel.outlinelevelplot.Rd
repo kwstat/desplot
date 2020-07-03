@@ -4,8 +4,20 @@
 \alias{panel.outlinelevelplot}
 \title{Panel Function for desplot}
 \usage{
-panel.outlinelevelplot(x, y, z, subscripts, at, ..., alpha.regions = 1,
-  out1f, out1g, out2f, out2g, dq)
+panel.outlinelevelplot(
+  x,
+  y,
+  z,
+  subscripts,
+  at,
+  ...,
+  alpha.regions = 1,
+  out1f,
+  out1g,
+  out2f,
+  out2g,
+  dq
+)
 }
 \arguments{
 \item{x}{Coordinates}

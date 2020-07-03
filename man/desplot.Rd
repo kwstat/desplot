@@ -5,32 +5,84 @@
 \alias{ggdesplot}
 \title{Plot the layout/data of a field experiment.}
 \usage{
-desplot(form = formula(NULL ~ x + y), data, num = NULL,
-  num.string = NULL, col = NULL, col.string = NULL, text = NULL,
-  text.string = NULL, out1 = NULL, out1.string = NULL, out2 = NULL,
-  out2.string = NULL, dq = NULL, dq.string = NULL,
-  col.regions = RedGrayBlue, col.text = NULL, text.levels = NULL,
-  out1.gpar = list(col = "black", lwd = 3), out2.gpar = list(col =
-  "yellow", lwd = 1, lty = 1), at, midpoint = "median", ticks = FALSE,
-  flip = FALSE, main = NULL, xlab, ylab, shorten = "abb",
-  show.key = TRUE, key.cex, cex = 0.4, strip.cex = 0.75,
-  subset = TRUE, gg = FALSE, ...)
+desplot(
+  data,
+  form = formula(NULL ~ x + y),
+  num = NULL,
+  num.string = NULL,
+  col = NULL,
+  col.string = NULL,
+  text = NULL,
+  text.string = NULL,
+  out1 = NULL,
+  out1.string = NULL,
+  out2 = NULL,
+  out2.string = NULL,
+  dq = NULL,
+  dq.string = NULL,
+  col.regions = RedGrayBlue,
+  col.text = NULL,
+  text.levels = NULL,
+  out1.gpar = list(col = "black", lwd = 3),
+  out2.gpar = list(col = "yellow", lwd = 1, lty = 1),
+  at,
+  midpoint = "median",
+  ticks = FALSE,
+  flip = FALSE,
+  main = NULL,
+  xlab,
+  ylab,
+  shorten = "abb",
+  show.key = TRUE,
+  key.cex,
+  cex = 0.4,
+  strip.cex = 0.75,
+  subset = TRUE,
+  gg = FALSE,
+  ...
+)
 
-ggdesplot(form = formula(NULL ~ x + y), data, num = NULL,
-  num.string = NULL, col = NULL, col.string = NULL, text = NULL,
-  text.string = NULL, out1 = NULL, out1.string = NULL, out2 = NULL,
-  out2.string = NULL, dq = NULL, dq.string = NULL,
-  col.regions = RedGrayBlue, col.text = NULL, text.levels = NULL,
-  out1.gpar = list(col = "black", lwd = 3), out2.gpar = list(col =
-  "yellow", lwd = 1, lty = 1), at, midpoint = "median", ticks = FALSE,
-  flip = FALSE, main = NULL, xlab, ylab, shorten = "abb",
-  show.key = TRUE, key.cex, cex = 0.4, strip.cex = 0.75,
-  subset = TRUE, gg = FALSE, ...)
+ggdesplot(
+  data,
+  form = formula(NULL ~ x + y),
+  num = NULL,
+  num.string = NULL,
+  col = NULL,
+  col.string = NULL,
+  text = NULL,
+  text.string = NULL,
+  out1 = NULL,
+  out1.string = NULL,
+  out2 = NULL,
+  out2.string = NULL,
+  dq = NULL,
+  dq.string = NULL,
+  col.regions = RedGrayBlue,
+  col.text = NULL,
+  text.levels = NULL,
+  out1.gpar = list(col = "black", lwd = 3),
+  out2.gpar = list(col = "yellow", lwd = 1, lty = 1),
+  at,
+  midpoint = "median",
+  ticks = FALSE,
+  flip = FALSE,
+  main = NULL,
+  xlab,
+  ylab,
+  shorten = "abb",
+  show.key = TRUE,
+  key.cex,
+  cex = 0.4,
+  strip.cex = 0.75,
+  subset = TRUE,
+  gg = FALSE,
+  ...
+)
 }
 \arguments{
-\item{form}{A formula like \code{yield~x*y|location}. Note x,y are numeric.}
-
 \item{data}{A data frame.}
+
+\item{form}{A formula like \code{yield~x*y|location}. Note x,y are numeric.}
 
 \item{num}{Bare name (no quotes) of the column of the data to use 
 as a factor for number-coding the text in each cell.}
@@ -174,16 +226,22 @@ if(require(agridat)){
 
 # Show how to customize any feature.  Here: make the strips bigger.
 data(besag.met)
-d1 <- desplot(yield ~ col*row|county, besag.met, main="besag.met",
+d1 <- desplot(besag.met, 
+              yield ~ col*row|county, 
+              main="besag.met",
               out1=rep, out2=block, out2.gpar=list(col="white"), strip.cex=2)
 d1 <- update(d1, par.settings = list(layout.heights=list(strip=2)))
 print(d1)
 
 # Show experiment layout
 data(yates.oats)
-desplot(yield ~ col+row, yates.oats, out1=block, out2=gen)
+desplot(yates.oats, 
+        yield ~ col+row, 
+        out1=block, out2=gen)
 
-desplot(block ~ col+row, yates.oats, col=nitro, text=gen, cex=1, out1=block,
+desplot(yates.oats, 
+        block ~ col+row, 
+        col=nitro, text=gen, cex=1, out1=block,
         out2=gen, out2.gpar=list(col = "gray50", lwd = 1, lty = 1))
 
 }

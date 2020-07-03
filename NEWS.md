@@ -1,4 +1,7 @@
 
+# desplot 1.7 - Jul 2020
+
+* Please use `desplot(data,formula)` instead of `desplot(formula,data)`. The latter is being deprecated.
 
 # desplot 1.6 - Sep 2019
 
@@ -20,7 +23,7 @@
 
 # desplot 1.1 - Dec 2016
 
-* A new function argument `midpoint="median"` now uses the median to determine the midpoint for the ribbon. Previously, the midpoint was halfway between the minimum and maximum data values.  Use `midpoint=NULL` or `midpoint="midrange"` to restore the old behavior.
+* New function argument `midpoint="median"` uses the median to determine the midpoint for the ribbon. Previously, the midpoint was halfway between the minimum and maximum data values.  Use `midpoint=NULL` or `midpoint="midrange"` to restore the old behavior.
 
 * Minor fix so vignette example with `yates.oats` data will work with next version of `agridat`.
 

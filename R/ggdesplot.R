@@ -22,36 +22,36 @@ if(0){
 if(0){
   # yikes, ggplot is SLOW!
   libs(bench)
-  # calculating: lattice 33 ms, ggplot 17 ms
-  bench::mark(desplot(rep ~ col*row|county, data=besag.met, col=block, cex=.8))
-  bench::mark(ggdesplot(rep ~ col*row|county, data=besag.met, col=block, cex=.8))
-  # printing: lattice 212 ms, ggplot 934 ms
-  bench::mark(print(desplot(rep ~ col*row|county, data=besag.met, col=block, cex=.8)))
-  bench::mark(print(ggdesplot(rep ~ col*row|county, data=besag.met, col=block, cex=.8)))
+  # calculating: lattice 15 ms, ggplot 11 ms
+  bench::mark(desplot(besag.met, rep ~ col*row|county, col=block, cex=.8))
+  bench::mark(ggdesplot(besag.met, rep ~ col*row|county, col=block, cex=.8))
+  # printing: lattice 257 ms, ggplot 630 ms
+  bench::mark(print(desplot(besag.met, rep ~ col*row|county, col=block, cex=.8)))
+  bench::mark(print(ggdesplot(besag.met, rep ~ col*row|county, col=block, cex=.8)))
 }
 if(0){
   libs(agridat)
-  ggdesplot( ~ col*row|county, data=besag.met)
-  ggdesplot( ~ col*row|county, data=besag.met, col=block)
-  ggdesplot( ~ col*row|county, data=besag.met, num=block)
-  ggdesplot( ~ col*row|county, data=besag.met, text=block)
+  ggdesplot(besag.met, ~ col*row|county)
+  ggdesplot(besag.met, ~ col*row|county, col=block)
+  ggdesplot(besag.met, ~ col*row|county, num=block)
+  ggdesplot(besag.met,  ~ col*row|county, text=block)
   
-  ggdesplot(rep ~ col*row|county, data=besag.met)
-  ggdesplot(rep ~ col*row|county, data=besag.met, col=block, cex=.8)
-  ggdesplot(rep ~ col*row|county, data=besag.met, num=block, cex=.8)
-  ggdesplot(rep ~ col*row|county, data=besag.met, text=block, cex=.8)
+  ggdesplot(besag.met, rep ~ col*row|county)
+  ggdesplot(besag.met, rep ~ col*row|county, col=block, cex=.8)
+  ggdesplot(besag.met, rep ~ col*row|county, num=block, cex=.8)
+  ggdesplot(besag.met, rep ~ col*row|county, text=block, cex=.8)
   
-  ggdesplot(yield ~ col*row|county, data=besag.met, out1=rep)
-  ggdesplot(yield ~ col*row|county, data=besag.met, out2=block)
-  ggdesplot(yield ~ col*row|county, data=besag.met, out1=rep, out2=block)
+  ggdesplot(besag.met, yield ~ col*row|county, out1=rep)
+  ggdesplot(besag.met, yield ~ col*row|county, out2=block)
+  ggdesplot(besag.met, yield ~ col*row|county, out1=rep, out2=block)
   
-  ggdesplot(rep ~ col*row|county, data=besag.met, ticks=TRUE)
-  ggdesplot(rep ~ col*row|county, data=besag.met, ticks=TRUE, flip=TRUE)
+  ggdesplot(besag.met, rep ~ col*row|county, ticks=TRUE)
+  ggdesplot(besag.met, rep ~ col*row|county, ticks=TRUE, flip=TRUE)
                       
-  ggdesplot(rep ~ col*row|county, data=besag.met, out1=rep, ticks=TRUE,
+  ggdesplot(besag.met, rep ~ col*row|county, out1=rep, ticks=TRUE,
             main="besag.met", xlab="column", ylab="row")
 
-  ggdesplot(rep ~ col*row|county, data=besag.met, out1=rep, show.key=FALSE)
+  ggdesplot(besag.met, rep ~ col*row|county, out1=rep, show.key=FALSE)
   ##                   col.regions=RedGrayBlue, col.text=NULL, text.levels=NULL,
   ##                   out1.gpar=list(col="black", lwd=3),
   ##                   out2.gpar=list(col="yellow", lwd=1, lty=1),
@@ -67,7 +67,8 @@ if(0){
 #' @importFrom stats as.formula formula median
 #' @export
 #' @rdname desplot
-ggdesplot <- function(form=formula(NULL ~ x + y), data,
+ggdesplot <- function(data, 
+                      form=formula(NULL ~ x + y),
                       num=NULL, num.string=NULL,
                       col=NULL, col.string=NULL,
                       text=NULL, text.string=NULL,
@@ -87,8 +88,20 @@ ggdesplot <- function(form=formula(NULL ~ x + y), data,
                       strip.cex=.75, 
                       subset=TRUE, gg=FALSE, ...){
 
-  # Use data name for default title.  Do this BEFORE subset!
-  if(missing(main)) main <- deparse(substitute(data))
+  if(class(form)=="data.frame") {
+    # Old style: desplot(form, data)
+    # Use data name for default title.  Do this BEFORE subset!
+    if(missing(main)) main <- deparse(substitute(form))
+    tmp <- form
+    form <- data
+    data <- tmp
+    message("Please use desplot(data,form) instead of desplot(form,data)")
+  } else {
+    # New style: desplot(data, form)
+    # Use data name for default title.  Do this BEFORE subset!
+    if(missing(main)) main <- deparse(substitute(data))
+  }
+  
 
   # subset, based on subset() function
   ix <- if (missing(subset)) 
