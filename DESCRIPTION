@@ -13,6 +13,7 @@ Imports:
 Suggests:
     agridat,
     knitr,
+    rmarkdown,
     testthat
 License: GPL-3
 LazyData: yes

@@ -35,7 +35,7 @@ This data is is from a split-plot experiment with 6 replicates.  The replicates 
 ```R
 require(agridat)
 require(desplot)
-desplot(block ~ col+row, yates.oats,
+desplot(yates.oats, block ~ col+row,
         col=nitro, text=gen, cex=1, aspect=511/176,
         out1=block, out2=gen, 
         out2.gpar=list(col = "gray50", lwd = 1, lty = 1))
@@ -47,7 +47,7 @@ The default graphics are based on lattice.  It is also possible to create graphi
 ```R
 require(agridat)
 require(desplot)
-desplot(block ~ col+row, yates.oats,
+desplot(yates.oats, block ~ col+row,
         col=nitro, text=gen, cex=1, aspect=511/176,
         out1=block, out2=gen, 
         out2.gpar=list(col = "gray50", lwd = 1, lty = 1), gg=TRUE)
@@ -63,7 +63,7 @@ Another very useful technique is to color the cells according to a continuous re
 ```R
 require(agridat)
 require(desplot)
-desplot(yield ~ col*row, yates.oats,
+desplot(yates.oats, yield ~ col*row,
         col=gen, num=nitro, cex=1, out1=block, aspect=511/176)
 ```
 ![desplot](man/figures/yates_oats_yield.png?raw=true)

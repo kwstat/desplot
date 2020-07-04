@@ -1,3 +1,33 @@
+# desplot 1.7
+
+## test environments
+
+* local R 4.0.0 Windows 10
+* win-builder R 4.0.2
+* Rhub Debian Linux, R-devel, GCC 
+
+## R CMD check results
+
+One NOTE:
+
+```
+Found the following (possibly) invalid URLs:
+  URL: https://doi.org/10.2307/2983638
+    From: inst/doc/desplot_examples.html
+    Status: 403
+    Message: Forbidden
+```
+
+
+This URL works fine in a web browser. Please advise if changes are needed.
+
+## Downstream dependencies
+
+Reverse suggests:	agridat
+
+Checked OK.
+
+
 # desplot 1.6
 
 ## test environments
@@ -17,7 +47,7 @@ Found the following (possibly) invalid URLs:
     From: inst/doc/desplot_examples.html
     Status: 403
     Message: Forbidden
-```    
+```
 
 This URL works fine in a web browser. Please advise if changes are needed.
 
