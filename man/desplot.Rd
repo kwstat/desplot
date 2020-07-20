@@ -247,7 +247,8 @@ desplot(yates.oats,
 }
 }
 \references{
-K. Ryder (1981). Field plans: why the biometrician finds them useful.
+K. Ryder (1981).
+Field plans: why the biometrician finds them useful.
 \emph{Experimental Agriculture}, 17, 243--256.
 }
 \author{

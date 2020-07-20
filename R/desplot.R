@@ -1,5 +1,7 @@
 # desplot.R
 
+# ----------------------------------------------------------------------------
+
 #' Function to create a Red-Gray-Blue palette
 #'
 #' A function to create a Red-Gray-Blue palette.
@@ -164,12 +166,13 @@ RedGrayBlue <- colorRampPalette(c("firebrick", "lightgray", "#375997"))
 #' 
 #' @references
 #' 
-#' K. Ryder (1981). Field plans: why the biometrician finds them useful.
+#' K. Ryder (1981).
+#' Field plans: why the biometrician finds them useful.
 #' \emph{Experimental Agriculture}, 17, 243--256.
 #' 
 #' @import grid
 #' @import lattice
-#' @import reshape2
+#' @importFrom reshape2 acast melt
 #' @importFrom stats as.formula formula median
 #' @export
 #' @rdname desplot
@@ -219,6 +222,7 @@ desplot <- function(data,
                     strip.cex=.75, 
                     subset=TRUE, gg=FALSE, ...){
 
+  # Would be nice to remove this code someday, maybe 2022?
   if(class(data)=="formula") {
     # Old style: desplot(form, data)
     # Use data name for default title.  Do this BEFORE subset!

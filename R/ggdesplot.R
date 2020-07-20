@@ -88,6 +88,7 @@ ggdesplot <- function(data,
                       strip.cex=.75, 
                       subset=TRUE, gg=FALSE, ...){
 
+  # Would be nice to remove this code someday, maybe 2022?
   if(class(form)=="data.frame") {
     # Old style: desplot(form, data)
     # Use data name for default title.  Do this BEFORE subset!

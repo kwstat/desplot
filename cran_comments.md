@@ -2,24 +2,14 @@
 
 ## test environments
 
-* local R 4.0.0 Windows 10
-* win-builder R 4.0.2
-* Rhub Debian Linux, R-devel, GCC 
+* local R 4.0.2 Windows 10
+* Rhub Ubuntu Linus 16.04, R-release
+* Rhub Windows Server 2008, R-devel
+* Rhub Fedora Linux, R-devel
 
 ## R CMD check results
 
-One NOTE:
-
-```
-Found the following (possibly) invalid URLs:
-  URL: https://doi.org/10.2307/2983638
-    From: inst/doc/desplot_examples.html
-    Status: 403
-    Message: Forbidden
-```
-
-
-This URL works fine in a web browser. Please advise if changes are needed.
+Status: OK
 
 ## Downstream dependencies
 

@@ -1,7 +1,7 @@
 
 # desplot 1.7 - Jul 2020
 
-* Please use `desplot(data,formula)` instead of `desplot(formula,data)`. The latter is being deprecated.
+* Please use `desplot(data,formula)` instead of `desplot(formula,data)`.
 
 # desplot 1.6 - Sep 2019
 
@@ -9,7 +9,7 @@
 
 # desplot 1.5 - Apr 2019
 
-* Beta version of `desplot()` to create `ggplot2` graphics.
+* Beta version of `ggdesplot()` to create `ggplot2` graphics.
 
 * New argument `subset` to subset data before analysis.
 
@@ -19,13 +19,11 @@
 
 # desplot 1.2 - Jul 2017
 
-* Now using `testthat` and `covr` packages. (Currently `covr` fails).
+* Now using `testthat` and `covr` packages.
 
 # desplot 1.1 - Dec 2016
 
 * New function argument `midpoint="median"` uses the median to determine the midpoint for the ribbon. Previously, the midpoint was halfway between the minimum and maximum data values.  Use `midpoint=NULL` or `midpoint="midrange"` to restore the old behavior.
-
-* Minor fix so vignette example with `yates.oats` data will work with next version of `agridat`.
 
 # desplot 1.0 - Dec 2015
 
@@ -34,4 +32,3 @@
 # desplot 0.0 - 2008
 
 * Original creation of function.
-
