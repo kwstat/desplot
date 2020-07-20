@@ -92,7 +92,7 @@
       <h1 data-toc-skip>Plotting field maps with the desplot package</h1>
                         <h4 class="author">Kevin Wright</h4>
             
-            <h4 class="date">2020-07-04</h4>
+            <h4 class="date">2020-07-20</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/kwstat/desplot/blob/master/../../../../../x/rpack/desplot/vignettes/desplot_examples.Rmd"><code>../../../../../x/rpack/desplot/vignettes/desplot_examples.Rmd</code></a></small>
       <div class="hidden name"><code>desplot_examples.Rmd</code></div>
@@ -109,15 +109,14 @@
 <div id="r-setup" class="section level1">
 <h1 class="hasAnchor">
 <a href="#r-setup" class="anchor"></a>R setup</h1>
-<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="st">"knitr"</span>)</pre></body></html></div>
-<pre><code>## Warning: package 'knitr' was built under R version 4.0.2</code></pre>
-<div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="kw pkg">knitr</span><span class="kw ns">::</span><span class="no"><a href="https://rdrr.io/pkg/knitr/man/opts_chunk.html">opts_chunk</a></span>$<span class="fu">set</span>(<span class="kw">fig.align</span><span class="kw">=</span><span class="st">"center"</span>, <span class="kw">fig.width</span><span class="kw">=</span><span class="fl">6</span>, <span class="kw">fig.height</span><span class="kw">=</span><span class="fl">6</span>)
+<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="st">"knitr"</span>)
+<span class="kw pkg">knitr</span><span class="kw ns">::</span><span class="no"><a href="https://rdrr.io/pkg/knitr/man/opts_chunk.html">opts_chunk</a></span>$<span class="fu">set</span>(<span class="kw">fig.align</span><span class="kw">=</span><span class="st">"center"</span>, <span class="kw">fig.width</span><span class="kw">=</span><span class="fl">6</span>, <span class="kw">fig.height</span><span class="kw">=</span><span class="fl">6</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span>(<span class="kw">width</span><span class="kw">=</span><span class="fl">90</span>)</pre></body></html></div>
 <div id="example-1" class="section level2">
 <h2 class="hasAnchor">
 <a href="#example-1" class="anchor"></a>Example 1</h2>
 <p>First, a plot of the experimental design of the oats data from <span class="citation">Yates (1935)</span>.</p>
-<div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">agridat</span>)
+<div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">agridat</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">desplot</span>)
 <span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="no">yates.oats</span>)
 <span class="co"># Older versions of agridat used x/y here instead of col/row</span>
@@ -132,7 +131,7 @@
 <h2 class="hasAnchor">
 <a href="#example-2" class="anchor"></a>Example 2</h2>
 <p>This next example is from <span class="citation">Ryder (1981)</span>. Fit an ordinary RCB model with fixed effects for <code>block</code> and <code>genotype</code>. Plot a heatmap of the residuals.</p>
-<div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">agridat</span>)
+<div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">agridat</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">desplot</span>)
 <span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="no">ryder.groundnut</span>)
 <span class="no">gnut</span> <span class="kw">&lt;-</span> <span class="no">ryder.groundnut</span>
