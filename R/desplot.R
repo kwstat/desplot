@@ -223,7 +223,7 @@ desplot <- function(data,
                     subset=TRUE, gg=FALSE, ...){
 
   # Would be nice to remove this code someday, maybe 2022?
-  if(class(data)=="formula") {
+  if(inherits(data, "formula")) {
     # Old style: desplot(form, data)
     # Use data name for default title.  Do this BEFORE subset!
     if(missing(main)) main <- deparse(substitute(form))
@@ -815,16 +815,16 @@ panel.outlinelevelplot <- function(x, y, z, subscripts, at,
   #  Derived from lattice::panel.levelplot
   dots=list(...)
   col.regions=dots$col.regions
-  # Based on panel.levelplot
 
   # parent function forces x,y to be numeric, not factors
   
   if (length(subscripts) == 0L) return()
-  
-  z <- as.numeric(z)
-  zcol <- level.colors(z, at, col.regions, colors = TRUE)
+
+  dq <- dq[subscripts]
   x <- x[subscripts]
   y <- y[subscripts]
+  z <- as.numeric(z)
+  zcol <- level.colors(z, at, col.regions, colors = TRUE)
   
   zlim <- range(z, finite = TRUE)
   z <- z[subscripts]
@@ -861,13 +861,13 @@ panel.outlinelevelplot <- function(x, y, z, subscripts, at,
   # Data quality indicator
   gp=list(col="black", lwd=1)
   class(gp) <- "gpar"
-  # lower-left to upper-right
+  # draw diagonal line from lower-left to upper-right
   xd=x[dq >= 1L]
   yd=y[dq >= 1L]
   if(length(xd)>0) grid.segments(x0=xd-.5, y0=yd-.5,
                                  x1=xd+.5, y1=yd+.5, 
                                  default.units="native", gp=gp)
-  # upper-left to lower-right
+  # draw diagonal line from upper-left to lower-right
   xd=x[dq >= 2L]
   yd=y[dq >= 2L]
   if(length(xd)>0) grid.segments(x0=xd-.5, y0=yd+.5,
@@ -895,6 +895,7 @@ panel.outlinelevelplot <- function(x, y, z, subscripts, at,
   return()
 }
 
+#' @noRd
 .addLevels <- function(dat, xvar='x', yvar='y', locvar=NULL){
   # For each loc, we want x/y coords to be complete.
   # NO: 1,2,4.  YES: 1,2,3,4.
@@ -944,6 +945,7 @@ panel.outlinelevelplot <- function(x, y, z, subscripts, at,
   return(dat)
 }
 
+#' @noRd
 # lel is a very simple version of lattice:::extend.limits
 lel <- function (lim, prop = lattice.getOption("axis.padding")$numeric) {
 

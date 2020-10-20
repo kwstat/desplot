@@ -89,7 +89,7 @@ ggdesplot <- function(data,
                       subset=TRUE, gg=FALSE, ...){
 
   # Would be nice to remove this code someday, maybe 2022?
-  if(class(form)=="data.frame") {
+  if(inherits(data, "formula")) {
     # Old style: desplot(form, data)
     # Use data name for default title.  Do this BEFORE subset!
     if(missing(main)) main <- deparse(substitute(form))
@@ -480,7 +480,7 @@ ggdesplot <- function(data,
   if(has.dq) {
     # Data quality indicator
 
-    # lower-left to upper-right
+    # draw diagonal line from lower-left to upper-right
     data$x1l = data[[x.string]]-.5
     data$x1r = data[[x.string]]+.5
     data$y1l = data[[y.string]]-.5
@@ -492,7 +492,7 @@ ggdesplot <- function(data,
       geom_segment(data=data[data$dq.val >= 1L, ],
                    aes_string(x="x1l", xend="x1r", y="y1l", yend="y1r"),
                    color="black")
-    # upper-left to lower-right
+    # draw diagonal line from upper-left to lower-right
     data$y1l = data[[y.string]]+.5
     data$y1r = data[[y.string]]-.5
     out <- out +

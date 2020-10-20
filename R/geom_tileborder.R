@@ -76,6 +76,7 @@ StatTileBorder <-
             calc_borders(data$x, data$y, data$grp)
           })
 
+#' @noRd
 #' @importFrom reshape2 acast melt
 calc_borders <- function(x,y,grp){
   # x,y: coordinates for tiles in a heatmap

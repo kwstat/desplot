@@ -78,7 +78,8 @@ test_that("out1,out2,out1.gpar,out2.gpar", {
 })
 
 test_that("dq", {
-  desplot(oats35, yield~col+row, out1=block, dq=dq)
+  desplot(oats35, block~col+row, out1=block, dq=dq)
+  desplot(oats35, block~col+row|block, out1=block, dq=dq)
 })
 
 test_that("strip.cex", {

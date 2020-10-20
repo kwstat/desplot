@@ -1,3 +1,6 @@
+# desplot 1.8
+
+* Bug fix for `dq` with multiple panels.
 
 # desplot 1.7 - Jul 2020
 
