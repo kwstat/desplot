@@ -39,7 +39,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">desplot</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.8</span>
       </span>
     </div>
 
@@ -106,31 +106,34 @@
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
-<div class="sourceCode" id="cb1"><pre class="r"><span class="co"># Install the released version from CRAN:</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"desplot"</span>)
+<div class="sourceCode" id="cb1"><pre class="downlit">
+<span class="co"># Install the released version from CRAN:</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"desplot"</span><span class="op">)</span>
 
 <span class="co"># Install the development version from GitHub:</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"devtools"</span>)
-<span class="kw pkg">devtools</span><span class="kw ns">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span>(<span class="st">"kwstat/desplot"</span>)</pre></div>
+<span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span>
+<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span><span class="op">(</span><span class="st">"kwstat/desplot"</span><span class="op">)</span></pre></div>
 </div>
 <div id="example-1" class="section level2">
 <h2 class="hasAnchor">
 <a href="#example-1" class="anchor"></a>Example 1</h2>
 <p>This data is is from a split-plot experiment with 6 replicates. The replicates are shown by the colored regions and outlined by the thick lines. The text codes and the thin lines define the whole-plots. The nitrogen sub-plot treatments are shown by the text colors.</p>
-<div class="sourceCode" id="cb2"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">require</a></span>(<span class="no">agridat</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">require</a></span>(<span class="no">desplot</span>)
-<span class="fu"><a href="reference/desplot.html">desplot</a></span>(<span class="no">yates.oats</span>, <span class="no">block</span> ~ <span class="no">col</span>+<span class="no">row</span>,
-        <span class="kw">col</span><span class="kw">=</span><span class="no">nitro</span>, <span class="kw">text</span><span class="kw">=</span><span class="no">gen</span>, <span class="kw">cex</span><span class="kw">=</span><span class="fl">1</span>, <span class="kw">aspect</span><span class="kw">=</span><span class="fl">511</span>/<span class="fl">176</span>,
-        <span class="kw">out1</span><span class="kw">=</span><span class="no">block</span>, <span class="kw">out2</span><span class="kw">=</span><span class="no">gen</span>,
-        <span class="kw">out2.gpar</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">col</span> <span class="kw">=</span> <span class="st">"gray50"</span>, <span class="kw">lwd</span> <span class="kw">=</span> <span class="fl">1</span>, <span class="kw">lty</span> <span class="kw">=</span> <span class="fl">1</span>))</pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit">
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="va"><a href="http://kwstat.github.io/agridat/">agridat</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="va"><a href="http://kwstat.github.io/desplot/">desplot</a></span><span class="op">)</span>
+<span class="fu"><a href="reference/desplot.html">desplot</a></span><span class="op">(</span><span class="va">yates.oats</span>, <span class="va">block</span> <span class="op">~</span> <span class="va">col</span><span class="op">+</span><span class="va">row</span>,
+        col<span class="op">=</span><span class="va">nitro</span>, text<span class="op">=</span><span class="va">gen</span>, cex<span class="op">=</span><span class="fl">1</span>, aspect<span class="op">=</span><span class="fl">511</span><span class="op">/</span><span class="fl">176</span>,
+        out1<span class="op">=</span><span class="va">block</span>, out2<span class="op">=</span><span class="va">gen</span>, 
+        out2.gpar<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>col <span class="op">=</span> <span class="st">"gray50"</span>, lwd <span class="op">=</span> <span class="fl">1</span>, lty <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></pre></div>
 <p><img src="reference/figures/yates_oats_design.png?raw=true" alt="desplot"></p>
 <p>The default graphics are based on lattice. It is also possible to create graphics based on ggplot2 by adding ‘gg=TRUE’ to the function. This functionality is in development and the legend for the ggplot version is not as polished as the lattice version.</p>
-<div class="sourceCode" id="cb3"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">require</a></span>(<span class="no">agridat</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">require</a></span>(<span class="no">desplot</span>)
-<span class="fu"><a href="reference/desplot.html">desplot</a></span>(<span class="no">yates.oats</span>, <span class="no">block</span> ~ <span class="no">col</span>+<span class="no">row</span>,
-        <span class="kw">col</span><span class="kw">=</span><span class="no">nitro</span>, <span class="kw">text</span><span class="kw">=</span><span class="no">gen</span>, <span class="kw">cex</span><span class="kw">=</span><span class="fl">1</span>, <span class="kw">aspect</span><span class="kw">=</span><span class="fl">511</span>/<span class="fl">176</span>,
-        <span class="kw">out1</span><span class="kw">=</span><span class="no">block</span>, <span class="kw">out2</span><span class="kw">=</span><span class="no">gen</span>,
-        <span class="kw">out2.gpar</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">col</span> <span class="kw">=</span> <span class="st">"gray50"</span>, <span class="kw">lwd</span> <span class="kw">=</span> <span class="fl">1</span>, <span class="kw">lty</span> <span class="kw">=</span> <span class="fl">1</span>), <span class="kw">gg</span><span class="kw">=</span><span class="fl">TRUE</span>)
+<div class="sourceCode" id="cb3"><pre class="downlit">
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="va"><a href="http://kwstat.github.io/agridat/">agridat</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="va"><a href="http://kwstat.github.io/desplot/">desplot</a></span><span class="op">)</span>
+<span class="fu"><a href="reference/desplot.html">desplot</a></span><span class="op">(</span><span class="va">yates.oats</span>, <span class="va">block</span> <span class="op">~</span> <span class="va">col</span><span class="op">+</span><span class="va">row</span>,
+        col<span class="op">=</span><span class="va">nitro</span>, text<span class="op">=</span><span class="va">gen</span>, cex<span class="op">=</span><span class="fl">1</span>, aspect<span class="op">=</span><span class="fl">511</span><span class="op">/</span><span class="fl">176</span>,
+        out1<span class="op">=</span><span class="va">block</span>, out2<span class="op">=</span><span class="va">gen</span>, 
+        out2.gpar<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>col <span class="op">=</span> <span class="st">"gray50"</span>, lwd <span class="op">=</span> <span class="fl">1</span>, lty <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>, gg<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>
         <span class="co"># note, out2.gpar is ignored</span></pre></div>
 <p><img src="reference/figures/yates_oats_design_ggplot.png?raw=true" alt="desplot"></p>
 </div>
@@ -138,10 +141,11 @@
 <h2 class="hasAnchor">
 <a href="#example-2" class="anchor"></a>Example 2</h2>
 <p>Another very useful technique is to color the cells according to a continuous response variable (such as plot yield).</p>
-<div class="sourceCode" id="cb4"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">require</a></span>(<span class="no">agridat</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">require</a></span>(<span class="no">desplot</span>)
-<span class="fu"><a href="reference/desplot.html">desplot</a></span>(<span class="no">yates.oats</span>, <span class="no">yield</span> ~ <span class="no">col</span>*<span class="no">row</span>,
-        <span class="kw">col</span><span class="kw">=</span><span class="no">gen</span>, <span class="kw">num</span><span class="kw">=</span><span class="no">nitro</span>, <span class="kw">cex</span><span class="kw">=</span><span class="fl">1</span>, <span class="kw">out1</span><span class="kw">=</span><span class="no">block</span>, <span class="kw">aspect</span><span class="kw">=</span><span class="fl">511</span>/<span class="fl">176</span>)</pre></div>
+<div class="sourceCode" id="cb4"><pre class="downlit">
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="va"><a href="http://kwstat.github.io/agridat/">agridat</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="va"><a href="http://kwstat.github.io/desplot/">desplot</a></span><span class="op">)</span>
+<span class="fu"><a href="reference/desplot.html">desplot</a></span><span class="op">(</span><span class="va">yates.oats</span>, <span class="va">yield</span> <span class="op">~</span> <span class="va">col</span><span class="op">*</span><span class="va">row</span>,
+        col<span class="op">=</span><span class="va">gen</span>, num<span class="op">=</span><span class="va">nitro</span>, cex<span class="op">=</span><span class="fl">1</span>, out1<span class="op">=</span><span class="va">block</span>, aspect<span class="op">=</span><span class="fl">511</span><span class="op">/</span><span class="fl">176</span><span class="op">)</span></pre></div>
 <p><img src="reference/figures/yates_oats_yield.png?raw=true" alt="desplot"></p>
 </div>
 </div>
@@ -188,7 +192,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

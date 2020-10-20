@@ -41,7 +41,7 @@ test_that("num,col,text", {
   })
 })
 
-test_that("cleanup function checks variables", {
+test_that("function `cleanup` checks variables", {
   expect_error( desplot(oats35, yield~col+row, num=junk) )
   expect_error( desplot(oats35, yield~col+row, col=junk) )
   expect_error( desplot(oats35, yield~col+row, text=junk) )
@@ -261,3 +261,4 @@ if(FALSE){
 test_that("ggdesplot", {
   ggdesplot(oats35, ~ col+row|block, cex=1, num=gen)
 } )
+

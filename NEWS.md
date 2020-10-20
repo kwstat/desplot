@@ -2,6 +2,8 @@
 
 * Bug fix for `dq` with multiple panels.
 
+* Use `inherits` to check class #4.
+
 # desplot 1.7 - Jul 2020
 
 * Please use `desplot(data,formula)` instead of `desplot(formula,data)`.

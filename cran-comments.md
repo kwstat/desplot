@@ -1,9 +1,15 @@
+# desplot 1.8
+
+## test environments
+
+* local R 4.0.3 Windows 10
+
 # desplot 1.7
 
 ## test environments
 
 * local R 4.0.2 Windows 10
-* Rhub Ubuntu Linus 16.04, R-release
+* Rhub Ubuntu Linux 16.04, R-release
 * Rhub Windows Server 2008, R-devel
 * Rhub Fedora Linux, R-devel
 
