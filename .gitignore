@@ -20,4 +20,4 @@ vignettes/*.tex
 man
 revdep
 pkgdown
-
+CRAN-RELEASE

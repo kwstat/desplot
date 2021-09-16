@@ -9,7 +9,7 @@ Repository: https://github.com/kwstat/desplot
 
 `desplot` makes it easy to plot experimental designs of field trials in agriculture.
 
-Key features:
+## Key features
 
 * Flexible options to customize appearance of graphic.
 
