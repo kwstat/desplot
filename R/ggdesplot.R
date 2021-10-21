@@ -522,12 +522,13 @@ ggdesplot <- function(data,
             axis.ticks=element_blank())
 
   # blank theme
-  out <- out + 
+  out <- out +
+    coord_cartesian(expand = FALSE) + # no extra space between facet heatmaps
     theme(#aspect.ratio = (18*2)/(11*1),
-          axis.line = element_line(colour = "white"),
+          axis.line = element_line(colour = "black"), # left/bottom border
           panel.grid.major = element_blank(),
           panel.grid.minor = element_blank(),
-          panel.border = element_blank(),
+          panel.border = element_rect(fill = NA, colour = "black"), # top/right
           panel.background = element_blank(),
           panel.spacing = unit(0, "lines"),   # space between panels
           strip.text = element_text(size=5)
