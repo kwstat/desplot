@@ -1,3 +1,37 @@
+# desplot 1.9
+
+## test environments
+
+* local R 4.1.1 Windows 10
+* Rhub Windows Server 2008 R2 SP1, R-devel, 32/64 bit
+* Rhub Ubuntu Linux 20.04.1 LTS, R-release, GCC
+* Rhub Fedora Linux, R-devel, clang, gfortran
+* WinBuilder devel
+
+## R CMD check results
+
+OK
+
+One NOTE:
+
+```
+Found the following (possibly) invalid URLs:
+  URL: https://doi.org/10.2307/2983638
+    From: inst/doc/desplot_examples.html
+    Status: 403
+    Message: Forbidden
+```
+
+This URL works fine in a web browser. Please advise if changes are needed.
+
+## Downstream dependencies
+
+* agridat
+* grapesAgri1
+
+Checked OK.
+
+
 # desplot 1.8
 
 ## test environments
@@ -29,7 +63,7 @@ Reverse suggests:	agridat
 Checked OK.
 
 
-# --- desplot 1.7 ---
+# desplot 1.7
 
 ## test environments
 
@@ -49,7 +83,7 @@ Reverse suggests:	agridat
 Checked OK.
 
 
-# --- desplot 1.6 ---
+# desplot 1.6
 
 ## test environments
 
@@ -80,7 +114,7 @@ Checked OK.
 
 
 
-# --- desplot 1.5 ---
+# desplot 1.5
 
 ## test environments
 
@@ -108,7 +142,7 @@ Checked OK.
 
 
 
-# --- desplot 1.3 ---
+# desplot 1.3
 
 ## test environments
 
@@ -122,7 +156,7 @@ There were no ERRORs, WARNINGs, or NOTEs.
 
 
 
-# --- desplot 1.2 ---
+# desplot 1.2
 
 ## test environments
 
@@ -136,7 +170,7 @@ There were no ERRORs, WARNINGs, or NOTEs.
 
 
 
-# --- desplot 1.1 ---
+# desplot 1.1
 
 ## test environments
 
@@ -150,7 +184,7 @@ There were no ERRORs, WARNINGs, or NOTEs.
 
 
 
-# --- desplot 1.0 ---
+# desplot 1.0
 
 This is a new package submission.  The functions in this package are being
 split off from the 'agridat' package so that the latter can be a data-only

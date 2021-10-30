@@ -1,4 +1,10 @@
-# desplot 1.8
+# desplot 1.9 - Oct 2021
+
+* Tweaks to `ggdesplot` output.
+* Remove LazyData from DESCRIPTION.
+
+
+# desplot 1.8 - Oct 2020
 
 * Bug fix for `dq` with multiple panels.
 * Use `inherits` to check class #4.

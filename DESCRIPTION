@@ -1,6 +1,6 @@
 Package: desplot
 Title: Plotting Field Plans for Agricultural Experiments
-Version: 1.8
+Version: 1.9
 Authors@R: person("Kevin","Wright", email="kw.stat@gmail.com", comment=c(ORCID = "0000-0002-0617-8673"), role=c("aut","cre"))
 Type: Package
 Description: A function for plotting maps of agricultural field experiments that
@@ -16,10 +16,9 @@ Suggests:
     rmarkdown,
     testthat
 License: GPL-3
-LazyData: yes
 URL: https://kwstat.github.io/desplot/
 BugReports: https://github.com/kwstat/desplot/issues
 VignetteBuilder:
     knitr
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 Encoding: UTF-8
