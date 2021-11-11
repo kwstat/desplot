@@ -145,10 +145,11 @@ desplot(dat0, ~ x+y|loc,
 
 
 
-# missing values
 oats34 <- oats35
-oats34[1,'yield'] <- NA
-desplot(oats34, yield~col+row|block)
+# create a row of missing values in the field to test .addLevels
+oats34[which(oats34$row==16),'yield'] <- NA
+desplot(oats34, yield~col+row, tick=TRUE)
+desplot(oats34, yield~col+row|block, tick=TRUE)
 
 # Text over continuous colors
 desplot(oats35, yield~col+row,
