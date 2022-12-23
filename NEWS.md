@@ -1,5 +1,6 @@
 # desplot 1.10 - unpublished
 
+* One row panels no longer have whitespace. Issue #9.
 
 # desplot 1.9 - Oct 2021
 

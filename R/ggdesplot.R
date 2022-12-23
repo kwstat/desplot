@@ -1,34 +1,23 @@
 # ggdesplot.R
 
-# todo: try plotly with this
+# Currently the "outline" and "text" do not have guides.
+# Perhaps this can be used for multiple scales:
+# https://github.com/eliocamp/ggnewscale
 
 if(0){
   
   # multiple legends
   # https://stackoverflow.com/questions/18394391/r-custom-legend-for-multiple-layer-ggplot#18395012
   
-  # example tufte geom
-  #https://github.com/jrnold/ggthemes/blob/master/R/geom-tufteboxplot.R
-  
   # perfect example for desplot, but no facets
   # https://stackoverflow.com/questions/25704567/overlay-ggplot-grouped-tiles-with-polygon-border-depending-on-extra-factor
   
   # https://stackoverflow.com/questions/36156387/how-to-make-a-custom-ggplot2-geom-with-multiple-geometries
   
-  # https://stackoverflow.com/questions/25704567/overlay-ggplot-grouped-tiles-with-polygon-border-depending-on-extra-factor
   # https://stackoverflow.com/questions/11846295/how-to-add-different-lines-for-facets#11847210
   
 }
-if(0){
-  # yikes, ggplot is SLOW!
-  libs(bench)
-  # calculating: lattice 15 ms, ggplot 11 ms
-  bench::mark(desplot(besag.met, rep ~ col*row|county, col=block, cex=.8))
-  bench::mark(ggdesplot(besag.met, rep ~ col*row|county, col=block, cex=.8))
-  # printing: lattice 257 ms, ggplot 630 ms
-  bench::mark(print(desplot(besag.met, rep ~ col*row|county, col=block, cex=.8)))
-  bench::mark(print(ggdesplot(besag.met, rep ~ col*row|county, col=block, cex=.8)))
-}
+
 if(0){
   libs(agridat)
   ggdesplot(besag.met, ~ col*row|county)
@@ -421,8 +410,10 @@ ggdesplot <- function(data,
 
   # In function call we use 'list' instead of 'gpar' because gpar is not
   # exported from grid, so now fixup the class for out1.gpar, out2.gpar
-  if(class(out1.gpar) != "gpar") class(out1.gpar) <- "gpar"
-  if(class(out2.gpar) != "gpar") class(out2.gpar) <- "gpar"
+  #if(class(out1.gpar) != "gpar") class(out1.gpar) <- "gpar"
+  #if(class(out2.gpar) != "gpar") class(out2.gpar) <- "gpar"
+  class(out1.gpar) <- "gpar"
+  class(out2.gpar) <- "gpar"
 
   # Cell text
   if(has.text) {

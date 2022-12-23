@@ -255,8 +255,21 @@ if(FALSE){
 
 }
 
+# Test for issue #9. First panel has only 1 row.
+dat1row <- data.frame(
+  var = letters[1:9],
+  block = as.factor(c(1, 1, 1, 2, 2, 2,2,2,2)),
+  row = c(rep(1L,6),2,2,2),
+  col = c(1:6,4,5,6)
+)
+desplot(data = dat1row,
+        tick=TRUE,
+        form = var ~ col + row | block)
+
 # ----------------------------------------------------------------------------
 # ----------------------------------------------------------------------------
+
+
 
 # ggdesplot
 test_that("ggdesplot", {

@@ -54,8 +54,8 @@ RedGrayBlue <- colorRampPalette(c("firebrick", "lightgray", "#375997"))
 #' \emph{numeric}, the cells are colored according to \code{col.regions}, and
 #' a ribbon key is placed on the right.
 #' 
-#' Use \code{shorten='abb'} (this is default) to shorten the cell text using
-#' the \code{abbreviate} function.
+#' Use \code{shorten='abb'} (this is default) to shorten the cell text to 2
+#' characters using the \code{abbreviate} function
 #' Use \code{shorten='sub'} to use a 3-character substring.
 #' Use \code{shorten='no'} or \code{shorten=FALSE} for no shortening.
 #' 
@@ -567,9 +567,11 @@ desplot <- function(data,
   if (lr==0) show.key <- FALSE
 
   # In function call we use 'list' instead of 'gpar' because gpar is not
-  # exported from grid, so now fixup the class for out1.gpar, out2.gpar
-  if(class(out1.gpar) != "gpar") class(out1.gpar) <- "gpar"
-  if(class(out2.gpar) != "gpar") class(out2.gpar) <- "gpar"
+  # exported from grid, so now change the class for out1.gpar, out2.gpar
+  #if(class(out1.gpar) != "gpar") class(out1.gpar) <- "gpar"
+  class(out1.gpar) <- "gpar"
+  #if(class(out2.gpar) != "gpar") class(out2.gpar) <- "gpar"
+  class(out2.gpar) <- "gpar"
   
   # ----- Now we can actually set up the legend grobs -----
   if(show.key) {
@@ -736,14 +738,16 @@ prepanel.desplot <- function (x, y, subscripts, flip, ...) {
 
     ux <- sort(unique(x[is.finite(x)]))
     if ((ulen <- length(ux)) < 2)
-      xlim <- ux + c(-1, 1)
+      #xlim <- ux + c(-1, 1)
+      xlim <- ux + c(-0.5, 0.5)
     else {
       diffs <- diff(as.numeric(ux))[c(1, ulen - 1)]
       xlim <- c(ux[1] - diffs[1]/2, ux[ulen] + diffs[2]/2)
     }
     uy <- sort(unique(y[is.finite(y)]))
     if ((ulen <- length(uy)) < 2)
-      ylim <- uy + c(-1, 1)
+      #ylim <- uy + c(-1, 1)
+      ylim <- uy + c(-0.5, 0.5)
     else {
       diffs <- diff(as.numeric(uy))[c(1, ulen - 1)]
       ylim <- c(uy[1] - diffs[1]/2, uy[ulen] + diffs[2]/2)
@@ -902,12 +906,12 @@ panel.outlinelevelplot <- function(x, y, z, subscripts, at,
   # Add one NA datum for each missing x and each missing y
   # This does NOT completely fill in the rectangle (as needed by asreml)
 
-  # Original values
-  ox <- dat[[xvar]]
-  oy <- dat[[yvar]]
+  ## # Original values
+  ## ox <- dat[[xvar]]
+  ## oy <- dat[[yvar]]
 
-  if( is.factor(ox) | is.factor(oy) )
-    stop("FIXME: ", xvar, " or ", yvar, " are factors.")
+  ## if( is.factor(ox) | is.factor(oy) )
+  ##   stop("FIXME: ", xvar, " or ", yvar, " are factors.")
 
   ## if(is.null(locvar)) {
   ##   loclevs <- factor("1") # hack alert
@@ -946,8 +950,12 @@ panel.outlinelevelplot <- function(x, y, z, subscripts, at,
   # The old code above assumed locvar was character/factor, but still worked
   # if locvar was numeric because R was coercing the data when assigning the
   # locvar to the new row.  BUT, if dat was a tibble, then the coercion was
-  # not working.  The code below fixes that problem and is slightly cleaner.
+  # not working.  The code below fixes that problem so that now locvar is
+  # allowed to be numeric.  Also slightly cleaner.
   
+  if( is.factor(dat[[xvar]]) | is.factor(dat[[yvar]]) )
+    stop("FIXME: ", xvar, " or ", yvar, " are factors.")
+
   if(is.null(locvar)) {
     # If there is no location variable, we use "1" as the location level
     uniquelocs <- "1"
