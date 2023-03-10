@@ -51,9 +51,12 @@ if(0){
   
 }
 
+# Note: To avoid a similar note from the CMD check about .data,
+# use #' @importFrom rlang .data
 
 #' @import ggplot2
 #' @importFrom stats as.formula formula median
+#' @importFrom rlang .data
 #' @export
 #' @rdname desplot
 ggdesplot <- function(data, 
@@ -211,7 +214,12 @@ ggdesplot <- function(data,
 
   if(has.col){
     data[[col.string]] <- factor(data[[col.string]]) # In case it is numeric
+  } else {
+    # We still need a column for color to pass to aes( color=.data[[col.string]] )
+    col.string="no_color"
+    data[[col.string]] <- factor(1)
   }
+  
   # Determine what fills the cells: nothing, character/factor, or numeric
   if(is.null(fill.string)) fill.type="none"
   else if (is.factor(data[[fill.string]]))
@@ -435,7 +443,8 @@ ggdesplot <- function(data,
 
   # --------------- build the plot ---------------
 
-  out <- ggplot(data, aes_string(x=x.string, y=y.string))
+  #out <- ggplot(data, aes_string(x=x.string, y=y.string))
+  out <- ggplot(data, aes(x=.data[[x.string]], y=.data[[y.string]]))
   
   if(!is.null(panel.string))
     out <- out + 
@@ -443,28 +452,32 @@ ggdesplot <- function(data,
   
   if(fill.type=="num")
     out <- out +
-    geom_tile(aes_string(fill = fill.string)) +
+    #geom_tile(aes_string(fill = fill.string)) +
+    geom_tile(aes(fill = .data[[fill.string]])) +
     scale_fill_gradientn(colours=col.regions, guide="colorbar")
   
   if(fill.type=="factor")
     out <- out +
-    geom_tile(aes_string(fill = fill.string)) +
+    #geom_tile(aes_string(fill = fill.string)) +
+    geom_tile(aes(fill = .data[[fill.string]]))
     scale_fill_manual(values=col.regions)
   
   if(has.out1)
     out <- out + 
-    geom_tileborder(aes_string(group=1, grp=out1.string),
+    #geom_tileborder(aes_string(group=1, grp=out1.string),
+    geom_tileborder(aes(group=1, grp=.data[[out1.string]]),
                     lineend="round", color="black", lwd=1.5)
   
   if(has.out2)
     out <- out + 
-    geom_tileborder(aes_string(group=1, grp=out2.string), 
+    #geom_tileborder(aes_string(group=1, grp=out2.string), 
+    geom_tileborder(aes(group=1, grp=.data[[out2.string]]),
                     color="yellow", lwd=0.5)
-  
   # use '4*cex' so that cex in lattice/ggplot2 is roughly the same size
   if(has.text|has.num|has.col) # cell text
-    out = out + geom_text(aes_string(x.string, y.string, 
-                                     label="cell.text", color=col.string), 
+    #out = out + geom_text(aes_string(x.string, y.string, 
+    out = out + geom_text(aes(x=.data[[x.string]], y=.data[[y.string]], 
+                              label=.data[["cell.text"]], color=.data[[col.string]]), 
                           size=4*cex) + 
     scale_color_manual(values=col.text)
   
@@ -481,14 +494,16 @@ ggdesplot <- function(data,
     # Same for data[data$dq.val ,] instead of subset
     out <- out +
       geom_segment(data=data[data$dq.val >= 1L, ],
-                   aes_string(x="x1l", xend="x1r", y="y1l", yend="y1r"),
+                   #aes_string(x="x1l", xend="x1r", y="y1l", yend="y1r"),
+                   aes(x=.data[["x1l"]], xend=.data[["x1r"]], y=.data[["y1l"]], yend=.data[["y1r"]]),
                    color="black")
     # draw diagonal line from upper-left to lower-right
     data$y1l = data[[y.string]]+.5
     data$y1r = data[[y.string]]-.5
     out <- out +
       geom_segment(data=data[data$dq.val >= 2L, ],
-                   aes_string(x="x1l", xend="x1r", y="y1l", yend="y1r"),
+                   #aes_string(x="x1l", xend="x1r", y="y1l", yend="y1r"),
+                   aes(x=.data[["x1l"]], xend=.data[["x1r"]], y=.data[["y1l"]], yend=.data[["y1r"]]),
                    color="black")
   }
   

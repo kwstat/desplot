@@ -1,6 +1,8 @@
-# desplot 1.10 - unpublished
+# desplot 1.10 - Mar 2023
 
-* One row panels no longer have whitespace. Issue #9.
+* One-row panels no longer have whitespace. Issue #9.
+* Replace `aes_string(x=x.string)` with `aes(x=.data[[x.string]])` etc.
+
 
 # desplot 1.9 - Oct 2021
 

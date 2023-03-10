@@ -202,8 +202,8 @@ and a key is placed on the left.  If the response variable is
 \emph{numeric}, the cells are colored according to \code{col.regions}, and
 a ribbon key is placed on the right.
 
-Use \code{shorten='abb'} (this is default) to shorten the cell text using
-the \code{abbreviate} function.
+Use \code{shorten='abb'} (this is default) to shorten the cell text to 2
+characters using the \code{abbreviate} function
 Use \code{shorten='sub'} to use a 3-character substring.
 Use \code{shorten='no'} or \code{shorten=FALSE} for no shortening.
 

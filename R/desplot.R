@@ -789,7 +789,7 @@ prepanel.desplot <- function (x, y, subscripts, flip, ...) {
 #' 
 #' @param z Value for filling each cell.
 #' 
-#' @param subscripts For compatability.
+#' @param subscripts For compatibility.
 #' 
 #' @param at Breakpoints for the colors.
 #' 

@@ -1,3 +1,22 @@
+# desplot 1.10
+
+## test environments
+
+* local R 4.2.2 Windows 10
+* WinBuilder devel
+* Rhub Windows Server 2022, R-devel, 64 bit
+
+## R CMD check results
+
+OK
+
+## Downstream dependencies
+
+* agridat
+* FieldHub
+* grapesAgri1
+
+
 # desplot 1.9
 
 ## test environments

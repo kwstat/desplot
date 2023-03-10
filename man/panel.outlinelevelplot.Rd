@@ -26,7 +26,7 @@ panel.outlinelevelplot(
 
 \item{z}{Value for filling each cell.}
 
-\item{subscripts}{For compatability.}
+\item{subscripts}{For compatibility.}
 
 \item{at}{Breakpoints for the colors.}
 
