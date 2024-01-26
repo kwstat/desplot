@@ -6,15 +6,15 @@
 * WinBuilder devel
 * Rhub Windows Server 2022, R-devel, 64 bit
 
-## R CMD check results
-
-OK
+R CMD check results: OK
 
 ## Downstream dependencies
 
 * agridat
 * FieldHub
 * grapesAgri1
+
+Checked OK
 
 
 # desplot 1.9

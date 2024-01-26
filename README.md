@@ -67,3 +67,9 @@ desplot(yates.oats, yield ~ col*row,
         col=gen, num=nitro, cex=1, out1=block, aspect=511/176)
 ```
 ![desplot](man/figures/yates_oats_yield.png?raw=true)
+
+
+### Logo note
+
+The hexagon logo for this package shows a simple experimental design layout on top of a tan (soil-color) background.
+
