@@ -1,9 +1,16 @@
+Type: Package
 Package: desplot
 Title: Plotting Field Plans for Agricultural Experiments
 Version: 1.10
-Authors@R: person("Kevin","Wright", email="kw.stat@gmail.com", comment=c(ORCID = "0000-0002-0617-8673"), role=c("aut","cre","cph"))
-Type: Package
-Description: A function for plotting maps of agricultural field experiments that are laid out in grids.  See Ryder (1981) <doi:10.1017/S0014479700011601>.
+Authors@R: 
+    person("Kevin", "Wright", , "kw.stat@gmail.com", role = c("aut", "cre", "cph"),
+           comment = c(ORCID = "0000-0002-0617-8673"))
+Description: A function for plotting maps of agricultural field
+    experiments that are laid out in grids.  See Ryder (1981)
+    <doi:10.1017/S0014479700011601>.
+License: MIT + file LICENSE
+URL: https://kwstat.github.io/desplot/, http://kwstat.github.io/desplot/
+BugReports: https://github.com/kwstat/desplot/issues
 Imports:
     ggplot2,
     grid,
@@ -15,11 +22,8 @@ Suggests:
     knitr,
     rmarkdown,
     testthat
-License: MIT + file LICENSE
-URL: https://kwstat.github.io/desplot/
-BugReports: https://github.com/kwstat/desplot/issues
 VignetteBuilder:
     knitr
-RoxygenNote: 7.2.2
 Encoding: UTF-8
 Language: en-US
+RoxygenNote: 7.3.2

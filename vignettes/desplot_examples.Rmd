@@ -30,9 +30,6 @@ First, a plot of the experimental design of the oats data from @yates1935complex
 library(agridat)
 library(desplot)
 data(yates.oats)
-# Older versions of agridat used x/y here instead of col/row
-if(is.element("x",names(yates.oats)))
-   yates.oats <- transform(yates.oats, col=x, row=y)
 desplot(yates.oats, block ~ col+row,
         col=nitro, text=gen, cex=1, out1=block,
         out2=gen, out2.gpar=list(col = "gray50", lwd = 1, lty = 1))
