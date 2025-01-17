@@ -1,22 +1,30 @@
-# desplot 1.11 - unpublished
+# desplot 1.11 ()
 
 * Switch to MIT license.
+
+* Documentation pages now created via Github Actions.
+
+* Fix the checking for multiple cell values when there are 2 panel factors.
+
 
 # desplot 1.10 (2023-03-01)
 
 * One-row panels no longer have whitespace. Issue #9.
+
 * Replace `aes_string(x=x.string)` with `aes(x=.data[[x.string]])` etc.
 
 
 # desplot 1.9 (2021-10-30)
 
 * Tweaks to `ggdesplot` output.
+
 * Remove LazyData from DESCRIPTION.
 
 
 # desplot 1.8 (2020-10-21)
 
 * Bug fix for `dq` with multiple panels.
+
 * Use `inherits` to check class #4.
 
 

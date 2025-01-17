@@ -41,7 +41,7 @@ test_that("num,col,text", {
   })
 })
 
-test_that("function `cleanup` checks variables", {
+test_that("function cleanup checks variables", {
   expect_error( desplot(oats35, yield~col+row, num=junk) )
   expect_error( desplot(oats35, yield~col+row, col=junk) )
   expect_error( desplot(oats35, yield~col+row, text=junk) )
@@ -133,6 +133,30 @@ test_that("subset", {
             subset = block %in% c("B1","B2"), cex=1, num=gen)
   })
 })
+
+## ---------------------------------------------------------------------------
+
+test_that("If a cell has multiple observations, issue a warning.",{
+  # No panel factor
+  dat0 <- expand.grid(col=1:2, row=1:2)
+  dat0$y <- rnorm(nrow(dat0))
+  dat0 <- rbind(dat0, dat0[1,]) # Create one cell that has 2 observations
+
+  # One panel factor
+  dat1 <- expand.grid(state=c("S1","S2"), col=1:2, row=1:2)
+  dat1$y <- rnorm(nrow(dat1))
+  dat1 <- rbind(dat1, dat1[1,]) # Create one cell that has 2 observations
+
+  # Two panel factors
+  dat2 <- expand.grid(state=c("S1","S2"), loc=c("L1","L2","L3"), col=1:2, row=1:2)
+  dat2$y <- rnorm(nrow(dat2))
+  dat2 <- rbind(dat2, dat2[1,]) # Create one cell that has 2 observations
+  
+  expect_warning( desplot(dat0, y~col*row) )
+  expect_warning( desplot(dat1, y~col*row|state) )
+  expect_warning( desplot(dat2, y~col*row|state*loc) )
+})
+
 
 # ----------------------------------------------------------------------------
 

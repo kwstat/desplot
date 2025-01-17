@@ -1,7 +1,7 @@
 Type: Package
 Package: desplot
 Title: Plotting Field Plans for Agricultural Experiments
-Version: 1.10
+Version: 1.11
 Authors@R: 
     person("Kevin", "Wright", , "kw.stat@gmail.com", role = c("aut", "cre", "cph"),
            comment = c(ORCID = "0000-0002-0617-8673"))

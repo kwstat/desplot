@@ -53,6 +53,23 @@ Note the largest positive/negative residuals are adjacent to each other,
 perhaps caused by the original data values being swapped.  Checking with
 experiment investigators (managers, data collectors, etc.) is recommended.
 
+# Infrequently asked questions
 
+## How do I change the ordering of panels?
+
+Make sure that the panel variable is a factor and then change the levels of the factor.
+
+In the example below, the first three panels are set to the levels C1, C3, C5. The other levels remain in the same (relative) order.
+
+```{r panelorder, eval=FALSE}
+library(agridat)
+library(desplot)
+data(besag.met)
+desplot(besag.met, yield~col*row|county, main="default county ordering")
+library(forcats)
+besag.met <- transform(besag.met,
+                       county=fct_relevel(county, c("C1","C3","C5")))
+desplot(besag.met, yield~col*row|county, main="custom county ordering")
+```
 ## References
 	

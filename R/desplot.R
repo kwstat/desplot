@@ -490,13 +490,21 @@ desplot <- function(data,
   fac2num <- function(x) as.numeric(levels(x))[x]
   if(is.factor(data[[x.string]])) data[[x.string]] <- fac2num(data[[x.string]])
   if(is.factor(data[[y.string]])) data[[y.string]] <- fac2num(data[[y.string]])
-  data <- .addLevels(data, x.string, y.string, panel.string)
+  #data <- .addLevels(data, x.string, y.string, panel.string)
 
-  # Check for multiple values
-  if(is.null(panel.string)){
+  # Check for multiple values for each cell.
+  if(is.null(ff$cond)) {
+    # no factor for panels
     tt <- table(data[[x.string]], data[[y.string]])
+  } else if(length(ff$cond) == 1L) {
+    # one conditioning factor
+    tt <- table(data[[x.string]], data[[y.string]], data[[ff$cond[1]]])
+  } else if(length(ff$cond)==2L) {
+    # two conditioning factors
+    tt <- table(data[[x.string]], data[[y.string]], data[[ff$cond[1]]], data[[ff$cond[2]]])
   } else {
-    tt <- table(data[[x.string]], data[[y.string]], data[[panel.string]])
+    message("Not checking for multiple data for each x/y/panel combination")
+    tt <- NULL
   }
   if(any(tt>1))
     warning("There are multiple data for each x/y/panel combination")
