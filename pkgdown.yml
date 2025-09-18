@@ -1,9 +1,9 @@
 pandoc: 3.1.11
-pkgdown: 2.1.1
+pkgdown: 2.1.3
 pkgdown_sha: ~
 articles:
   desplot_examples: desplot_examples.html
-last_built: 2025-01-17T21:35Z
+last_built: 2025-09-18T21:17Z
 urls:
   reference: http://kwstat.github.io/desplot/reference
   article: http://kwstat.github.io/desplot/articles
