@@ -68,6 +68,23 @@ desplot(yates.oats, yield ~ col*row,
 ```
 ![desplot](man/figures/yates_oats_yield.png?raw=true)
 
+## Example 3
+
+Multiple locations can be shown in a single figure.
+Data quality for each cell can be indicated with a slash drawn across questionable values and an X drawn across bad values.
+
+```R
+require(agridat)
+require(desplot)
+bmet <- agridat::besag.met
+# Simulate a data quality flag
+bmet$flag <- sample(c("G","Q","B"), nrow(bmet), replace=TRUE, prob=c(0.8,0.1,0.1))
+desplot(bmet, yield ~ col*row|county,
+        main="besag.met",
+        num=gen, out1=rep, dq=flag,
+        aspect=1.0)
+```
+![desplot](man/figures/besag_met_missing.png?raw=true)
 
 ### Logo note
 
