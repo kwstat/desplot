@@ -459,7 +459,7 @@ ggdesplot <- function(data,
   if(fill.type=="factor")
     out <- out +
     #geom_tile(aes_string(fill = fill.string)) +
-    geom_tile(aes(fill = .data[[fill.string]]))
+    geom_tile(aes(fill = .data[[fill.string]])) +
     scale_fill_manual(values=col.regions)
   
   if(has.out1)
