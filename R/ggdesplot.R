@@ -529,8 +529,10 @@ ggdesplot <- function(data,
             axis.ticks=element_blank())
 
   # Apply aspect ratio if specified
+  # Note: lattice uses aspect as width/height, but ggplot2 coord_fixed uses height/width
+  # so we need to invert it
   if(!is.null(aspect)) {
-    out <- out + coord_fixed(ratio = aspect, expand = FALSE)
+    out <- out + coord_fixed(ratio = 1/aspect, expand = FALSE)
   } else {
     out <- out + coord_cartesian(expand = FALSE) # no extra space between facet heatmaps
   }
