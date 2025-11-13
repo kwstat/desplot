@@ -3,7 +3,7 @@ pkgdown: 2.2.0
 pkgdown_sha: ~
 articles:
   desplot_examples: desplot_examples.html
-last_built: 2025-11-13T14:49Z
+last_built: 2025-11-13T16:13Z
 urls:
   reference: http://kwstat.github.io/desplot/reference
   article: http://kwstat.github.io/desplot/articles
