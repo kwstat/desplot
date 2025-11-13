@@ -463,16 +463,21 @@ ggdesplot <- function(data,
     scale_fill_manual(values=col.regions)
   
   if(has.out1)
-    out <- out + 
+    out <- out +
     #geom_tileborder(aes_string(group=1, grp=out1.string),
     geom_tileborder(aes(group=1, grp=.data[[out1.string]]),
-                    lineend="round", color="black", lwd=1.5)
-  
+                    lineend="round",
+                    color=out1.gpar$col,
+                    lwd=out1.gpar$lwd,
+                    linetype=if(is.null(out1.gpar$lty)) 1 else out1.gpar$lty)
+
   if(has.out2)
-    out <- out + 
-    #geom_tileborder(aes_string(group=1, grp=out2.string), 
+    out <- out +
+    #geom_tileborder(aes_string(group=1, grp=out2.string),
     geom_tileborder(aes(group=1, grp=.data[[out2.string]]),
-                    color="yellow", lwd=0.5)
+                    color=out2.gpar$col,
+                    lwd=out2.gpar$lwd,
+                    linetype=if(is.null(out2.gpar$lty)) 1 else out2.gpar$lty)
   # use '4*cex' so that cex in lattice/ggplot2 is roughly the same size
   if(has.text|has.num|has.col) # cell text
     #out = out + geom_text(aes_string(x.string, y.string, 
