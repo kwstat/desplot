@@ -537,7 +537,7 @@ ggdesplot <- function(data,
           panel.border = element_rect(fill = NA, colour = "black"), # top/right
           panel.background = element_blank(),
           panel.spacing = unit(0, "lines"),   # space between panels
-          strip.text = element_text(size=5)
+          strip.text = element_text(size = 11 * strip.cex)
           )
   
   out
