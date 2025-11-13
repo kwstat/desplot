@@ -3,6 +3,10 @@
 library(desplot)
 library(agridat)
 
+# Show package version being tested
+cat("Testing with desplot version:", as.character(packageVersion("desplot")), "\n")
+cat("(Development version with aspect ratio support)\n\n")
+
 # Example 1: aspect=1 creates square cells
 ggdesplot(yates.oats, yield ~ col*row,
           col=gen, num=nitro, cex=1, out1=block,
