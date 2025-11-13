@@ -529,6 +529,7 @@ ggdesplot <- function(data,
             axis.ticks=element_blank())
 
   # Apply aspect ratio if specified
+  # Both lattice and ggplot2 use aspect as height/width ratio
   if(!is.null(aspect)) {
     out <- out + coord_fixed(ratio = aspect, expand = FALSE)
   } else {
