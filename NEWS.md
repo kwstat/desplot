@@ -6,6 +6,9 @@
 
 * Fix the checking for multiple cell values when there are 2 panel factors.
 
+* New support for `aspect` with `ggdesplot()`. (P.Schmidt)
+
+* New support for named colors (P.Schmidt).
 
 # desplot 1.10 (2023-03-01)
 

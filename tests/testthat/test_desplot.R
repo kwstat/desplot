@@ -29,6 +29,22 @@ oats35 <- yates.oats
 oats35$dq <- rep(c(0,0,0,0,0,0,0,0,1,2), length=72)
 # ----------------------------------------------------------------------------
 
+# aspect ratio
+#data(yates.oats)
+
+# Show experiment layout in true aspect
+# Field width = 4 plots * 44 links = 176 links
+# Field length = 18 plots * 28.4 links = 511 links
+test_that("aspect ratio", {
+  # With lattice, the aspect ratio is y/x for the entire field
+  expect_silent(desplot(yates.oats, yield ~ col+row, aspect=511/176))
+   # With ggplot, the aspect ratio is y/x for each cell
+  expect_silent(ggdesplot(yates.oats, yield ~ col+row, aspect=28.4/44))
+  })
+
+
+## ---------------------------------------------------------------------------
+
 # col.regions, at, midpoint
 
 test_that("num,col,text", {
@@ -260,8 +276,7 @@ desplot(dmet2, yield~col*row|county, tick=TRUE)
 # fixme
 desplot(dmet2, yield~col*row|county, out1=rep, out2=block, tick=TRUE)
 
-# Another midpoint example with strong difference between midpoint
-# styles. Only works with agridat 1.13 or greater
+# Another midpoint example with strong difference between midpoint styles.
 if(FALSE){
   library(agridat)
   # The high outlier makes most of the field look red

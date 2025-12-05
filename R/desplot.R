@@ -64,11 +64,6 @@ RedGrayBlue <- colorRampPalette(c("firebrick", "lightgray", "#375997"))
 #' To correctly outline the split-plot factor, simply concatenate the
 #' whole-plot factor and sub-plot factor together.
 #'
-#' To get a map of a field with a true aspect ratio (lattice version only), 
-#' include 'aspect=ylen/xlen'
-#' in the call, where 'ylen' is the vertical length of the field and 'xlen'
-#' is the horizontal length of the field.
-#' 
 #' To call this function inside another function, you can hack like this:
 #' vr <- "yield"; vx <- "x"; vy <- "y";
 #' eval(parse(text=paste("desplot(", vr, "~", vx, "*", vy, ", data=yates.oats)")))
@@ -153,6 +148,13 @@ RedGrayBlue <- colorRampPalette(c("firebrick", "lightgray", "#375997"))
 #' @param cex Expansion factor for text/number in each cell.
 #' 
 #' @param strip.cex Strip cex.
+#'
+#' @param aspect Aspect ratio.
+#' To get a map of a field with a true aspect ratio include 'aspect=ylen/xlen'.
+#' For lattice, 'ylen' is the vertical length of the field and 'xlen'
+#' is the horizontal length of the field.
+#' For ggplot2, 'ylen' is the vertical length of each cell/plot and 'xlen'
+#' is the horizontal length of each plot.
 #' 
 #' @param subset An expression that evaluates to logical index vector for subsetting the data.
 #' 
@@ -189,11 +191,18 @@ RedGrayBlue <- colorRampPalette(c("firebrick", "lightgray", "#375997"))
 #' d1 <- update(d1, par.settings = list(layout.heights=list(strip=2)))
 #' print(d1)
 #' 
-#' # Show experiment layout
 #' data(yates.oats)
+#' # Show experiment layout in true aspect
+#' # Field width = 4 plots * 44 links = 176 links
+#' # Field length = 18 plots * 28.4 links = 511 links
+#' # With lattice, the aspect ratio is y/x for the entire field
 #' desplot(yates.oats, 
 #'         yield ~ col+row, 
-#'         out1=block, out2=gen)
+#'         out1=block, out2=gen, aspect=511/176)
+#' # With ggplot, the aspect ratio is y/x for each cell
+#' ggdesplot(yates.oats, 
+#'         yield ~ col+row, 
+#'         out1=block, out2=gen, aspect=28.4/44)
 #' 
 #' desplot(yates.oats, 
 #'         block ~ col+row, 
@@ -219,7 +228,8 @@ desplot <- function(data,
                     show.key=TRUE,
                     key.cex, # left legend cex
                     cex=.4, # cell cex
-                    strip.cex=.75, 
+                    strip.cex=.75,
+                    aspect=NULL, 
                     subset=TRUE, gg=FALSE, ...){
 
   # Would be nice to remove this code someday, maybe 2022?
