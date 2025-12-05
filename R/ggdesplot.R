@@ -259,7 +259,23 @@ ggdesplot <- function(data,
                        "#9980FF","#E680FF","#D0D192","#59FF9C","#FFA24D",
                        "#FBFF4D","#4D9FFF","#704DFF","#DB4DFF","#808080",
                        "#9FFF40","#C9CC3D")
-    col.regions <- rep(col.regions, length=fill.n)
+    # Handle named vectors for col.regions
+    if(!is.null(names(col.regions))) {
+      fill.levels <- levels(fill.val)
+      matched_colors <- col.regions[fill.levels]
+      # Check if all levels were matched
+      if(any(is.na(matched_colors))) {
+        missing_levels <- fill.levels[is.na(matched_colors)]
+        warning("col.regions: Not all factor levels found in provided names. ",
+                "Missing: ", paste(missing_levels, collapse=", "),
+                ". Falling back to positional matching.")
+        col.regions <- rep(col.regions, length=fill.n)
+      } else {
+        col.regions <- as.vector(matched_colors)
+      }
+    } else {
+      col.regions <- rep(col.regions, length=fill.n)
+    }
     at <- c((0:fill.n)+.5)
   } else if(fill.type=="num") {
     if(missing(at) && is.null(midpoint)){
@@ -388,7 +404,22 @@ ggdesplot <- function(data,
     col.n <- length(lt.col)
     lr <- lr + 2 + col.n
     lt <- c(lt, lt.col)
-    if(length(col.text) < col.n) col.text <- rep(col.text, length=col.n)
+    # Handle named vectors for col.text
+    if(!is.null(names(col.text))) {
+      matched_colors <- col.text[lt.col]
+      # Check if all levels were matched
+      if(any(is.na(matched_colors))) {
+        missing_levels <- lt.col[is.na(matched_colors)]
+        warning("col.text: Not all factor levels found in provided names. ",
+                "Missing: ", paste(missing_levels, collapse=", "),
+                ". Falling back to positional matching.")
+        if(length(col.text) < col.n) col.text <- rep(col.text, length=col.n)
+      } else {
+        col.text <- as.vector(matched_colors)
+      }
+    } else {
+      if(length(col.text) < col.n) col.text <- rep(col.text, length=col.n)
+    }
   } else {
     col.val <- rep(1, nrow(data)) # No color specified, use black by default
   }
