@@ -314,11 +314,11 @@ desplot <- function(data,
   }
 
   if(gg | isTRUE(options()$desplot.gg)) {
-    #if (!requireNamespace("ggplot2")) 
+    #if (!requireNamespace("ggplot2"))
     #  stop("You must first install the ggplot2 package: install.packages('ggplot2')")
-    out <- ggdesplot(form=form, data=data, 
-                     num.string=num.string, col.string=col.string, 
-                     text.string=text.string, 
+    out <- ggdesplot(form=form, data=data,
+                     num.string=num.string, col.string=col.string,
+                     text.string=text.string,
                      out1.string=out1.string, out2.string=out2.string,
                      dq.string=dq.string,
                      col.regions=col.regions, col.text=col.text,
@@ -327,7 +327,7 @@ desplot <- function(data,
                      ticks=ticks, flip=flip, main=main, xlab=xlab, ylab=ylab,
                      shorten=shorten, show.key=show.key,
                      key.cex=key.cex, cex=cex, strip.cex=strip.cex,
-                     subset=subset)
+                     subset=subset, ...)
     return(out)
   }
   

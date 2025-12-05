@@ -59,7 +59,7 @@ if(0){
 #' @importFrom rlang .data
 #' @export
 #' @rdname desplot
-ggdesplot <- function(data, 
+ggdesplot <- function(data,
                       form=formula(NULL ~ x + y),
                       num=NULL, num.string=NULL,
                       col=NULL, col.string=NULL,
@@ -77,7 +77,8 @@ ggdesplot <- function(data,
                       show.key=TRUE,
                       key.cex, # left legend cex
                       cex=.4, # cell cex
-                      strip.cex=.75, 
+                      strip.cex=.75,
+                      aspect=NULL, # aspect ratio for true-scale field maps
                       subset=TRUE, gg=FALSE, ...){
 
   # Would be nice to remove this code someday, maybe 2022?
@@ -563,11 +564,17 @@ ggdesplot <- function(data,
             axis.text.y=element_blank(),
             axis.ticks=element_blank())
 
+  # Apply aspect ratio if specified
+  # Both lattice and ggplot2 use aspect as height/width ratio
+  if(!is.null(aspect)) {
+    out <- out + coord_fixed(ratio = aspect, expand = FALSE)
+  } else {
+    out <- out + coord_cartesian(expand = FALSE) # no extra space between facet heatmaps
+  }
+
   # blank theme
   out <- out +
-    coord_cartesian(expand = FALSE) + # no extra space between facet heatmaps
-    theme(#aspect.ratio = (18*2)/(11*1),
-          axis.line = element_line(colour = "black"), # left/bottom border
+    theme(axis.line = element_line(colour = "black"), # left/bottom border
           panel.grid.major = element_blank(),
           panel.grid.minor = element_blank(),
           panel.border = element_rect(fill = NA, colour = "black"), # top/right
