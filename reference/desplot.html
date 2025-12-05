@@ -77,6 +77,7 @@ field experiment and also the observed data values.</p>
 <span>  <span class="va">key.cex</span>,</span>
 <span>  cex <span class="op">=</span> <span class="fl">0.4</span>,</span>
 <span>  strip.cex <span class="op">=</span> <span class="fl">0.75</span>,</span>
+<span>  aspect <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  subset <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  gg <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  <span class="va">...</span></span>
@@ -114,6 +115,7 @@ field experiment and also the observed data values.</p>
 <span>  <span class="va">key.cex</span>,</span>
 <span>  cex <span class="op">=</span> <span class="fl">0.4</span>,</span>
 <span>  strip.cex <span class="op">=</span> <span class="fl">0.75</span>,</span>
+<span>  aspect <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  subset <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  gg <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  <span class="va">...</span></span>
@@ -267,6 +269,15 @@ One of 'midrange', 'median, or a numeric value.</p></dd>
 <dd><p>Strip cex.</p></dd>
 
 
+<dt id="arg-aspect">aspect<a class="anchor" aria-label="anchor" href="#arg-aspect"></a></dt>
+<dd><p>Aspect ratio.
+To get a map of a field with a true aspect ratio include 'aspect=ylen/xlen'.
+For lattice, 'ylen' is the vertical length of the field and 'xlen'
+is the horizontal length of the field.
+For ggplot2, 'ylen' is the vertical length of each cell/plot and 'xlen'
+is the horizontal length of each plot.</p></dd>
+
+
 <dt id="arg-subset">subset<a class="anchor" aria-label="anchor" href="#arg-subset"></a></dt>
 <dd><p>An expression that evaluates to logical index vector for subsetting the data.</p></dd>
 
@@ -316,10 +327,6 @@ Use <code>shorten='no'</code> or <code>shorten=FALSE</code> for no shortening.</
 be adjacent to each other by virtue of appearing in different whole-plots.
 To correctly outline the split-plot factor, simply concatenate the
 whole-plot factor and sub-plot factor together.</p>
-<p>To get a map of a field with a true aspect ratio (lattice version only),
-include 'aspect=ylen/xlen'
-in the call, where 'ylen' is the vertical length of the field and 'xlen'
-is the horizontal length of the field.</p>
 <p>To call this function inside another function, you can hack like this:
 vr &lt;- "yield"; vx &lt;- "x"; vy &lt;- "y";
 eval(parse(text=paste("desplot(", vr, "~", vx, "*", vy, ", data=yates.oats)")))</p>
@@ -348,11 +355,18 @@ Field plans: why the biometrician finds them useful.
 <span class="r-in"><span><span class="va">d1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/update.html" class="external-link">update</a></span><span class="op">(</span><span class="va">d1</span>, par.settings <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>layout.heights<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>strip<span class="op">=</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">d1</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Show experiment layout</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">yates.oats</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># Show experiment layout in true aspect</span></span></span>
+<span class="r-in"><span><span class="co"># Field width = 4 plots * 44 links = 176 links</span></span></span>
+<span class="r-in"><span><span class="co"># Field length = 18 plots * 28.4 links = 511 links</span></span></span>
+<span class="r-in"><span><span class="co"># With lattice, the aspect ratio is y/x for the entire field</span></span></span>
 <span class="r-in"><span><span class="fu">desplot</span><span class="op">(</span><span class="va">yates.oats</span>, </span></span>
 <span class="r-in"><span>        <span class="va">yield</span> <span class="op">~</span> <span class="va">col</span><span class="op">+</span><span class="va">row</span>, </span></span>
-<span class="r-in"><span>        out1<span class="op">=</span><span class="va">block</span>, out2<span class="op">=</span><span class="va">gen</span><span class="op">)</span></span></span>
+<span class="r-in"><span>        out1<span class="op">=</span><span class="va">block</span>, out2<span class="op">=</span><span class="va">gen</span>, aspect<span class="op">=</span><span class="fl">511</span><span class="op">/</span><span class="fl">176</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># With ggplot, the aspect ratio is y/x for each cell</span></span></span>
+<span class="r-in"><span><span class="fu">ggdesplot</span><span class="op">(</span><span class="va">yates.oats</span>, </span></span>
+<span class="r-in"><span>        <span class="va">yield</span> <span class="op">~</span> <span class="va">col</span><span class="op">+</span><span class="va">row</span>, </span></span>
+<span class="r-in"><span>        out1<span class="op">=</span><span class="va">block</span>, out2<span class="op">=</span><span class="va">gen</span>, aspect<span class="op">=</span><span class="fl">28.4</span><span class="op">/</span><span class="fl">44</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">desplot</span><span class="op">(</span><span class="va">yates.oats</span>, </span></span>
 <span class="r-in"><span>        <span class="va">block</span> <span class="op">~</span> <span class="va">col</span><span class="op">+</span><span class="va">row</span>, </span></span>
