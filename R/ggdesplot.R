@@ -270,7 +270,8 @@ ggdesplot <- function(data,
         warning("col.regions: Not all factor levels found in provided names. ",
                 "Missing: ", paste(missing_levels, collapse=", "),
                 ". Falling back to positional matching.")
-        col.regions <- rep(col.regions, length=fill.n)
+        # Strip names so scale_fill_manual() matches positionally, not by name.
+        col.regions <- rep(as.vector(col.regions), length=fill.n)
       } else {
         col.regions <- as.vector(matched_colors)
       }
@@ -359,6 +360,18 @@ ggdesplot <- function(data,
   fac2num <- function(x) as.numeric(levels(x))[x]
   if(is.factor(data[[x.string]])) data[[x.string]] <- fac2num(data[[x.string]])
   if(is.factor(data[[y.string]])) data[[y.string]] <- fac2num(data[[y.string]])
+
+  # Combine ALL conditioning variables into a single panel factor, so a formula
+  # like 'y ~ x*z | a + b' facets on every conditioning variable. Previously only
+  # ff$cond[1] was used, silently dropping the rest and overplotting cells.
+  if(length(ff$cond) > 0L){
+    panel.string <- ".panel"
+    data[[panel.string]] <- interaction(data[ff$cond], sep=" | ",
+                                        drop=TRUE, lex.order=TRUE)
+  } else {
+    panel.string <- NULL
+  }
+
   data <- .addLevels(data, x.string, y.string, panel.string)
 
   # Check for multiple values
@@ -414,7 +427,8 @@ ggdesplot <- function(data,
         warning("col.text: Not all factor levels found in provided names. ",
                 "Missing: ", paste(missing_levels, collapse=", "),
                 ". Falling back to positional matching.")
-        if(length(col.text) < col.n) col.text <- rep(col.text, length=col.n)
+        # Strip names so scale_color_manual() matches positionally, not by name.
+        col.text <- rep(as.vector(col.text), length=col.n)
       } else {
         col.text <- as.vector(matched_colors)
       }
@@ -514,9 +528,11 @@ ggdesplot <- function(data,
   if(has.text|has.num|has.col) # cell text
     #out = out + geom_text(aes_string(x.string, y.string, 
     out = out + geom_text(aes(x=.data[[x.string]], y=.data[[y.string]], 
-                              label=.data[["cell.text"]], color=.data[[col.string]]), 
-                          size=4*cex) + 
-    scale_color_manual(values=col.text)
+                              label=.data[["cell.text"]], color=.data[[col.string]]),
+                          size=4*cex) +
+    # Only show a color key when 'col' was actually supplied; otherwise the
+    # internal dummy 'no_color' factor would leak in as a spurious legend.
+    scale_color_manual(values=col.text, guide=if(has.col) "legend" else "none")
   
   if(has.dq) {
     # Data quality indicator
