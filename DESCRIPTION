@@ -5,7 +5,7 @@ Version: 1.11
 Authors@R: 
     person("Kevin", "Wright", , "kw.stat@gmail.com", role = c("aut", "cre", "cph"),
            comment = c(ORCID = "0000-0002-0617-8673"),
-    person("Paul", "Schmidt", , "paul.schmidt@uni-hohenheim.de", role = c("aut")
+    person("Paul", "Schmidt", role = c("aut")
 )
 Description: A function for plotting maps of agricultural field
     experiments that are laid out in grids.  See Ryder (1981)
