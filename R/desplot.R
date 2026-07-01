@@ -127,7 +127,7 @@ RedGrayBlue <- colorRampPalette(c("firebrick", "lightgray", "#375997"))
 #' Note: using 'at' causes 'midpoint' to be set to NULL.
 #'
 #' @param midpoint Method to find midpoint of the color ribbon.
-#' One of 'midrange', 'median, or a numeric value.
+#' One of 'midrange', 'median (default), or a numeric value.
 #' 
 #' @param ticks If TRUE, show tick marks along the bottom and left sides.
 #' 
