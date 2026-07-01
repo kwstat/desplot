@@ -8,6 +8,7 @@ experiment and why that may be useful.
 ## R setup
 
 ``` r
+
 library("knitr")
 knitr::opts_chunk$set(fig.align="center", fig.width=6, fig.height=6)
 options(width=90)
@@ -19,6 +20,7 @@ First, a plot of the experimental design of the oats data from Yates
 (1935).
 
 ``` r
+
 library(agridat)
 library(desplot)
 data(yates.oats)
@@ -36,6 +38,7 @@ fixed effects for `block` and `genotype`. Plot a heatmap of the
 residuals.
 
 ``` r
+
 library(agridat)
 library(desplot)
 data(ryder.groundnut)
@@ -62,6 +65,7 @@ In the example below, the first three panels are set to the levels C1,
 C3, C5. The other levels remain in the same (relative) order.
 
 ``` r
+
 library(agridat)
 library(desplot)
 data(besag.met)

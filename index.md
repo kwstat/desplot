@@ -22,6 +22,7 @@ agriculture.
 ## Installation
 
 ``` r
+
 # Install the released version from CRAN:
 install.packages("desplot")
 
@@ -38,6 +39,7 @@ lines. The text codes and the thin lines define the whole-plots. The
 nitrogen sub-plot treatments are shown by the text colors.
 
 ``` r
+
 require(agridat)
 require(desplot)
 desplot(yates.oats, block ~ col+row,
@@ -56,6 +58,7 @@ functionality is in development and the legend for the ggplot version is
 not as polished as the lattice version.
 
 ``` r
+
 require(agridat)
 require(desplot)
 desplot(yates.oats, block ~ col+row,
@@ -75,6 +78,7 @@ Another very useful technique is to color the cells according to a
 continuous response variable (such as plot yield).
 
 ``` r
+
 require(agridat)
 require(desplot)
 desplot(yates.oats, yield ~ col*row,
@@ -92,6 +96,7 @@ each cell can be indicated with a slash drawn across questionable values
 and an X drawn across bad values.
 
 ``` r
+
 require(agridat)
 require(desplot)
 bmet <- agridat::besag.met
