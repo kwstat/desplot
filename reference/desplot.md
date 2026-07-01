@@ -186,7 +186,7 @@ ggdesplot(
 - midpoint:
 
   Method to find midpoint of the color ribbon. One of 'midrange',
-  'median, or a numeric value.
+  'median (default), or a numeric value.
 
 - ticks:
 
