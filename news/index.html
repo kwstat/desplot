@@ -37,7 +37,10 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.11" id="desplot-111-">desplot 1.11 ()<a class="anchor" aria-label="anchor" href="#desplot-111-"></a></h2>
-<ul><li><p>Switch to MIT license.</p></li>
+<ul><li><p><code><a href="../reference/desplot.html">ggdesplot()</a></code> no longer draws a spurious <code>no_color</code> legend when <code>text</code> or <code>num</code> is used without <code>col</code>. (P.Schmidt)</p></li>
+<li><p><code><a href="../reference/desplot.html">ggdesplot()</a></code> now facets on every conditioning variable in a formula such as <code>yield ~ col*row | site + rep</code>. Previously only the first was used and the others were silently dropped, overplotting cells. (P.Schmidt)</p></li>
+<li><p><code><a href="../reference/desplot.html">ggdesplot()</a></code> named <code>col.regions</code> and <code>col.text</code> now fall back to positional matching (as the warning states) when some factor levels are unnamed, instead of leaving cells uncolored. (P.Schmidt)</p></li>
+<li><p>Switch to MIT license.</p></li>
 <li><p>Documentation pages now created via Github Actions.</p></li>
 <li><p>Fix the checking for multiple cell values when there are 2 panel factors.</p></li>
 <li><p>New support for <code>aspect</code> with <code><a href="../reference/desplot.html">ggdesplot()</a></code>. (P.Schmidt)</p></li>

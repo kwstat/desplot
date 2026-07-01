@@ -2,6 +2,20 @@
 
 ## desplot 1.11 ()
 
+- [`ggdesplot()`](http://kwstat.github.io/desplot/reference/desplot.md)
+  no longer draws a spurious `no_color` legend when `text` or `num` is
+  used without `col`. (P.Schmidt)
+
+- [`ggdesplot()`](http://kwstat.github.io/desplot/reference/desplot.md)
+  now facets on every conditioning variable in a formula such as
+  `yield ~ col*row | site + rep`. Previously only the first was used and
+  the others were silently dropped, overplotting cells. (P.Schmidt)
+
+- [`ggdesplot()`](http://kwstat.github.io/desplot/reference/desplot.md)
+  named `col.regions` and `col.text` now fall back to positional
+  matching (as the warning states) when some factor levels are unnamed,
+  instead of leaving cells uncolored. (P.Schmidt)
+
 - Switch to MIT license.
 
 - Documentation pages now created via Github Actions.
