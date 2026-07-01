@@ -141,7 +141,7 @@ Can either be an ordinary \code{list()} or a call to \code{gpar()} from the
 Note: using 'at' causes 'midpoint' to be set to NULL.}
 
 \item{midpoint}{Method to find midpoint of the color ribbon.
-One of 'midrange', 'median, or a numeric value.}
+One of 'midrange', 'median (default), or a numeric value.}
 
 \item{ticks}{If TRUE, show tick marks along the bottom and left sides.}
 
