@@ -81,22 +81,6 @@ ggdesplot <- function(data,
                       aspect=NULL, # aspect ratio for true-scale field maps
                       subset=TRUE, gg=FALSE, ...){
 
-  # Would be nice to remove this code someday, maybe 2022?
-  if(inherits(data, "formula")) {
-    # Old style: desplot(form, data)
-    # Use data name for default title.  Do this BEFORE subset!
-    if(missing(main)) main <- deparse(substitute(form))
-    tmp <- form
-    form <- data
-    data <- tmp
-    message("Please use desplot(data,form) instead of desplot(form,data)")
-  } else {
-    # New style: desplot(data, form)
-    # Use data name for default title.  Do this BEFORE subset!
-    if(missing(main)) main <- deparse(substitute(data))
-  }
-  
-
   # subset, based on subset() function
   ix <- if (missing(subset)) 
     rep_len(TRUE, nrow(data))
@@ -192,7 +176,7 @@ ggdesplot <- function(data,
   has.out1 <- !is.null(out1.string)
   has.out2 <- !is.null(out2.string)
   has.dq <- !is.null(dq.string)
-  if(has.num & has.text) stop("Specify either 'num' or 'text'. Not both.")
+  if(has.num && has.text) stop("Specify either 'num' or 'text'. Not both.")
 
   # Split a formula like: resp~x*y|cond into a list of text strings called
   # resp, xy (vector like 'x' '*' 'y') , cond ('cond' could be a vector)
@@ -372,6 +356,10 @@ ggdesplot <- function(data,
     panel.string <- NULL
   }
 
+  # Why is .addLevels used here but not in desplot?  Because ggplot2 does not 
+  # automatically add missing factor levels to the plot, so we need to do it 
+  # manually.  In desplot, the lattice package automatically adds missing 
+  # factor levels to the plot.
   data <- .addLevels(data, x.string, y.string, panel.string)
 
   # Check for multiple values
@@ -455,8 +443,6 @@ ggdesplot <- function(data,
       text.levels <- abbreviate(lt.text, 2, method='both')
     else if (shorten=='sub')
       text.levels <- substring(lt.text, 1, 3)
-  } else {
-    # Nothing.  Why is this here?
   }
 
   # We might not have a key, even though it was requested

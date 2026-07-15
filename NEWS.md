@@ -16,6 +16,8 @@
 
 * New support for named colors (P.Schmidt).
 
+* Deprecated syntax `desplot(formula,data)`.
+
 # desplot 1.10 (2023-03-01)
 
 * One-row panels no longer have whitespace. Issue #9.

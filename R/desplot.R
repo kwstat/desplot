@@ -232,21 +232,6 @@ desplot <- function(data,
                     aspect=NULL, 
                     subset=TRUE, gg=FALSE, ...){
 
-  # Would be nice to remove this code someday, maybe 2022?
-  if(inherits(data, "formula")) {
-    # Old style: desplot(form, data)
-    # Use data name for default title.  Do this BEFORE subset!
-    if(missing(main)) main <- deparse(substitute(form))
-    tmp <- form
-    form <- data
-    data <- tmp
-    message("Please use desplot(data,form) instead of desplot(form,data)")
-  } else {
-    # New style: desplot(data, form)
-    # Use data name for default title.  Do this BEFORE subset!
-    if(missing(main)) main <- deparse(substitute(data))
-  }
-
   # subset, based on subset() function
   ix <- if (missing(subset)) 
     rep_len(TRUE, nrow(data))
@@ -359,7 +344,7 @@ desplot <- function(data,
   has.out1 <- !is.null(out1.string)
   has.out2 <- !is.null(out2.string)
   has.dq <- !is.null(dq.string)
-  if(has.num & has.text) stop("Specify either 'num' or 'text'. Not both.")
+  if(has.num && has.text) stop("Specify either 'num' or 'text'. Not both.")
 
 
   # Split a formula like: resp~x*y|cond into a list of text strings called
@@ -512,11 +497,12 @@ desplot <- function(data,
     col.text <- c("black", "red3", "darkorange2", "chartreuse4",
                   "deepskyblue4", "blue", "purple4", "darkviolet", "maroon")
 
-  # Change x/y from factor to numeric if needed.  Add missing x,y levels.
+  # Change x/y from factor to numeric if needed.
   fac2num <- function(x) as.numeric(levels(x))[x]
-  if(is.factor(data[[x.string]])) data[[x.string]] <- fac2num(data[[x.string]])
-  if(is.factor(data[[y.string]])) data[[y.string]] <- fac2num(data[[y.string]])
-  #data <- .addLevels(data, x.string, y.string, panel.string)
+  if(is.factor(data[[x.string]])) 
+    data[[x.string]] <- fac2num(data[[x.string]])
+  if(is.factor(data[[y.string]])) 
+    data[[y.string]] <- fac2num(data[[y.string]])
 
   # Check for multiple values for each cell.
   if(is.null(ff$cond)) {
@@ -608,8 +594,6 @@ desplot <- function(data,
       text.levels <- abbreviate(lt.text, 2, method='both')
     else if (shorten=='sub')
       text.levels <- substring(lt.text, 1, 3)
-  } else {
-    # Nothing.  Why is this here?
   }
 
   # We might not have a key, even though it was requested
@@ -955,48 +939,7 @@ panel.outlinelevelplot <- function(x, y, z, subscripts, at,
   # Add one NA datum for each missing x and each missing y
   # This does NOT completely fill in the rectangle (as needed by asreml)
 
-  ## # Original values
-  ## ox <- dat[[xvar]]
-  ## oy <- dat[[yvar]]
-
-  ## if( is.factor(ox) | is.factor(oy) )
-  ##   stop("FIXME: ", xvar, " or ", yvar, " are factors.")
-
-  ## if(is.null(locvar)) {
-  ##   loclevs <- factor("1") # hack alert
-  ## } else {
-  ##   oloc <- factor(dat[[locvar]]) # In case loc is character
-  ##   loclevs <- levels(oloc)
-  ## }
-
-  ## for(loc.i in loclevs){
-
-  ##   if(is.null(locvar)){
-  ##     ux <- sort(unique(ox))
-  ##     uy <- sort(unique(oy))
-  ##   } else {
-  ##     ux <- sort(unique(ox[oloc==loc.i]))
-  ##     uy <- sort(unique(oy[oloc==loc.i]))
-  ##   }
-  ##   # Add new rows and columns. Fill with missing data
-  ##   xnew <- setdiff(seq(from=min(ux), to=max(ux), by=1), ux)
-  ##   ynew <- setdiff(seq(from=min(uy), to=max(uy), by=1), uy)
-  ##   if(length(xnew) > 0){
-  ##     newrows <- nrow(dat) + 1:length(xnew)
-  ##     dat[newrows, xvar] <- xnew # R creates these rows
-  ##     if(!is.null(locvar))
-  ##       dat[newrows, locvar] <- rep(loc.i, length(xnew))
-  ##   }
-  ##   if(length(ynew) > 0){
-  ##     browser()
-  ##     newrows <- nrow(dat) + 1:length(ynew)
-  ##     dat[newrows, yvar] <- ynew
-  ##     if(!is.null(locvar))
-  ##       dat[newrows, locvar] <- rep(loc.i, length(ynew))
-  ##   }
-  ## }
-
-  # The old code above assumed locvar was character/factor, but still worked
+  # Previous code assumed locvar was character/factor, but still worked
   # if locvar was numeric because R was coercing the data when assigning the
   # locvar to the new row.  BUT, if dat was a tibble, then the coercion was
   # not working.  The code below fixes that problem so that now locvar is
