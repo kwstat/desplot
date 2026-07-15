@@ -29,6 +29,8 @@
 
 - New support for named colors (P.Schmidt).
 
+- Deprecated syntax `desplot(formula,data)`.
+
 ## desplot 1.10 (2023-03-01)
 
 CRAN release: 2023-03-09
