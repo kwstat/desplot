@@ -44,3 +44,23 @@ test_that("ggdesplot single conditioning variable keeps its panel labels", {
   p <- suppressWarnings(ggdesplot(besag.met, yield ~ col * row | county))
   expect_equal(levels(p$data$.panel), paste0("C", 1:6))
 })
+
+test_that("ggdesplot leaves a cell with a missing value empty", {
+  # 4x4 field with a hole at col 2 / row 2, once numeric and once a factor
+  hole <- data.frame(
+    col = rep(1:4, times = 4),
+    row = rep(1:4, each = 4),
+    yield = c(1:5, NA, 7:16),
+    B = factor(c(rep("b1", 5), NA, rep("b2", 10)))
+  )
+
+  fill_num <- ggplot2::layer_data(ggdesplot(hole, yield ~ col * row), 1)$fill
+  expect_equal(sum(fill_num == "transparent"), 1L)
+  # the guard: the other 15 cells still get a real colour from col.regions,
+  # so the empty cell comes from the missing value and not from a broken scale
+  expect_equal(length(unique(fill_num[fill_num != "transparent"])), 15L)
+
+  fill_fac <- ggplot2::layer_data(ggdesplot(hole, B ~ col * row), 1)$fill
+  expect_equal(sum(fill_fac == "transparent"), 1L)
+  expect_equal(length(unique(fill_fac[fill_fac != "transparent"])), 2L)
+})
