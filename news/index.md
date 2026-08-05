@@ -3,6 +3,13 @@
 ## desplot 1.11 ()
 
 - [`ggdesplot()`](http://kwstat.github.io/desplot/reference/desplot.md)
+  now leaves cells with a missing value empty, as
+  [`desplot()`](http://kwstat.github.io/desplot/reference/desplot.md)
+  does. Previously they were filled with the ggplot2 default grey, which
+  lies inside the range of the default red-gray-blue scale and so looked
+  like a mid-range value. (P.Schmidt)
+
+- [`ggdesplot()`](http://kwstat.github.io/desplot/reference/desplot.md)
   no longer draws a spurious `no_color` legend when `text` or `num` is
   used without `col`. (P.Schmidt)
 
