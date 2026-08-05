@@ -482,17 +482,21 @@ ggdesplot <- function(data,
     out <- out + 
       facet_wrap(panel.string, scales="free")
   
+  # Note, cells with a missing value are left empty instead of being filled
+  # with the ggplot2 default grey50, which is hard to tell from the lightgray
+  # midpoint of RedGrayBlue. The lattice version leaves such cells empty too.
   if(fill.type=="num")
     out <- out +
     #geom_tile(aes_string(fill = fill.string)) +
     geom_tile(aes(fill = .data[[fill.string]])) +
-    scale_fill_gradientn(colours=col.regions, guide="colorbar")
+    scale_fill_gradientn(colours=col.regions, guide="colorbar",
+                         na.value="transparent")
   
   if(fill.type=="factor")
     out <- out +
     #geom_tile(aes_string(fill = fill.string)) +
     geom_tile(aes(fill = .data[[fill.string]])) +
-    scale_fill_manual(values=col.regions)
+    scale_fill_manual(values=col.regions, na.value="transparent")
   
   if(has.out1)
     out <- out +

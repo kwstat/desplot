@@ -1,5 +1,7 @@
 # desplot 1.11 ()
 
+* `ggdesplot()` now leaves cells with a missing value empty, as `desplot()` does. Previously they were filled with the ggplot2 default grey, which lies inside the range of the default red-gray-blue scale and so looked like a mid-range value. (P.Schmidt)
+
 * `ggdesplot()` no longer draws a spurious `no_color` legend when `text` or `num` is used without `col`. (P.Schmidt)
 
 * `ggdesplot()` now facets on every conditioning variable in a formula such as `yield ~ col*row | site + rep`. Previously only the first was used and the others were silently dropped, overplotting cells. (P.Schmidt)
