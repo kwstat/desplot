@@ -129,8 +129,16 @@ RedGrayBlue <- colorRampPalette(c("firebrick", "lightgray", "#375997"))
 #' @param midpoint Method to find midpoint of the color ribbon.
 #' One of 'midrange', 'median (default), or a numeric value.
 #' 
-#' @param ticks If TRUE, show tick marks along the bottom and left sides.
-#' 
+#' @param ticks Controls the axis ticks and labels. One of: \code{FALSE}
+#' (default, no axes), \code{TRUE} (axes with the default "pretty" breaks),
+#' \code{"all"} (a break at every integer coordinate, resolved separately for
+#' each axis), or a list \code{list(x=, y=)} for explicit per-axis control where
+#' each element is a numeric vector of breaks or \code{"all"}. A missing list
+#' element leaves that axis at the default breaks.
+#'
+#' @param panel.border If TRUE (default), draw the panel border and axis lines.
+#' If FALSE, omit them for a cleaner field map.
+#'
 #' @param flip If TRUE, vertically flip the image.
 #' 
 #' @param main Main title.
@@ -222,7 +230,7 @@ desplot <- function(data,
                     out1.gpar=list(col="black", lwd=3),
                     out2.gpar=list(col="yellow", lwd=1, lty=1),
                     at, midpoint="median",
-                    ticks=FALSE, flip=FALSE,
+                    ticks=FALSE, panel.border=TRUE, flip=FALSE,
                     main=NULL, xlab, ylab,
                     shorten='abb',
                     show.key=TRUE,
@@ -319,7 +327,8 @@ desplot <- function(data,
                      col.regions=col.regions, col.text=col.text,
                      out1.gpar=out1.gpar, out2.gpar=out2.gpar,
                      at=at, midpoint=midpoint,
-                     ticks=ticks, flip=flip, main=main, xlab=xlab, ylab=ylab,
+                     ticks=ticks, panel.border=panel.border,
+                     flip=flip, main=main, xlab=xlab, ylab=ylab,
                      shorten=shorten, show.key=show.key,
                      key.cex=key.cex, cex=cex, strip.cex=strip.cex,
                      subset=subset, ...)

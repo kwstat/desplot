@@ -15,6 +15,13 @@ partial <- data.frame(
   rep = factor(paste0("R", rep(1:4, length.out = 16)))
 )
 
+# 6 columns x 4 rows: x- and y-range differ, so "all" resolves per-axis and
+# 'pretty' (2,4,6) is distinguishable from 'all' (1:6).
+fld <- expand.grid(COLUMN = 1:6, ROW = 1:4)
+fld$ENTRY <- factor(seq_len(nrow(fld)) %% 12 + 1)
+xbreaks <- function(p) { b <- ggplot2::ggplot_build(p)$layout$panel_params[[1]]$x$breaks; b[!is.na(b)] }
+ybreaks <- function(p) { b <- ggplot2::ggplot_build(p)$layout$panel_params[[1]]$y$breaks; b[!is.na(b)] }
+
 test_that("ggdesplot does not add a spurious colour legend without 'col'", {
   skip_if_not(utils::packageVersion("ggplot2") >= "3.5.0")
   data(besag.met, package = "agridat")
@@ -63,4 +70,47 @@ test_that("ggdesplot leaves a cell with a missing value empty", {
   fill_fac <- ggplot2::layer_data(ggdesplot(hole, B ~ col * row), 1)$fill
   expect_equal(sum(fill_fac == "transparent"), 1L)
   expect_equal(length(unique(fill_fac[fill_fac != "transparent"])), 2L)
+})
+
+test_that("ggdesplot panel.border switch toggles the panel border and axis line", {
+  p_on  <- suppressWarnings(ggdesplot(fld, ENTRY ~ COLUMN * ROW))
+  p_off <- suppressWarnings(ggdesplot(fld, ENTRY ~ COLUMN * ROW, panel.border = FALSE))
+  expect_true(inherits(p_on$theme$panel.border,  "element_rect"))   # default keeps it
+  expect_true(inherits(p_off$theme$panel.border, "element_blank"))  # switch removes it
+  expect_true(inherits(p_off$theme$axis.line,    "element_blank"))  # axis.line follows
+})
+
+test_that("ggdesplot ticks='all' puts a break at every integer, resolved per axis", {
+  p <- suppressWarnings(ggdesplot(fld, ENTRY ~ COLUMN * ROW, ticks = "all"))
+  expect_equal(xbreaks(p), as.numeric(1:6))
+  expect_equal(ybreaks(p), as.numeric(1:4))
+  expect_false(inherits(p$theme$axis.text.x, "element_blank"))      # axes shown
+  # flip keeps the same data-space breaks (scale_y_reverse negates the positions)
+  p_flip <- suppressWarnings(ggdesplot(fld, ENTRY ~ COLUMN * ROW, ticks = "all", flip = TRUE))
+  expect_true(setequal(abs(ybreaks(p_flip)), 1:4))
+})
+
+test_that("ggdesplot ticks=list gives explicit per-axis breaks", {
+  p <- suppressWarnings(ggdesplot(fld, ENTRY ~ COLUMN * ROW, ticks = list(x = c(1, 3, 5), y = "all")))
+  expect_equal(xbreaks(p), c(1, 3, 5))
+  expect_equal(ybreaks(p), as.numeric(1:4))
+  # a missing list element leaves that axis at the default (pretty) breaks, axes still shown
+  p2 <- suppressWarnings(ggdesplot(fld, ENTRY ~ COLUMN * ROW, ticks = list(x = c(2, 4))))
+  expect_equal(xbreaks(p2), c(2, 4))
+  expect_equal(ybreaks(p2), ybreaks(suppressWarnings(ggdesplot(fld, ENTRY ~ COLUMN * ROW, ticks = TRUE))))
+  expect_false(inherits(p2$theme$axis.text.x, "element_blank"))
+})
+
+test_that("ggdesplot logical ticks stay backward compatible", {
+  p_f <- suppressWarnings(ggdesplot(fld, ENTRY ~ COLUMN * ROW, ticks = FALSE))
+  p_t <- suppressWarnings(ggdesplot(fld, ENTRY ~ COLUMN * ROW, ticks = TRUE))
+  expect_true(inherits(p_f$theme$axis.text.x,  "element_blank"))    # FALSE hides axes
+  expect_false(inherits(p_t$theme$axis.text.x, "element_blank"))    # TRUE shows them
+  expect_false(identical(xbreaks(p_t), as.numeric(1:6)))            # pretty (2,4,6), not 'all'
+})
+
+test_that("ggdesplot rejects an invalid ticks specification", {
+  expect_error(suppressWarnings(ggdesplot(fld, ENTRY ~ COLUMN * ROW, ticks = "foo")))
+  expect_error(suppressWarnings(ggdesplot(fld, ENTRY ~ COLUMN * ROW, ticks = list(z = 1))))
+  expect_error(suppressWarnings(ggdesplot(fld, ENTRY ~ COLUMN * ROW, ticks = NA)))
 })
