@@ -1,5 +1,9 @@
 # desplot 1.11 ()
 
+* `ticks` now accepts `"all"` (a break at every integer coordinate) or a `list(x=, y=)` for explicit per-axis breaks, in both `desplot()` and `ggdesplot()`. `TRUE`/`FALSE` behave as before. (P.Schmidt)
+
+* New argument `panel.border` (default `TRUE`) toggles the panel border and axis lines, in both `desplot()` and `ggdesplot()`. Set `FALSE` for a cleaner field map. (P.Schmidt)
+
 * `ggdesplot()` now leaves cells with a missing value empty, as `desplot()` does. Previously they were filled with the ggplot2 default grey, which lies inside the range of the default red-gray-blue scale and so looked like a mid-range value. (P.Schmidt)
 
 * `ggdesplot()` no longer draws a spurious `no_color` legend when `text` or `num` is used without `col`. (P.Schmidt)

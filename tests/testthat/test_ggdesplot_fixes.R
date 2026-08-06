@@ -114,3 +114,57 @@ test_that("ggdesplot rejects an invalid ticks specification", {
   expect_error(suppressWarnings(ggdesplot(fld, ENTRY ~ COLUMN * ROW, ticks = list(z = 1))))
   expect_error(suppressWarnings(ggdesplot(fld, ENTRY ~ COLUMN * ROW, ticks = NA)))
 })
+
+# ---------------------------------------------------------------------------
+# Same 'ticks' / 'panel.border' features on the lattice path, so desplot() and
+# ggdesplot() behave identically. The lattice trellis object stores the axis
+# spec in p$x.scales$draw / $at and the panel box colour in
+# p$par.settings$axis.line$col.
+# ---------------------------------------------------------------------------
+
+test_that("desplot ticks='all' puts a break at every integer, resolved per axis", {
+  p <- desplot(fld, ENTRY ~ COLUMN * ROW, ticks = "all")
+  expect_true(isTRUE(p$x.scales$draw))
+  expect_equal(as.numeric(p$x.scales$at), as.numeric(1:6))
+  expect_equal(as.numeric(p$y.scales$at), as.numeric(1:4))
+  # flip keeps the same break values and does not error while building
+  p_flip <- desplot(fld, ENTRY ~ COLUMN * ROW, ticks = "all", flip = TRUE)
+  expect_equal(as.numeric(p_flip$y.scales$at), as.numeric(1:4))
+})
+
+test_that("desplot ticks=list gives explicit per-axis breaks", {
+  p <- desplot(fld, ENTRY ~ COLUMN * ROW, ticks = list(x = c(1, 3, 5), y = "all"))
+  expect_equal(as.numeric(p$x.scales$at), c(1, 3, 5))
+  expect_equal(as.numeric(p$y.scales$at), as.numeric(1:4))
+  # a missing list element leaves that axis at lattice's default (at = FALSE)
+  p2 <- desplot(fld, ENTRY ~ COLUMN * ROW, ticks = list(x = c(2, 4)))
+  expect_equal(as.numeric(p2$x.scales$at), c(2, 4))
+  expect_identical(p2$y.scales$at, FALSE)
+  expect_true(isTRUE(p2$x.scales$draw))
+})
+
+test_that("desplot logical ticks stay backward compatible", {
+  p_f <- desplot(fld, ENTRY ~ COLUMN * ROW, ticks = FALSE)
+  p_t <- desplot(fld, ENTRY ~ COLUMN * ROW, ticks = TRUE)
+  expect_true(isFALSE(p_f$x.scales$draw))                         # FALSE hides axes
+  expect_true(isTRUE(p_t$x.scales$draw))                          # TRUE shows them
+  expect_false(identical(as.numeric(p_t$x.scales$at), as.numeric(1:6)))  # default breaks, not 'all'
+})
+
+test_that("desplot panel.border switch toggles the panel box and axis line", {
+  p_on  <- desplot(fld, ENTRY ~ COLUMN * ROW)
+  p_off <- desplot(fld, ENTRY ~ COLUMN * ROW, panel.border = FALSE)
+  expect_false(identical(p_on$par.settings$axis.line$col, "transparent"))  # default keeps it
+  expect_identical(p_off$par.settings$axis.line$col, "transparent")        # switch removes it
+  # a par.settings the user passes through '...' survives the merge
+  p_mix <- desplot(fld, ENTRY ~ COLUMN * ROW, panel.border = FALSE,
+                   par.settings = list(strip.background = list(col = "grey90")))
+  expect_identical(p_mix$par.settings$axis.line$col, "transparent")
+  expect_identical(p_mix$par.settings$strip.background$col, "grey90")
+})
+
+test_that("desplot rejects an invalid ticks specification", {
+  expect_error(desplot(fld, ENTRY ~ COLUMN * ROW, ticks = "foo"))
+  expect_error(desplot(fld, ENTRY ~ COLUMN * ROW, ticks = list(z = 1)))
+  expect_error(desplot(fld, ENTRY ~ COLUMN * ROW, ticks = NA))
+})
