@@ -129,8 +129,16 @@ RedGrayBlue <- colorRampPalette(c("firebrick", "lightgray", "#375997"))
 #' @param midpoint Method to find midpoint of the color ribbon.
 #' One of 'midrange', 'median (default), or a numeric value.
 #' 
-#' @param ticks If TRUE, show tick marks along the bottom and left sides.
-#' 
+#' @param ticks Controls the axis ticks and labels. One of: \code{FALSE}
+#' (default, no axes), \code{TRUE} (axes with the default "pretty" breaks),
+#' \code{"all"} (a break at every integer coordinate, resolved separately for
+#' each axis), or a list \code{list(x=, y=)} for explicit per-axis control where
+#' each element is a numeric vector of breaks or \code{"all"}. A missing list
+#' element leaves that axis at the default breaks.
+#'
+#' @param panel.border If TRUE (default), draw the panel border and axis lines.
+#' If FALSE, omit them for a cleaner field map.
+#'
 #' @param flip If TRUE, vertically flip the image.
 #' 
 #' @param main Main title.
@@ -175,7 +183,7 @@ RedGrayBlue <- colorRampPalette(c("firebrick", "lightgray", "#375997"))
 #' @import grid
 #' @import lattice
 #' @importFrom reshape2 acast melt
-#' @importFrom stats as.formula formula median
+#' @importFrom stats as.formula formula median update
 #' @export
 #' @rdname desplot
 #' 
@@ -204,13 +212,16 @@ RedGrayBlue <- colorRampPalette(c("firebrick", "lightgray", "#375997"))
 #'         yield ~ col+row, 
 #'         out1=block, out2=gen, aspect=28.4/44)
 #' 
-#' desplot(yates.oats, 
-#'         block ~ col+row, 
+#' desplot(yates.oats,
+#'         block ~ col+row,
 #'         col=nitro, text=gen, cex=1, out1=block,
 #'         out2=gen, out2.gpar=list(col = "gray50", lwd = 1, lty = 1))
-#' 
+#'
+#' # Overloaded 'ticks' (a break at every integer) and the 'panel.border' switch
+#' desplot(yates.oats, yield ~ col+row, ticks="all", panel.border=FALSE)
+#'
 #' }
-desplot <- function(data, 
+desplot <- function(data,
                     form=formula(NULL ~ x + y),
                     num=NULL, num.string=NULL,
                     col=NULL, col.string=NULL,
@@ -222,7 +233,7 @@ desplot <- function(data,
                     out1.gpar=list(col="black", lwd=3),
                     out2.gpar=list(col="yellow", lwd=1, lty=1),
                     at, midpoint="median",
-                    ticks=FALSE, flip=FALSE,
+                    ticks=FALSE, panel.border=TRUE, flip=FALSE,
                     main=NULL, xlab, ylab,
                     shorten='abb',
                     show.key=TRUE,
@@ -319,7 +330,8 @@ desplot <- function(data,
                      col.regions=col.regions, col.text=col.text,
                      out1.gpar=out1.gpar, out2.gpar=out2.gpar,
                      at=at, midpoint=midpoint,
-                     ticks=ticks, flip=flip, main=main, xlab=xlab, ylab=ylab,
+                     ticks=ticks, panel.border=panel.border,
+                     flip=flip, main=main, xlab=xlab, ylab=ylab,
                      shorten=shorten, show.key=show.key,
                      key.cex=key.cex, cex=cex, strip.cex=strip.cex,
                      subset=subset, ...)
@@ -359,12 +371,6 @@ desplot <- function(data,
   x.string <- ff$xy[1]
   y.string <- ff$xy[3]
   panel.string <- ff$cond[1]
-
-  # If ticks are requested, add axis labels
-  if (missing(xlab))
-    xlab <- ifelse(ticks, x.string, "")
-  if (missing(ylab))
-    ylab <- ifelse(ticks, y.string, "")
 
   # Determine what fills the cells: nothing, character/factor, or numeric
   if(is.null(fill.string)) fill.type="none"
@@ -501,8 +507,18 @@ desplot <- function(data,
   fac2num <- function(x) as.numeric(levels(x))[x]
   if(is.factor(data[[x.string]])) 
     data[[x.string]] <- fac2num(data[[x.string]])
-  if(is.factor(data[[y.string]])) 
+  if(is.factor(data[[y.string]]))
     data[[y.string]] <- fac2num(data[[y.string]])
+
+  # Resolve the (overloaded) 'ticks' argument into a show flag + per-axis breaks.
+  # Done after x/y are numeric so "all" can enumerate the integer coordinates.
+  tk <- .resolve_ticks(ticks, data[[x.string]], data[[y.string]])
+
+  # If ticks are requested, add axis labels
+  if (missing(xlab))
+    xlab <- ifelse(tk$show, x.string, "")
+  if (missing(ylab))
+    ylab <- ifelse(tk$show, y.string, "")
 
   # Check for multiple values for each cell.
   if(is.null(ff$cond)) {
@@ -716,7 +732,13 @@ desplot <- function(data,
     
   out1.val <- if(has.out1) data[[out1.string]] else NULL
   out2.val <- if(has.out2) data[[out2.string]] else NULL
-  
+
+  # Assemble the axis scales from the resolved 'ticks'. A NULL break vector
+  # (tk$x / tk$y) leaves that axis at lattice's default (pretty) breaks.
+  scales.arg <- list(relation = "free", draw = tk$show)
+  if(!is.null(tk$x)) scales.arg$x <- list(at = tk$x)
+  if(!is.null(tk$y)) scales.arg$y <- list(at = tk$y)
+
   out <-
     levelplot(form,
               data=data,
@@ -732,9 +754,7 @@ desplot <- function(data,
               main=main,
               xlab=xlab,
               ylab=ylab,
-              scales=list(relation='free', # Different scales for each panel
-                          draw=ticks # Don't draw panel axes
-              ),
+              scales=scales.arg,
               prepanel = prepanel.desplot,
               panel=function(x, y, z, subscripts, groups, ...,
                              out1f, out1g, out2f, out2g, dq){
@@ -752,6 +772,19 @@ desplot <- function(data,
                              col=col.text[as.numeric(col.val[subscripts])])
               },
               strip=strip.custom(par.strip.text=list(cex=strip.cex)), ...)
+
+  # panel.border=FALSE: drop the panel box + axis lines that lattice draws by
+  # default (the ggplot2 version does the same). Merge into any par.settings the
+  # user passed through '...' rather than adding a second par.settings argument.
+  if(!panel.border) {
+    ps <- out$par.settings
+    if(is.null(ps)) ps <- list()
+    al <- ps$axis.line
+    if(is.null(al)) al <- list()
+    al$col <- "transparent"
+    ps$axis.line <- al
+    out <- update(out, par.settings = ps)
+  }
 
   # Use 'update' for any other modifications
   #if(!show.key) out <- update(out, legend=list(left=NULL))

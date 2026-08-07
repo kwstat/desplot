@@ -71,7 +71,7 @@ ggdesplot <- function(data,
                       out1.gpar=list(col="black", lwd=3),
                       out2.gpar=list(col="yellow", lwd=1, lty=1),
                       at, midpoint="median",
-                      ticks=FALSE, flip=FALSE,
+                      ticks=FALSE, panel.border=TRUE, flip=FALSE,
                       main=NULL, xlab, ylab,
                       shorten='abb',
                       show.key=TRUE,
@@ -191,11 +191,14 @@ ggdesplot <- function(data,
   y.string <- ff$xy[3]
   panel.string <- ff$cond[1]
 
+  # Resolve the (overloaded) 'ticks' argument into a show flag + per-axis breaks.
+  tk <- .resolve_ticks(ticks, data[[x.string]], data[[y.string]])
+
   # If ticks are requested, add axis labels
   if (missing(xlab))
-    xlab <- ifelse(ticks, x.string, "")
+    xlab <- ifelse(tk$show, x.string, "")
   if (missing(ylab))
-    ylab <- ifelse(ticks, y.string, "")
+    ylab <- ifelse(tk$show, y.string, "")
 
   if(has.col){
     data[[col.string]] <- factor(data[[col.string]]) # In case it is numeric
@@ -560,12 +563,17 @@ ggdesplot <- function(data,
     xlab(xlab) + 
     ylab(ylab)
   
+  # Axis breaks: honour explicit/"all" breaks from 'ticks'; keep flip via reverse.
+  if(!is.null(tk$x))
+    out <- out + scale_x_continuous(breaks = tk$x)
   if(flip)
-    out <- out + scale_y_reverse()
-  
+    out <- out + scale_y_reverse(breaks = if(is.null(tk$y)) waiver() else tk$y)
+  else if(!is.null(tk$y))
+    out <- out + scale_y_continuous(breaks = tk$y)
+
   # remove axis ticks and labels
-  if(!ticks)
-    out <- out + 
+  if(!tk$show)
+    out <- out +
       theme(axis.text.x=element_blank(),
             axis.text.y=element_blank(),
             axis.ticks=element_blank())
@@ -580,14 +588,56 @@ ggdesplot <- function(data,
 
   # blank theme
   out <- out +
-    theme(axis.line = element_line(colour = "black"), # left/bottom border
+    theme(axis.line = if(panel.border) element_line(colour = "black") # left/bottom border
+                      else element_blank(),
           panel.grid.major = element_blank(),
           panel.grid.minor = element_blank(),
-          panel.border = element_rect(fill = NA, colour = "black"), # top/right
+          panel.border = if(panel.border) element_rect(fill = NA, colour = "black") # top/right
+                         else element_blank(),
           panel.background = element_blank(),
           panel.spacing = unit(0, "lines"),   # space between panels
           strip.text = element_text(size = 11 * strip.cex)
           )
   
   out
+}
+
+# Normalize the overloaded 'ticks' argument.
+# Accepts one of:
+#   FALSE / TRUE  - logical (backward compatible): FALSE hides the axes, TRUE
+#                   shows them with the default (pretty) breaks.
+#   "all"         - show axes with a break at every integer coordinate, resolved
+#                   separately for each axis.
+#   list(x=, y=)  - explicit per-axis control; each element is a numeric vector of
+#                   breaks or "all". A missing element leaves that axis at the
+#                   default (pretty) breaks.
+# 'xvals'/'yvals' are the numeric coordinate values, used to resolve "all".
+# Returns list(show = <logical: draw axes?>, x = <NULL|numeric>, y = <NULL|numeric>),
+# where a NULL break vector means "use the default breaks for that axis".
+.resolve_ticks <- function(ticks, xvals, yvals) {
+  all_int <- function(v) {
+    v <- v[is.finite(v)]
+    if(length(v) == 0) return(numeric(0))
+    seq(floor(min(v)), ceiling(max(v)), by = 1)
+  }
+  one <- function(spec, vals) {
+    if(is.null(spec)) return(NULL)
+    if(identical(spec, "all")) return(all_int(vals))
+    if(is.numeric(spec)) return(spec)
+    stop("'ticks' list elements must be numeric or \"all\".", call. = FALSE)
+  }
+  if(is.logical(ticks)) {
+    if(length(ticks) != 1L || is.na(ticks))
+      stop("'ticks' must be TRUE, FALSE, \"all\", or a list(x=, y=).", call. = FALSE)
+    return(list(show = ticks, x = NULL, y = NULL))
+  }
+  if(is.character(ticks) && length(ticks) == 1L && ticks == "all")
+    return(list(show = TRUE, x = all_int(xvals), y = all_int(yvals)))
+  if(is.list(ticks)) {
+    bad <- setdiff(names(ticks), c("x", "y"))
+    if(is.null(names(ticks)) || length(bad) > 0)
+      stop("'ticks' list may only have named elements 'x' and 'y'.", call. = FALSE)
+    return(list(show = TRUE, x = one(ticks$x, xvals), y = one(ticks$y, yvals)))
+  }
+  stop("'ticks' must be TRUE, FALSE, \"all\", or a list(x=, y=).", call. = FALSE)
 }
