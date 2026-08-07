@@ -43,6 +43,7 @@
 <li><p><code><a href="../reference/desplot.html">ggdesplot()</a></code> no longer draws a spurious <code>no_color</code> legend when <code>text</code> or <code>num</code> is used without <code>col</code>. (P.Schmidt)</p></li>
 <li><p><code><a href="../reference/desplot.html">ggdesplot()</a></code> now facets on every conditioning variable in a formula such as <code>yield ~ col*row | site + rep</code>. Previously only the first was used and the others were silently dropped, overplotting cells. (P.Schmidt)</p></li>
 <li><p><code><a href="../reference/desplot.html">ggdesplot()</a></code> named <code>col.regions</code> and <code>col.text</code> now fall back to positional matching (as the warning states) when some factor levels are unnamed, instead of leaving cells uncolored. (P.Schmidt)</p></li>
+<li><p><code><a href="../reference/desplot.html">ggdesplot()</a></code> now positions <code>num</code>/<code>text</code> labels correctly when the formula has no left-hand side (no fill variable, e.g. <code>~ col*row | block</code>). Previously the labels on the outer cells were clipped at the panel border because, without a filled tile, the half-cell extent was never established. (P.Schmidt)</p></li>
 <li><p>Switch to MIT license.</p></li>
 <li><p>Documentation pages now created via Github Actions.</p></li>
 <li><p>Fix the checking for multiple cell values when there are 2 panel factors.</p></li>
