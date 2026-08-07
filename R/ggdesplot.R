@@ -488,6 +488,14 @@ ggdesplot <- function(data,
   # Note, cells with a missing value are left empty instead of being filled
   # with the ggplot2 default grey50, which is hard to tell from the lightgray
   # midpoint of RedGrayBlue. The lattice version leaves such cells empty too.
+  if(fill.type=="none")
+    # No fill variable (empty formula LHS). Draw an invisible tile grid anyway
+    # so the +-0.5 cell extent is established; otherwise num/text labels on the
+    # outer cells sit on the panel border and are clipped. The lattice path
+    # reserves this extent regardless of fill.
+    out <- out +
+    geom_tile(fill = "transparent")
+
   if(fill.type=="num")
     out <- out +
     #geom_tile(aes_string(fill = fill.string)) +

@@ -12,6 +12,8 @@
 
 * `ggdesplot()` named `col.regions` and `col.text` now fall back to positional matching (as the warning states) when some factor levels are unnamed, instead of leaving cells uncolored. (P.Schmidt)
 
+* `ggdesplot()` now positions `num`/`text` labels correctly when the formula has no left-hand side (no fill variable, e.g. `~ col*row | block`). Previously the labels on the outer cells were clipped at the panel border because, without a filled tile, the half-cell extent was never established. (P.Schmidt)
+
 * Switch to MIT license.
 
 * Documentation pages now created via Github Actions.
