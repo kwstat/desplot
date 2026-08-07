@@ -32,11 +32,34 @@ test_that("ggdesplot does not add a spurious colour legend without 'col'", {
 })
 
 test_that("ggdesplot named col.regions fallback colours every level", {
-  p <- suppressWarnings(
-    ggdesplot(partial, rep ~ col * row, col.regions = c(R1 = "red", R2 = "blue")))
+  # the names cover only R1/R2 of four levels: a deliberate warning fires and
+  # the code falls back to positional matching. Assert the warning (not suppress
+  # it) and then check the fallback still colours every tile (no grey NA).
+  expect_warning(
+    p <- ggdesplot(partial, rep ~ col * row, col.regions = c(R1 = "red", R2 = "blue")),
+    "positional"
+  )
   b <- ggplot2::ggplot_build(p)
-  # no tile should be left unfilled (grey NA) by the positional fallback
   expect_false(any(is.na(b$data[[1]]$fill)))
+})
+
+test_that("ggdesplot with no fill variable keeps num/text labels inside the panel", {
+  # Empty LHS: cells carry only numbers (num=), no fill. Without a tile to
+  # establish the +-0.5 cell extent, boundary labels are drawn on the panel
+  # edge and get clipped (the num= plot looked wrong). A transparent tile grid,
+  # as in the lattice path, must provide that extent.
+  blk <- expand.grid(col = 1:2, row = 1:3, block = c("B1", "B2"))
+  blk$block <- factor(blk$block)
+  blk$g     <- factor(rep(1:3, length.out = nrow(blk)))
+  p <- ggdesplot(blk, ~ col * row | block, num = g)
+  b <- ggplot2::ggplot_build(p)
+  rng <- b$layout$panel_params[[1]]$x.range
+  # the drawn range must reach half a cell beyond the outer column centres,
+  # otherwise a label at col 1 or col 2 sits on the panel border
+  expect_lte(rng[1], 0.5)
+  expect_gte(rng[2], 2.5)
+  # the extent comes from a (transparent) tile layer, not from the text alone
+  expect_true(any(vapply(p$layers, function(l) inherits(l$geom, "GeomTile"), logical(1))))
 })
 
 test_that("ggdesplot facets on every conditioning variable", {
