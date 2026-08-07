@@ -29,6 +29,7 @@ desplot(
   at,
   midpoint = "median",
   ticks = FALSE,
+  panel.border = TRUE,
   flip = FALSE,
   main = NULL,
   xlab,
@@ -67,6 +68,7 @@ ggdesplot(
   at,
   midpoint = "median",
   ticks = FALSE,
+  panel.border = TRUE,
   flip = FALSE,
   main = NULL,
   xlab,
@@ -190,7 +192,17 @@ ggdesplot(
 
 - ticks:
 
-  If TRUE, show tick marks along the bottom and left sides.
+  Controls the axis ticks and labels. One of: `FALSE` (default, no
+  axes), `TRUE` (axes with the default "pretty" breaks), `"all"` (a
+  break at every integer coordinate, resolved separately for each axis),
+  or a list `list(x=, y=)` for explicit per-axis control where each
+  element is a numeric vector of breaks or `"all"`. A missing list
+  element leaves that axis at the default breaks.
+
+- panel.border:
+
+  If TRUE (default), draw the panel border and axis lines. If FALSE,
+  omit them for a cleaner field map.
 
 - flip:
 
@@ -331,10 +343,13 @@ ggdesplot(yates.oats,
         yield ~ col+row, 
         out1=block, out2=gen, aspect=28.4/44)
 
-desplot(yates.oats, 
-        block ~ col+row, 
+desplot(yates.oats,
+        block ~ col+row,
         col=nitro, text=gen, cex=1, out1=block,
         out2=gen, out2.gpar=list(col = "gray50", lwd = 1, lty = 1))
+
+# Overloaded 'ticks' (a break at every integer) and the 'panel.border' switch
+desplot(yates.oats, yield ~ col+row, ticks="all", panel.border=FALSE)
 
 }
 #> Loading required package: agridat

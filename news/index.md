@@ -2,6 +2,20 @@
 
 ## desplot 1.11 ()
 
+- `ticks` now accepts `"all"` (a break at every integer coordinate) or a
+  `list(x=, y=)` for explicit per-axis breaks, in both
+  [`desplot()`](http://kwstat.github.io/desplot/reference/desplot.md)
+  and
+  [`ggdesplot()`](http://kwstat.github.io/desplot/reference/desplot.md).
+  `TRUE`/`FALSE` behave as before. (P.Schmidt)
+
+- New argument `panel.border` (default `TRUE`) toggles the panel border
+  and axis lines, in both
+  [`desplot()`](http://kwstat.github.io/desplot/reference/desplot.md)
+  and
+  [`ggdesplot()`](http://kwstat.github.io/desplot/reference/desplot.md).
+  Set `FALSE` for a cleaner field map. (P.Schmidt)
+
 - [`ggdesplot()`](http://kwstat.github.io/desplot/reference/desplot.md)
   now leaves cells with a missing value empty, as
   [`desplot()`](http://kwstat.github.io/desplot/reference/desplot.md)
