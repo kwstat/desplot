@@ -37,9 +37,13 @@ oats35$dq <- rep(c(0,0,0,0,0,0,0,0,1,2), length=72)
 # Field length = 18 plots * 28.4 links = 511 links
 test_that("aspect ratio", {
   # With lattice, the aspect ratio is y/x for the entire field
-  expect_silent(desplot(yates.oats, yield ~ col+row, aspect=511/176))
-   # With ggplot, the aspect ratio is y/x for each cell
-  expect_silent(ggdesplot(yates.oats, yield ~ col+row, aspect=28.4/44))
+  expect_silent(
+    desplot(yates.oats, yield ~ col+row, aspect=511/176)
+  )
+  # With ggplot, the aspect ratio is y/x for each cell
+  expect_silent(
+    ggdesplot(yates.oats, yield ~ col+row, aspect=28.4/44)
+  )
   })
 
 
@@ -93,7 +97,7 @@ test_that("out1,out2,out1.gpar,out2.gpar", {
   })
 })
 
-test_that("dq", {
+test_that("data quality argument works", {
   expect_silent({
     desplot(oats35, block~col+row, out1=block, dq=dq)
     desplot(oats35, block~col+row|block, out1=block, dq=dq)
@@ -154,30 +158,27 @@ test_that("subset", {
 
 test_that("If a cell has multiple observations, issue a warning.",{
   # No panel factor
-  dat0 <- expand.grid(col=1:2, row=1:2)
-  dat0$y <- rnorm(nrow(dat0))
-  dat0 <- rbind(dat0, dat0[1,]) # Create one cell that has 2 observations
+  d0 <- expand.grid(col=1:2, row=1:2)
+  d0$y <- rnorm(nrow(d0))
+  d0 <- rbind(d0, d0[1,]) # Create one cell that has 2 observations
 
   # One panel factor
-  dat1 <- expand.grid(state=c("S1","S2"), col=1:2, row=1:2)
-  dat1$y <- rnorm(nrow(dat1))
-  dat1 <- rbind(dat1, dat1[1,]) # Create one cell that has 2 observations
+  d1 <- expand.grid(state=c("S1","S2"), col=1:2, row=1:2)
+  d1$y <- rnorm(nrow(d1))
+  d1 <- rbind(d1, d1[1,]) # Create one cell that has 2 observations
 
   # Two panel factors
-  dat2 <- expand.grid(state=c("S1","S2"), loc=c("L1","L2","L3"), col=1:2, row=1:2)
-  dat2$y <- rnorm(nrow(dat2))
-  dat2 <- rbind(dat2, dat2[1,]) # Create one cell that has 2 observations
+  d2 <- expand.grid(state=c("S1","S2"), loc=c("L1","L2","L3"), col=1:2, row=1:2)
+  d2$y <- rnorm(nrow(d2))
+  d2 <- rbind(d2, d2[1,]) # Create one cell that has 2 observations
   
-  expect_warning( desplot(dat0, y~col*row) )
-  expect_warning( desplot(dat1, y~col*row|state) )
-  expect_warning( desplot(dat2, y~col*row|state*loc) )
+  expect_warning( desplot(d0, y~col*row) )
+  expect_warning( desplot(d1, y~col*row|state) )
+  expect_warning( desplot(d2, y~col*row|state*loc) )
 })
 
 
 # ----------------------------------------------------------------------------
-
-
-desplot(dat0, yield ~ x+y|loc, col.regions=terrain.colors)
 
 desplot(dat0, ~ x+y|loc,
         text=trt2, col=trt1, cex=1,
@@ -232,7 +233,7 @@ desplot(oats35, yield~col+row, midpoint=103.97) # custom, mean
 desplot(oats35, yield~col+row, midpoint=0) # nonsensical low
 desplot(oats35, yield~col+row, midpoint=200) # nonsensical hi
 
-# Remove the ribbon completely
+# Manually remove the ribbon completely
 dd <- desplot(oats35, yield ~  col+row)
 dd
 dd$legend$right=NULL
@@ -273,7 +274,6 @@ dmet2 <- subset(dmet2, !(county=="C4" & col<11))
 dmet2 <- subset(dmet2, !(county=="C5" & col<10))
 
 desplot(dmet2, yield~col*row|county, tick=TRUE)
-# fixme
 desplot(dmet2, yield~col*row|county, out1=rep, out2=block, tick=TRUE)
 
 # Another midpoint example with strong difference between midpoint styles.
@@ -315,7 +315,8 @@ desplot(data = dat1row,
 # ggdesplot
 test_that("ggdesplot", {
   expect_silent({
-    ggdesplot(oats35, ~ col+row|block, cex=1, num=gen)
+    desplot(oats35, ~ col+row|block, num=gen)
+    ggdesplot(oats35, ~ col+row|block, num=gen)
   })
 } )
 

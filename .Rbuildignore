@@ -13,6 +13,7 @@
 ^\.RData$
 ^\.Rhistory$
 ^cran-comments\.md$
+^CONTRIBUTING\.md$
 ^README\.md$
 ^$NEWS\.md$
 ^notes\.Rmd$
