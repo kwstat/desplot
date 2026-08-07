@@ -50,7 +50,8 @@
 
 - New support for named colors (P.Schmidt).
 
-- Deprecated syntax `desplot(formula,data)`.
+- Deprecated syntax `desplot(formula,data)`. Use
+  `desplot(data, formula)` instead.
 
 ## desplot 1.10 (2023-03-01)
 
