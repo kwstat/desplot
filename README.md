@@ -15,7 +15,7 @@ Repository: https://github.com/kwstat/desplot
 
 * Stable, well-tested using lattice graphics.
 
-* Beta version using ggplot2 graphics. Note ggplot2 is about 4 times slower.
+* Most features available in ggplot2 graphics.
 
 ## Installation
 
@@ -42,7 +42,7 @@ desplot(yates.oats, block ~ col+row,
 ```
 ![desplot](man/figures/yates_oats_design.png?raw=true)
 
-The default graphics are based on lattice.  It is also possible to create graphics based on ggplot2 by adding 'gg=TRUE' to the function. This functionality is in development and the legend for the ggplot version is not as polished as the lattice version.
+The default graphics are based on lattice.  It is also possible to create graphics based on ggplot2 by adding 'gg=TRUE' to the function. The legend for the ggplot version is not as polished as the lattice version.
 
 ```R
 require(agridat)

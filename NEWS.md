@@ -1,4 +1,4 @@
-# desplot 1.11 ()
+# desplot 1.11 (2026-08-10)
 
 * `ticks` now accepts `"all"` (a break at every integer coordinate) or a `list(x=, y=)` for explicit per-axis breaks, in both `desplot()` and `ggdesplot()`. `TRUE`/`FALSE` behave as before. (P.Schmidt)
 

@@ -1,3 +1,22 @@
+# desplot 1.11
+
+## test environments
+
+* R 4.6.1 Windows 11
+* WinBuilder R devel
+* WinBuilder R release
+
+R CMD check results: OK
+
+## Downstream dependencies
+
+* agridat
+* FielDHub
+* qrlabelr
+
+No new problems.
+
+
 # desplot 1.10
 
 ## test environments

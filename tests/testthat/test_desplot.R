@@ -314,9 +314,71 @@ desplot(data = dat1row,
 
 # ggdesplot
 test_that("ggdesplot", {
+  data(yates.oats, package="agridat")
+  oats35 <- yates.oats
   expect_silent({
-    desplot(oats35, ~ col+row|block, num=gen)
-    ggdesplot(oats35, ~ col+row|block, num=gen)
+    desplot(oats35, ~ col+row|block, cex=1, num=gen)
+    ggdesplot(oats35, ~ col+row|block, cex=1, num=gen)
   })
 } )
 
+gdd <- structure(list(ge = c(35, 40, 31, 36, 5, 6, 7, 42, 44, 48, 35, 
+39, 41, 49, 47, 18, 34, 37, 39, 41, 38, 45, 49, 40, 31, 33, 36, 
+37, 5, 7, 42, 44, 45, 48, 20, 21, 24, 26, 33, 34, 38, 6, 42, 
+44, 45, 48, 49, 43, 11, 16, 8, 9, 15, 12, 13, 46, 14, 17, 42, 
+44, 45, 48, 49, 43, 11, 16, 47, 8, 9, 15, 12, 13, 46, 18, 14, 
+17, 1, 2, 3, 4, 10, 19, 22, 23, 25, 27, 28, 29, 30, 31, 32, 33, 
+34, 38, 1, 2, 3, 4, 10, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 
+29, 31, 32, 33, 38), x = c(61L, 59L, 60L, 63L, 55L, 58L, 63L, 
+62L, 56L, 57L, 77L, 74L, 74L, 73L, 66L, 72L, 60L, 62L, 64L, 57L, 
+58L, 65L, 61L, 73L, 73L, 76L, 78L, 77L, 78L, 76L, 75L, 78L, 76L, 
+74L, 28L, 32L, 34L, 31L, 56L, 77L, 75L, 75L, 65L, 67L, 71L, 68L, 
+65L, 71L, 66L, 69L, 68L, 72L, 67L, 70L, 69L, 70L, 64L, 64L, 83L, 
+84L, 82L, 80L, 81L, 83L, 79L, 82L, 81L, 79L, 81L, 83L, 84L, 82L, 
+80L, 83L, 84L, 79L, 36L, 32L, 30L, 34L, 35L, 31L, 32L, 27L, 33L, 
+28L, 33L, 27L, 36L, 31L, 29L, 30L, 30L, 29L, 20L, 20L, 16L, 24L, 
+23L, 26L, 19L, 19L, 26L, 17L, 15L, 22L, 16L, 21L, 25L, 22L, 21L, 
+24L, 23L, 18L), y = c(56L, 55L, 56L, 55L, 56L, 56L, 56L, 55L, 
+55L, 56L, 26L, 26L, 28L, 28L, 57L, 56L, 55L, 56L, 55L, 55L, 55L, 
+55L, 55L, 27L, 26L, 26L, 28L, 27L, 26L, 28L, 26L, 27L, 27L, 27L, 
+31L, 30L, 31L, 30L, 56L, 28L, 27L, 28L, 56L, 57L, 57L, 57L, 57L, 
+56L, 56L, 57L, 56L, 57L, 56L, 56L, 56L, 57L, 57L, 56L, 29L, 28L, 
+27L, 28L, 28L, 28L, 28L, 28L, 26L, 26L, 27L, 27L, 26L, 26L, 27L, 
+26L, 29L, 27L, 31L, 31L, 31L, 30L, 31L, 32L, 32L, 32L, 31L, 32L, 
+30L, 31L, 30L, 31L, 31L, 32L, 30L, 32L, 59L, 58L, 59L, 58L, 59L, 
+59L, 58L, 59L, 58L, 58L, 59L, 58L, 58L, 59L, 59L, 59L, 58L, 59L, 
+58L, 58L)), row.names = c(NA, -114L), class = "data.frame")
+desplot(gdd, ge ~ x + y, tick=TRUE)
+
+# ----------------------------------------------------------------------------
+# Version switching for manual testing
+# Install desplot 1.10 and 1.11 into separate temp directories and reload
+
+if (FALSE) {
+  lib110 <- file.path(tempdir(), "desplot_110")
+  # "c:\\tmp\\RtmpwHc7Vs/desplot_110"
+  lib111 <- file.path(tempdir(), "desplot_111")
+  # "c:\\tmp\\RtmpwHc7Vs/desplot_111"
+  dir.create(lib110)
+  dir.create(lib111)
+
+  remotes::install_version("desplot", version = "1.10", lib = lib110)
+  remotes::install_version("desplot", version = "1.11", lib = lib111)
+
+  # Switch to version 1.10
+  detach("package:desplot", unload = TRUE, character.only = TRUE)
+  library(desplot, lib.loc = lib110)
+  packageVersion("desplot")
+  desplot(gdd, ge ~ x + y, tick=TRUE)
+
+  # Switch to version 1.11
+  detach("package:desplot", unload = TRUE, character.only = TRUE)
+  library(desplot, lib.loc = lib111)
+  packageVersion("desplot")
+  desplot(gdd, ge ~ x + y, tick=TRUE)
+
+  # Switch back to the default installed version
+  #  detach("package:desplot", unload = TRUE, character.only = TRUE)
+  #  library(desplot)
+  #  packageVersion("desplot")
+}
