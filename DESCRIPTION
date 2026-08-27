@@ -1,7 +1,7 @@
 Type: Package
 Package: desplot
 Title: Plotting Field Plans for Agricultural Experiments
-Version: 1.11
+Version: 1.12
 Authors@R: c(
     person("Kevin", "Wright", , "kw.stat@gmail.com", role = c("aut", "cre", "cph"),
            comment = c(ORCID = "0000-0002-0617-8673")),
@@ -28,4 +28,4 @@ VignetteBuilder:
     knitr
 Encoding: UTF-8
 Language: en-US
-Config/roxygen2/version: 8.0.0
+Config/roxygen2/version: 8.1.0

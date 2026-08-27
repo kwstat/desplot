@@ -172,9 +172,15 @@ test_that("If a cell has multiple observations, issue a warning.",{
   d2$y <- rnorm(nrow(d2))
   d2 <- rbind(d2, d2[1,]) # Create one cell that has 2 observations
   
-  expect_warning( desplot(d0, y~col*row) )
-  expect_warning( desplot(d1, y~col*row|state) )
-  expect_warning( desplot(d2, y~col*row|state*loc) )
+  expect_warning(
+    desplot(d0, y~col*row)
+   )
+  expect_warning(
+    desplot(d1, y~col*row|state)
+   )
+  expect_warning(
+    desplot(d2, y~col*row|state*loc)
+   )
 })
 
 
@@ -186,13 +192,6 @@ desplot(dat0, ~ x+y|loc,
         text.levels=c('A','B','C'))
 
 
-
-
-oats34 <- oats35
-# create a row of missing values in the field to test .addLevels
-oats34[which(oats34$row==16),'yield'] <- NA
-desplot(oats34, yield~col+row, tick=TRUE)
-desplot(oats34, yield~col+row|block, tick=TRUE)
 
 # Text over continuous colors
 desplot(oats35, yield~col+row,
@@ -244,7 +243,6 @@ oats35$genchar <- as.character(oats35$gen)
 desplot(oats35, gen~col+row, col=block, num=nitro, cex=1, out1=block)
 desplot(oats35, genchar~col+row, col=block, num=nitro, cex=1, out1=block)
 
-# Show actual yield values
 desplot(oats35, block~col+row, text=yield, shorten='no')
 
 desplot(oats35, block~col+row, col=nitro, text=gen, cex=1, out1=block)
@@ -258,8 +256,6 @@ desplot(oats35, nitro~col+row|block, text="gen", cex=.9)
 
 desplot(oats35, nitro~col+row|block, text="gen", cex=1)
 desplot(oats35, block~col+row|block, col="nitro", text="gen", cex=1)
-
-# Test cases with 1 or 2 rows or columns
 
 dmet <- agridat::besag.met
 
@@ -310,19 +306,8 @@ desplot(data = dat1row,
 # ----------------------------------------------------------------------------
 # ----------------------------------------------------------------------------
 
-
-
-# ggdesplot
-test_that("ggdesplot", {
-  data(yates.oats, package="agridat")
-  oats35 <- yates.oats
-  expect_silent({
-    desplot(oats35, ~ col+row|block, cex=1, num=gen)
-    ggdesplot(oats35, ~ col+row|block, cex=1, num=gen)
-  })
-} )
-
-gdd <- structure(list(ge = c(35, 40, 31, 36, 5, 6, 7, 42, 44, 48, 35, 
+test_that("desplot fills in missing x/y ordinates", {
+  gdd <- structure(list(ge = c(35, 40, 31, 36, 5, 6, 7, 42, 44, 48, 35, 
 39, 41, 49, 47, 18, 34, 37, 39, 41, 38, 45, 49, 40, 31, 33, 36, 
 37, 5, 7, 42, 44, 45, 48, 20, 21, 24, 26, 33, 34, 38, 6, 42, 
 44, 45, 48, 49, 43, 11, 16, 8, 9, 15, 12, 13, 46, 14, 17, 42, 
@@ -348,37 +333,24 @@ gdd <- structure(list(ge = c(35, 40, 31, 36, 5, 6, 7, 42, 44, 48, 35,
 30L, 31L, 30L, 31L, 31L, 32L, 30L, 32L, 59L, 58L, 59L, 58L, 59L, 
 59L, 58L, 59L, 58L, 58L, 59L, 58L, 58L, 59L, 59L, 59L, 58L, 59L, 
 58L, 58L)), row.names = c(NA, -114L), class = "data.frame")
-desplot(gdd, ge ~ x + y, tick=TRUE)
+  p1 <- desplot(gdd, ge ~ x + y, tick=TRUE)
 
-# ----------------------------------------------------------------------------
-# Version switching for manual testing
-# Install desplot 1.10 and 1.11 into separate temp directories and reload
+  # cell (40,40) is not in the data, but should be added to the
+  # axis levels by .addLevels
+  expect_in(40, unique(p1$panel.args.common$x))
+  expect_in(40, unique(p1$panel.args.common$y))
 
-if (FALSE) {
-  lib110 <- file.path(tempdir(), "desplot_110")
-  # "c:\\tmp\\RtmpwHc7Vs/desplot_110"
-  lib111 <- file.path(tempdir(), "desplot_111")
-  # "c:\\tmp\\RtmpwHc7Vs/desplot_111"
-  dir.create(lib110)
-  dir.create(lib111)
+} )
 
-  remotes::install_version("desplot", version = "1.10", lib = lib110)
-  remotes::install_version("desplot", version = "1.11", lib = lib111)
-
-  # Switch to version 1.10
-  detach("package:desplot", unload = TRUE, character.only = TRUE)
-  library(desplot, lib.loc = lib110)
-  packageVersion("desplot")
-  desplot(gdd, ge ~ x + y, tick=TRUE)
-
-  # Switch to version 1.11
-  detach("package:desplot", unload = TRUE, character.only = TRUE)
-  library(desplot, lib.loc = lib111)
-  packageVersion("desplot")
-  desplot(gdd, ge ~ x + y, tick=TRUE)
-
-  # Switch back to the default installed version
-  #  detach("package:desplot", unload = TRUE, character.only = TRUE)
-  #  library(desplot)
-  #  packageVersion("desplot")
-}
+test_that("ggdesplot", {
+  data(yates.oats, package="agridat")
+  oats34 <- yates.oats
+  # create a row of missing values in the field to test .addLevels
+  oats34[which(oats34$row==16),'yield'] <- NA
+  expect_silent({
+    desplot(oats34, yield~col+row, tick=TRUE)
+    desplot(oats34, yield~col+row|block, tick=TRUE)
+    ggdesplot(oats34, yield~col+row, tick=TRUE)
+    ggdesplot(oats34, yield~col+row|block, tick=TRUE)
+  })
+})

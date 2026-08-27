@@ -9,12 +9,18 @@ export(panel.outlinelevelplot)
 import(ggplot2)
 import(grid)
 import(lattice)
-importFrom(ggplot2,Stat)
-importFrom(ggplot2,ggproto)
-importFrom(reshape2,acast)
-importFrom(reshape2,melt)
+importFrom(ggplot2,
+  Stat,
+  ggproto
+)
+importFrom(reshape2,
+  acast,
+  melt
+)
 importFrom(rlang,.data)
-importFrom(stats,as.formula)
-importFrom(stats,formula)
-importFrom(stats,median)
-importFrom(stats,update)
+importFrom(stats,
+  as.formula,
+  formula,
+  median,
+  update
+)

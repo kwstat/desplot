@@ -509,6 +509,9 @@ desplot <- function(data,
     data[[x.string]] <- fac2num(data[[x.string]])
   if(is.factor(data[[y.string]]))
     data[[y.string]] <- fac2num(data[[y.string]])
+  
+  # Add empty cells to the data frame so that all x/y/panel combinations are present.
+  data <- .addLevels(data, x.string, y.string, panel.string)
 
   # Resolve the (overloaded) 'ticks' argument into a show flag + per-axis breaks.
   # Done after x/y are numeric so "all" can enumerate the integer coordinates.
