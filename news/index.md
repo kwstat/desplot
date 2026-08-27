@@ -1,5 +1,9 @@
 # Changelog
 
+## desplot 1.12 ()
+
+- Fix bug with missing (x,y) cells.
+
 ## desplot 1.11 (2026-08-10)
 
 CRAN release: 2026-08-21
